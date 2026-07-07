@@ -13,7 +13,29 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-07-07T04:08:20.022Z</updated>
+  <updated>2026-07-07T12:58:37.053Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="sql-injection" scheme="https://byroins.github.io/categories/web-security/sql-injection/"/>
+    <category term="sqli-labs" scheme="https://byroins.github.io/tags/sqli-labs/"/>
+    <category term="sql-injection" scheme="https://byroins.github.io/tags/sql-injection/"/>
+    <category term="information_schema" scheme="https://byroins.github.io/tags/information-schema/"/>
+    <id>https://byroins.github.io/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/</id>
+    <link href="https://byroins.github.io/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/"/>
+    <published>2026-07-07T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
+</blockquote>
+<blockquote>
+<p>Lab: sqli-labs Less-1, Less-3, &amp;]]>
+    </summary>
+    <title>Character Type Union Injection</title>
+    <updated>2026-07-07T12:58:37.053Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>
@@ -28,11 +50,11 @@
     <published>2026-07-06T14:00:00.000Z</published>
     <summary>
       <![CDATA[<blockquote>
-<p>环境: PHP 7.3.4 + MySQL 5.7.26<br>靶场: sqli-lab&#x2F;Less-2</p>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: sqli-labs Less-2</p>
 </blockquote>
 <h2 id="1-0-前置基础"><a href="#1-0-前置基础"]]>
     </summary>
     <title>Union Injection</title>
-    <updated>2026-07-07T04:08:20.022Z</updated>
+    <updated>2026-07-07T12:29:10.642Z</updated>
   </entry>
 </feed>

