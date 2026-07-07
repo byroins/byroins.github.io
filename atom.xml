@@ -13,18 +13,26 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-07-02T15:10:21.982Z</updated>
+  <updated>2026-07-07T04:08:20.022Z</updated>
   <entry>
     <author>
       <name>Byron</name>
     </author>
-    <id>https://byroins.github.io/2026/07/02/hello-world/</id>
-    <link href="https://byroins.github.io/2026/07/02/hello-world/"/>
-    <published>2026-07-02T15:10:21.982Z</published>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="sql-injection" scheme="https://byroins.github.io/categories/web-security/sql-injection/"/>
+    <category term="sqli-labs" scheme="https://byroins.github.io/tags/sqli-labs/"/>
+    <category term="sql-injection" scheme="https://byroins.github.io/tags/sql-injection/"/>
+    <category term="information_schema" scheme="https://byroins.github.io/tags/information-schema/"/>
+    <id>https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/</id>
+    <link href="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/"/>
+    <published>2026-07-06T14:00:00.000Z</published>
     <summary>
-      <![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a>]]>
+      <![CDATA[<blockquote>
+<p>环境: PHP 7.3.4 + MySQL 5.7.26<br>靶场: sqli-lab&#x2F;Less-2</p>
+</blockquote>
+<h2 id="1-0-前置基础"><a href="#1-0-前置基础"]]>
     </summary>
-    <title>Hello World</title>
-    <updated>2026-07-02T15:10:21.982Z</updated>
+    <title>Union Injection</title>
+    <updated>2026-07-07T04:08:20.022Z</updated>
   </entry>
 </feed>
