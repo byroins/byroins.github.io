@@ -50,6 +50,28 @@
     <category term="sql-injection" scheme="https://byroins.github.io/categories/web-security/sql-injection/"/>
     <category term="sqli-labs" scheme="https://byroins.github.io/tags/sqli-labs/"/>
     <category term="sql-injection" scheme="https://byroins.github.io/tags/sql-injection/"/>
+    <category term="error-injection" scheme="https://byroins.github.io/tags/error-injection/"/>
+    <category term="updatexml" scheme="https://byroins.github.io/tags/updatexml/"/>
+    <id>https://byroins.github.io/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/</id>
+    <link href="https://byroins.github.io/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/"/>
+    <published>2026-07-08T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: sqli-labs Less-5 &amp; Less-11</p>
+</blockquote>
+<h2 id="1-0-报错注入"><a]]>
+    </summary>
+    <title>Error Injection</title>
+    <updated>2026-07-13T08:41:41.507Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="sql-injection" scheme="https://byroins.github.io/categories/web-security/sql-injection/"/>
+    <category term="sqli-labs" scheme="https://byroins.github.io/tags/sqli-labs/"/>
+    <category term="sql-injection" scheme="https://byroins.github.io/tags/sql-injection/"/>
     <category term="information_schema" scheme="https://byroins.github.io/tags/information-schema/"/>
     <id>https://byroins.github.io/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/</id>
     <link href="https://byroins.github.io/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/"/>
