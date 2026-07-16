@@ -13,7 +13,32 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-07-13T08:41:06.818Z</updated>
+  <updated>2026-07-16T08:02:51.305Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="sql-injection" scheme="https://byroins.github.io/categories/web-security/sql-injection/"/>
+    <category term="sqli-labs" scheme="https://byroins.github.io/tags/sqli-labs/"/>
+    <category term="sql-injection" scheme="https://byroins.github.io/tags/sql-injection/"/>
+    <category term="sqlmap" scheme="https://byroins.github.io/tags/sqlmap/"/>
+    <id>https://byroins.github.io/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/</id>
+    <link href="https://byroins.github.io/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/"/>
+    <published>2026-07-16T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
+</blockquote>
+<blockquote>
+<p>Lab: sqli-labs Less-8</p>
+</blockquote>
+<hr>
+<h2]]>
+    </summary>
+    <title>SQLMap</title>
+    <updated>2026-07-16T08:02:51.305Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>
