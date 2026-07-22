@@ -13,7 +13,34 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-07-21T08:35:17.004Z</updated>
+  <updated>2026-07-22T08:08:21.122Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="xss" scheme="https://byroins.github.io/categories/web-security/xss/"/>
+    <category term="xss" scheme="https://byroins.github.io/tags/xss/"/>
+    <category term="cookie" scheme="https://byroins.github.io/tags/cookie/"/>
+    <category term="session" scheme="https://byroins.github.io/tags/session/"/>
+    <category term="dvwa" scheme="https://byroins.github.io/tags/dvwa/"/>
+    <category term="存储型xss" scheme="https://byroins.github.io/tags/%E5%AD%98%E5%82%A8%E5%9E%8Bxss/"/>
+    <id>https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/</id>
+    <link href="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/"/>
+    <published>2026-07-22T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
+</blockquote>
+<blockquote>
+<p>Lab: DVWA</p>
+</blockquote>
+<hr>
+<h2]]>
+    </summary>
+    <title>Cookie-Hijacking</title>
+    <updated>2026-07-22T08:08:21.122Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>

