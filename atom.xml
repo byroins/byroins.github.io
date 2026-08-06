@@ -13,7 +13,36 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-08-03T08:35:42.406Z</updated>
+  <updated>2026-08-06T06:45:52.265Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="include-file" scheme="https://byroins.github.io/categories/web-security/include-file/"/>
+    <category term="httpd.conf" scheme="https://byroins.github.io/tags/httpd-conf/"/>
+    <category term="logs" scheme="https://byroins.github.io/tags/logs/"/>
+    <category term="access.log" scheme="https://byroins.github.io/tags/access-log/"/>
+    <category term="include" scheme="https://byroins.github.io/tags/include/"/>
+    <category term="php://" scheme="https://byroins.github.io/tags/php/"/>
+    <category term="php://filter" scheme="https://byroins.github.io/tags/php-filter/"/>
+    <category term="php://input" scheme="https://byroins.github.io/tags/php-input/"/>
+    <id>https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/</id>
+    <link href="https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/"/>
+    <published>2026-08-04T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: PHP Apache</p>
+</blockquote>
+<blockquote>
+<p>Lab: Local Scripts</p>
+</blockquote>
+<hr>
+<h2 id="1-0-文件包含"><a]]>
+    </summary>
+    <title>Include-File</title>
+    <updated>2026-08-06T06:45:52.265Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>
@@ -43,7 +72,7 @@
 <h2 id="1-0-文件上传基础"><a]]>
     </summary>
     <title>Upload-File</title>
-    <updated>2026-08-03T08:35:42.406Z</updated>
+    <updated>2026-08-03T08:37:31.805Z</updated>
   </entry>
   <entry>
     <author>

