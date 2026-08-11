@@ -13,7 +13,31 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-08-06T06:58:44.833Z</updated>
+  <updated>2026-08-09T12:02:39.199Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="ssrf" scheme="https://byroins.github.io/categories/web-security/ssrf/"/>
+    <category term="ssrf" scheme="https://byroins.github.io/tags/ssrf/"/>
+    <category term="curl" scheme="https://byroins.github.io/tags/curl/"/>
+    <category term="file" scheme="https://byroins.github.io/tags/file/"/>
+    <category term="dict" scheme="https://byroins.github.io/tags/dict/"/>
+    <category term="pikachu" scheme="https://byroins.github.io/tags/pikachu/"/>
+    <category term="gopher" scheme="https://byroins.github.io/tags/gopher/"/>
+    <id>https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/</id>
+    <link href="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/"/>
+    <published>2026-08-07T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: Pikachu</p>
+</blockquote>
+<h1 id="1-0-SSRF"><a href="#1-0-SSRF"]]>
+    </summary>
+    <title>SSRF</title>
+    <updated>2026-08-09T12:02:39.199Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>
