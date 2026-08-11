@@ -13,7 +13,34 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-08-09T12:02:39.199Z</updated>
+  <updated>2026-08-11T08:00:13.292Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="rce" scheme="https://byroins.github.io/categories/web-security/rce/"/>
+    <category term="rce" scheme="https://byroins.github.io/tags/rce/"/>
+    <category term="eval()" scheme="https://byroins.github.io/tags/eval/"/>
+    <category term="system()" scheme="https://byroins.github.io/tags/system/"/>
+    <category term="exec()" scheme="https://byroins.github.io/tags/exec/"/>
+    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
+    <category term="过滤" scheme="https://byroins.github.io/tags/%E8%BF%87%E6%BB%A4/"/>
+    <category term="绕过" scheme="https://byroins.github.io/tags/%E7%BB%95%E8%BF%87/"/>
+    <category term="${IFS}" scheme="https://byroins.github.io/tags/IFS/"/>
+    <id>https://byroins.github.io/2026/08/10/web-security/rce/2026-08-10-rce/</id>
+    <link href="https://byroins.github.io/2026/08/10/web-security/rce/2026-08-10-rce/"/>
+    <published>2026-08-10T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: PHP 7.3.4 + Apache + MySQL 5.7.26</p>
+</blockquote>
+<blockquote>
+<p>Lab: Pikachu DVWA]]>
+    </summary>
+    <title>RCE</title>
+    <updated>2026-08-11T08:00:13.292Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>
