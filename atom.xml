@@ -13,7 +13,33 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-08-11T08:00:13.292Z</updated>
+  <updated>2026-08-22T13:15:53.645Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="tools" scheme="https://byroins.github.io/categories/tools/"/>
+    <category term="basic-tools" scheme="https://byroins.github.io/categories/tools/basic-tools/"/>
+    <category term="uv" scheme="https://byroins.github.io/tags/uv/"/>
+    <category term="docker" scheme="https://byroins.github.io/tags/docker/"/>
+    <category term="python" scheme="https://byroins.github.io/tags/python/"/>
+    <category term="venv" scheme="https://byroins.github.io/tags/venv/"/>
+    <category term="OneForAll" scheme="https://byroins.github.io/tags/OneForAll/"/>
+    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
+    <id>https://byroins.github.io/2026/08/20/tools/2026-08-22-basic-tools/</id>
+    <link href="https://byroins.github.io/2026/08/20/tools/2026-08-22-basic-tools/"/>
+    <published>2026-08-20T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: Kali Ubuntu Windows</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>摘要: 本文详细分析当下工具集最优管理链路, 从原理到实战部署,]]>
+    </summary>
+    <title>Basic-Tools</title>
+    <updated>2026-08-22T13:15:53.645Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>
@@ -176,7 +202,7 @@
 <h2]]>
     </summary>
     <title>XSS-Bypass-Decision-Tree</title>
-    <updated>2026-07-21T08:35:17.004Z</updated>
+    <updated>2026-08-12T08:53:37.227Z</updated>
   </entry>
   <entry>
     <author>

