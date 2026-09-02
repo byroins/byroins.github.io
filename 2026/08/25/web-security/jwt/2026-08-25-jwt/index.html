@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"byroins.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"atom-one-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":2,"unescape":true,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Environment: Kali CTFHub   Tools: BurpSuite jwt_tool   1.0 JWT基础1.1 什么是JWT?定义:JWT (JSON Web Token) 是一个开放标准, 定义了一种紧凑且自包含的方式, 用于在各方之间以 JSON 对象的形式安全传输信息. 令牌本身包含了所有必要的用户信息, 服务端无需额外存储会话状态 特点: 紧凑: 体积小, 适合通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JWT">
+<meta property="og:url" content="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/index.html">
+<meta property="og:site_name" content="Byron">
+<meta property="og:description" content="Environment: Kali CTFHub   Tools: BurpSuite jwt_tool   1.0 JWT基础1.1 什么是JWT?定义:JWT (JSON Web Token) 是一个开放标准, 定义了一种紧凑且自包含的方式, 用于在各方之间以 JSON 对象的形式安全传输信息. 令牌本身包含了所有必要的用户信息, 服务端无需额外存储会话状态 特点: 紧凑: 体积小, 适合通">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/1.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/2.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/3.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/4.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/5.png">
+<meta property="og:image" content="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/6.png">
+<meta property="article:published_time" content="2026-08-25T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-02T14:09:34.172Z">
+<meta property="article:author" content="Byron">
+<meta property="article:tag" content="CTFHub">
+<meta property="article:tag" content="Cookie">
+<meta property="article:tag" content="HS256">
+<meta property="article:tag" content="JWT">
+<meta property="article:tag" content="RS256">
+<meta property="article:tag" content="Session">
+<meta property="article:tag" content="Token">
+<meta property="article:tag" content="jwt_tool">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/1.png">
+
+
+<link rel="canonical" href="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/","path":"2026/08/25/web-security/jwt/2026-08-25-jwt/","title":"JWT"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>JWT | Byron</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Byron" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Byron</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Web Application Security Research & Exploit Development</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-JWT%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">1.0 JWT基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AFJWT"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 什么是JWT?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">定义:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-number">1.1.2.</span> <span class="nav-text">特点:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.3.</span> <span class="nav-text">核心应用场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-JWT-%E4%B8%8E-Session%E7%9A%84%E5%8C%BA%E5%88%AB-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-JWT"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 JWT 与 Session的区别(为什么需要 JWT?)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-JWT-%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 JWT 核心结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-Header-%E5%A4%B4%E9%83%A8"><span class="nav-number">1.3.1.</span> <span class="nav-text">01 Header (头部)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-Payload-%E8%8D%B7%E8%BD%BD"><span class="nav-number">1.3.2.</span> <span class="nav-text">02 Payload (荷载)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#03-SIgnature-%E7%AD%BE%E5%90%8D"><span class="nav-number">1.3.3.</span> <span class="nav-text">03 SIgnature (签名)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-JWT-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 JWT 工作原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-0-JWT-%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E4%B8%8E%E6%94%BB%E5%87%BB%E6%89%8B%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">2.0 JWT 常见漏洞与攻击手法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-JWT-%E6%BC%8F%E6%B4%9E%E5%AE%9E%E6%88%98"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 JWT 漏洞实战</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2"><span class="nav-number">2.1.1.</span> <span class="nav-text">01 敏感信息泄露</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E6%97%A0%E7%AD%BE%E5%90%8D"><span class="nav-number">2.1.2.</span> <span class="nav-text">02 无签名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#03-%E5%BC%B1%E5%AF%86%E9%92%A5"><span class="nav-number">2.1.3.</span> <span class="nav-text">03 弱密钥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#04-%E4%BF%AE%E6%94%B9%E7%AD%BE%E5%90%8D%E7%AE%97%E6%B3%95"><span class="nav-number">2.1.4.</span> <span class="nav-text">04 修改签名算法</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Byron"
+      src="/images/private/icon1.png">
+  <p class="site-author-name" itemprop="name">Byron</p>
+  <div class="site-description" itemprop="description">Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">74</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/byroins/penetration-testing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;byroins&#x2F;penetration-testing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="JWT | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JWT
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-08-25 22:00:00" itemprop="dateCreated datePublished" datetime="2026-08-25T22:00:00+08:00">2026-08-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-09-02 22:09:34" itemprop="dateModified" datetime="2026-09-02T22:09:34+08:00">2026-09-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/jwt/" itemprop="url" rel="index"><span itemprop="name">jwt</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>Environment: Kali CTFHub</p>
+</blockquote>
+<blockquote>
+<p>Tools: BurpSuite jwt_tool</p>
+</blockquote>
+<hr>
+<h2 id="1-0-JWT基础"><a href="#1-0-JWT基础" class="headerlink" title="1.0 JWT基础"></a>1.0 JWT基础</h2><h3 id="1-1-什么是JWT"><a href="#1-1-什么是JWT" class="headerlink" title="1.1 什么是JWT?"></a>1.1 什么是JWT?</h3><h4 id="定义"><a href="#定义" class="headerlink" title="定义:"></a>定义:</h4><p>JWT (JSON Web Token) 是一个开放标准, 定义了一种紧凑且自包含的方式, 用于在各方之间以 JSON 对象的形式安全传输信息. 令牌本身包含了所有必要的用户信息, 服务端无需额外存储会话状态</p>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点:"></a>特点:</h4><ul>
+<li>紧凑: 体积小, 适合通过URL, POST 参数, HTTP Header 传递</li>
+<li>自包含: 携带用户ID, 角色等关键信息, 减少数据库查询</li>
+<li>跨域: 天然支持跨域认证, 适合微服务和前后端分离架构</li>
+</ul>
+<h4 id="核心应用场景"><a href="#核心应用场景" class="headerlink" title="核心应用场景"></a>核心应用场景</h4><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>认证</strong></td>
+<td>用户登录后, 后续请求携带 JWT 即可访问受保护资源</td>
+</tr>
+<tr>
+<td><strong>信息交换</strong></td>
+<td>使用公钥&#x2F;私钥对签名, 确保发送方身份可信</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="1-2-JWT-与-Session的区别-为什么需要-JWT"><a href="#1-2-JWT-与-Session的区别-为什么需要-JWT" class="headerlink" title="1.2 JWT 与 Session的区别(为什么需要 JWT?)"></a>1.2 JWT 与 Session的区别(为什么需要 JWT?)</h3><p>传统 Session 认证问题:</p>
+<ul>
+<li>服务端需要存储 Session, 分布式环境下需共享存储(如Redis), 增加复杂度</li>
+<li>存在单点故障风险</li>
+<li>扩展性受限, 新增服务实例需同步认证状态</li>
+</ul>
+<p>JWT 的无状态优势:</p>
+<blockquote>
+<p>详见 <a href="#%E7%89%B9%E7%82%B9">特点</a></p>
+</blockquote>
+<hr>
+<h3 id="1-3-JWT-核心结构"><a href="#1-3-JWT-核心结构" class="headerlink" title="1.3 JWT 核心结构"></a>1.3 JWT 核心结构</h3><p>一个完整的 JWT 由三部分组成, 用点号分隔 <code>&#39;.&#39;</code></p>
+<h4 id="01-Header-头部"><a href="#01-Header-头部" class="headerlink" title="01 Header (头部)"></a>01 Header (头部)</h4><p>描述 JWT 的元数据, 是一个 Base64Url 编码的 JSON对象</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;alg&quot;</span><span class="punctuation">:</span> <span class="string">&quot;HS256&quot;</span><span class="punctuation">,</span> <span class="comment">// 签名算法</span></span><br><span class="line">    <span class="attr">&quot;typ&quot;</span><span class="punctuation">:</span> <span class="string">&quot;JWT&quot;</span>    <span class="comment">// 令牌</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>alg</code> 字段指定签名算法, <code>typ</code> 固定为<code>JWT</code></p>
+</blockquote>
+<hr>
+<h4 id="02-Payload-荷载"><a href="#02-Payload-荷载" class="headerlink" title="02 Payload (荷载)"></a>02 Payload (荷载)</h4><p>JWT 的主体内容, 包含需要传递的声明</p>
+<p><strong>注册声明(Registered Claims)</strong> –  预定义的标准字段</p>
+<table>
+<thead>
+<tr>
+<th>声明</th>
+<th>全称</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>iss</code></td>
+<td>Issuer</td>
+<td>签发者</td>
+</tr>
+<tr>
+<td><code>exp</code></td>
+<td>Expiration Time</td>
+<td>过期时间(必须使用Unix时间戳)</td>
+</tr>
+<tr>
+<td><code>sub</code></td>
+<td>Subject</td>
+<td>主题(通常为用户ID)</td>
+</tr>
+<tr>
+<td><code>aud</code></td>
+<td>Audience</td>
+<td>受众</td>
+</tr>
+<tr>
+<td><code>nbf</code></td>
+<td>Not Before</td>
+<td>在此时间之前不可用</td>
+</tr>
+<tr>
+<td><code>iat</code></td>
+<td>Issued At</td>
+<td>签发时间</td>
+</tr>
+<tr>
+<td><code>jti</code></td>
+<td>JWT ID</td>
+<td>JWT 唯一标识</td>
+</tr>
+</tbody></table>
+<p><strong>公共声明(Public Claims) :</strong> 自定义字段, 用于传递非敏感信息, 如用户ID, 角色.</p>
+<p><strong>私有声明(Private Claims):</strong> 双方约定的自定义信息.</p>
+<p><strong>重点:</strong> Payload 仅 Base64 编码, <strong>不是加密</strong>, 任何能拿到Token的人都可解码读取内容. </p>
+<hr>
+<h4 id="03-SIgnature-签名"><a href="#03-SIgnature-签名" class="headerlink" title="03 SIgnature (签名)"></a>03 SIgnature (签名)</h4><p>对 Header 和 Payload 进行签名, 用于验证令牌的完整性和真实性.</p>
+<p><strong>HS256 对称签名</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HMACSHA256(</span><br><span class="line">  base64UrlEncode(header) + <span class="string">&quot;.&quot;</span> + base64UrlEncode(payload),</span><br><span class="line">  secret</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><strong>两种主流签名算法对比:</strong></p>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>类型</th>
+<th>特点</th>
+<th>场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HS256</td>
+<td>对称加密</td>
+<td>同一密钥签名和验证, 密钥不能泄露</td>
+<td>单一服务端内部使用</td>
+</tr>
+<tr>
+<td>RS256</td>
+<td>非对称加密</td>
+<td>私钥签名, 公钥认证</td>
+<td>分布式系统, 第三方验证</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="1-4-JWT-工作原理"><a href="#1-4-JWT-工作原理" class="headerlink" title="1.4 JWT 工作原理"></a>1.4 JWT 工作原理</h3><blockquote>
+<p>以下 JWT 验证流程图解</p>
+</blockquote>
+<p><img data-src="/2026/08/25/web-security/jwt/2026-08-25-jwt/1.png"></p>
+<p><strong>流程:</strong></p>
+<ol>
+<li>用户登录: 客户端向服务端发送用户名和密码</li>
+<li>服务器验证: 验证凭据是否正确</li>
+<li>生成 JWT: 使用密钥签名, 编码用户信息(如 ID, Role) 和过期时间</li>
+<li>返回客户端: 将 JWT 返回给客户端</li>
+<li>客户端存储: 通常存储在<code>localStorage</code>或 <code>Cookie</code>中</li>
+<li>携带 JWT 请求: 后续请求在<code>Authorization: Bearer &lt;JWT&gt;</code>Header中携带</li>
+<li>服务器验证: 验证签名和有效期, 通过则允许访问</li>
+</ol>
+<hr>
+<h2 id="2-0-JWT-常见漏洞与攻击手法"><a href="#2-0-JWT-常见漏洞与攻击手法" class="headerlink" title="2.0 JWT 常见漏洞与攻击手法"></a>2.0 JWT 常见漏洞与攻击手法</h2><ul>
+<li><p><strong>alg: none 攻击</strong></p>
+<p>将 Header 中的<code>alg</code>改为<code>none</code>, 并删除签名. 部分有缺陷的库会直接接受未签名的Token</p>
+<ul>
+<li><p>影响: 完全绕过身份验证, 可伪造任意用户身份</p>
+</li>
+<li><p>利用: <code>jwt_tool -X a</code></p>
+</li>
+</ul>
+</li>
+<li><p><strong>算法混淆攻击(RS256 → HS256)</strong></p>
+<p>利用非对称加密 (RS256) 和对称加密 (HS256) 的差异, 攻击者获取公钥后, 将其作为 HMAC 的 “密钥” 伪造Token </p>
+<p>原理: 服务端期望 RS256 验证, 但攻击者将算法改为 HS256, 用公钥作为对称密钥签名.</p>
+</li>
+<li><p><strong>弱密钥爆破</strong></p>
+<p>如果 JWT 使用 HS256 且密钥太弱 , 可用社工字典暴力破解.</p>
+</li>
+<li><p><strong>kid 参数注入</strong></p>
+<p><code>kid</code> (Key ID) 用于指示服务器使用哪把密钥验证, 若输入过滤不严, 可进行:</p>
+<ul>
+<li>路径遍历: ..&#x2F;..&#x2F;dev&#x2F;null (使服务器使用空密钥)</li>
+<li>SQL注入: 操纵密钥查询逻辑</li>
+</ul>
+</li>
+<li><p><strong>jku (JWK Set URL) 注入</strong></p>
+<p><code>jku</code> 告诉服务器去哪里获取公钥, 若服务器未校验该URL, 攻击者可将其指向自己控制的服务器, 用自己生成的密钥伪造Token</p>
+</li>
+<li><p><strong>信息泄露</strong></p>
+<p>Payload 仅 Base64 编码, 不是加密, 攻击者可轻易解码读取其中的敏感信息</p>
+</li>
+</ul>
+<hr>
+<h3 id="2-1-JWT-漏洞实战"><a href="#2-1-JWT-漏洞实战" class="headerlink" title="2.1 JWT 漏洞实战"></a>2.1 JWT 漏洞实战</h3><blockquote>
+<p>靶场: CTFHub <a target="_blank" rel="noopener" href="https://www.ctfhub.com/#/skilltree">链接</a></p>
+</blockquote>
+<h4 id="01-敏感信息泄露"><a href="#01-敏感信息泄露" class="headerlink" title="01 敏感信息泄露"></a>01 敏感信息泄露</h4><ul>
+<li><p>靶场打开后随意输入用户名和密码</p>
+</li>
+<li><p>获取Token</p>
+<ul>
+<li>浏览器开发者工具</li>
+<li>BurpSuite抓包(本文演示)</li>
+</ul>
+<p><img data-src="/2026/08/25/web-security/jwt/2026-08-25-jwt/2.png"></p>
+<blockquote>
+<p>可见是标准的三段式结构 → JWT</p>
+</blockquote>
+</li>
+<li><p>JWT 解码</p>
+<ul>
+<li>jwt.io (网页解码)</li>
+<li>Python</li>
+<li>jwt_tool(本文演示)</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv run jwt_too1.py &lt;JWT&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/25/web-security/jwt/2026-08-25-jwt/3.png"></p>
+<blockquote>
+<p>通过 FL 和 AG 的拼接值即可过关</p>
+</blockquote>
+<hr>
+</li>
+</ul>
+<h4 id="02-无签名"><a href="#02-无签名" class="headerlink" title="02 无签名"></a>02 无签名</h4><ul>
+<li><p>靶场打开后随意输入用户名和密码</p>
+</li>
+<li><p>获取Token </p>
+</li>
+<li><p>BurpSuite插件 <code>JWT Editor</code></p>
+<p><img data-src="/2026/08/25/web-security/jwt/2026-08-25-jwt/4.png"></p>
+<blockquote>
+<p>Attack → ‘none’ Signing Algorithm &#x3D;&#x3D; (手工)”alg”: “none” &amp;&amp; 删除JWT第三段SIgnature值</p>
+<p>最终 JWT 格式应为: <code>base64(header).base64(payload).</code></p>
+</blockquote>
+<hr>
+</li>
+</ul>
+<h4 id="03-弱密钥"><a href="#03-弱密钥" class="headerlink" title="03 弱密钥"></a>03 弱密钥</h4><blockquote>
+<p>本例采用john增量暴力破解</p>
+</blockquote>
+<ul>
+<li><p>打开靶场后输入随机用户名和密码</p>
+</li>
+<li><p>获取登录后的数据包, 找到Token字段</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IjEiLCJwYXNzd29yZCI6IjEiLCJyb2xlIjoiZ3Vlc3QifQ.XjHFAfHxEoWOhPL1nlGO1zXqwsWHZb9hhZ7Njx31yGU</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将Token保存为<code>jwt.txt</code></p>
+</li>
+<li><p>使用<code>john</code></p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">john --format=HMAC-SHA256 --incremental=Lowernum jwt.txt</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/25/web-security/jwt/2026-08-25-jwt/5.png"></p>
+<blockquote>
+<p>成功破解</p>
+</blockquote>
+</li>
+<li><p>伪造新Token并修改权限</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv run jwt_tool.py eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IjEiLCJwYXNzd29yZCI6IjEiLCJyb2xlIjoiZ3Vlc3QifQ.XjHFAfHxEoWOhPL1nlGO1zXqwsWHZb9hhZ7Njx31yGU -S hs256 -p <span class="string">&quot;eilh&quot;</span> -I -pc role -pv admin</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/25/web-security/jwt/2026-08-25-jwt/6.png"></p>
+</li>
+<li><p>Token提交</p>
+<p>BurpSuite开启拦截抓包, 替换伪造Token, 得到flag</p>
+</li>
+</ul>
+<hr>
+<h4 id="04-修改签名算法"><a href="#04-修改签名算法" class="headerlink" title="04 修改签名算法"></a>04 修改签名算法</h4><p>漏洞原理: </p>
+<p>服务端使用RS256: 私钥签名, 公钥验证, 但服务端并未写死验证算法, 读取alg字段, 可以将<code>RS256</code>, 修改为<code>HS256</code>, 通过公钥文件当<code>HMAC‑HS256</code>对称密钥校验签名.</p>
+<hr>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/CTFHub/" rel="tag"># CTFHub</a>
+              <a href="/tags/JWT/" rel="tag"># JWT</a>
+              <a href="/tags/jwt-tool/" rel="tag"># jwt_tool</a>
+              <a href="/tags/Token/" rel="tag"># Token</a>
+              <a href="/tags/Session/" rel="tag"># Session</a>
+              <a href="/tags/Cookie/" rel="tag"># Cookie</a>
+              <a href="/tags/RS256/" rel="tag"># RS256</a>
+              <a href="/tags/HS256/" rel="tag"># HS256</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/24/web-security/vulhub/2026-08-24-vulhub-base/" rel="prev" title="Vulhub-Base">
+                  <i class="fa fa-angle-left"></i> Vulhub-Base
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/29/web-security/unserialize/2026-08-29-unserialize/" rel="next" title="Unserialize">
+                  Unserialize <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Byron</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"byroins/penetration-testing","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

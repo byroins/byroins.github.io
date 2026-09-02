@@ -13,7 +13,85 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-08-22T13:15:53.645Z</updated>
+  <updated>2026-09-02T14:12:51.352Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="unserialize" scheme="https://byroins.github.io/categories/web-security/unserialize/"/>
+    <category term="unserialize" scheme="https://byroins.github.io/tags/unserialize/"/>
+    <category term="serialize" scheme="https://byroins.github.io/tags/serialize/"/>
+    <category term="序列化" scheme="https://byroins.github.io/tags/%E5%BA%8F%E5%88%97%E5%8C%96/"/>
+    <category term="反序列化" scheme="https://byroins.github.io/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
+    <category term="__construct()" scheme="https://byroins.github.io/tags/construct/"/>
+    <category term="__destruct()" scheme="https://byroins.github.io/tags/destruct/"/>
+    <category term="魔术方法" scheme="https://byroins.github.io/tags/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/"/>
+    <id>https://byroins.github.io/2026/08/29/web-security/unserialize/2026-08-29-unserialize/</id>
+    <link href="https://byroins.github.io/2026/08/29/web-security/unserialize/2026-08-29-unserialize/"/>
+    <published>2026-08-29T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<hr>
+<h2 id="1-0-PHP-反序列化"><a href="#1-0-PHP-反序列化" class="headerlink" title="1.0 PHP 反序列化"></a>1.0 PHP 反序列化</h2><h3 id="1-1-基础"><a]]>
+    </summary>
+    <title>Unserialize</title>
+    <updated>2026-09-02T14:12:51.352Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="jwt" scheme="https://byroins.github.io/categories/web-security/jwt/"/>
+    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
+    <category term="JWT" scheme="https://byroins.github.io/tags/JWT/"/>
+    <category term="jwt_tool" scheme="https://byroins.github.io/tags/jwt-tool/"/>
+    <category term="Token" scheme="https://byroins.github.io/tags/Token/"/>
+    <category term="Session" scheme="https://byroins.github.io/tags/Session/"/>
+    <category term="Cookie" scheme="https://byroins.github.io/tags/Cookie/"/>
+    <category term="RS256" scheme="https://byroins.github.io/tags/RS256/"/>
+    <category term="HS256" scheme="https://byroins.github.io/tags/HS256/"/>
+    <id>https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/</id>
+    <link href="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/"/>
+    <published>2026-08-25T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: Kali CTFHub</p>
+</blockquote>
+<blockquote>
+<p>Tools: BurpSuite jwt_tool</p>
+</blockquote>
+<hr>
+<h2]]>
+    </summary>
+    <title>JWT</title>
+    <updated>2026-09-02T14:09:34.172Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="vulhub" scheme="https://byroins.github.io/categories/web-security/vulhub/"/>
+    <category term="docker" scheme="https://byroins.github.io/tags/docker/"/>
+    <category term="vulhub" scheme="https://byroins.github.io/tags/vulhub/"/>
+    <category term="proxy" scheme="https://byroins.github.io/tags/proxy/"/>
+    <id>https://byroins.github.io/2026/08/24/web-security/vulhub/2026-08-24-vulhub-base/</id>
+    <link href="https://byroins.github.io/2026/08/24/web-security/vulhub/2026-08-24-vulhub-base/"/>
+    <published>2026-08-24T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: Ubuntu 22.04 Docker</p>
+</blockquote>
+<blockquote>
+<p>Lab: Vulhub</p>
+</blockquote>
+<hr>
+<h2 id="1-0-靶场搭建"><a]]>
+    </summary>
+    <title>Vulhub-Base</title>
+    <updated>2026-09-02T14:13:22.044Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>
@@ -72,13 +150,40 @@
       <name>Byron</name>
     </author>
     <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
+    <category term="csrf" scheme="https://byroins.github.io/categories/web-security/csrf/"/>
+    <category term="Token" scheme="https://byroins.github.io/tags/Token/"/>
+    <category term="Cookie" scheme="https://byroins.github.io/tags/Cookie/"/>
+    <category term="csrf" scheme="https://byroins.github.io/tags/csrf/"/>
+    <category term="同源策略" scheme="https://byroins.github.io/tags/%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5/"/>
+    <category term="Referer" scheme="https://byroins.github.io/tags/Referer/"/>
+    <id>https://byroins.github.io/2026/08/08/web-security/csrf/2026-08-08-csrf/</id>
+    <link href="https://byroins.github.io/2026/08/08/web-security/csrf/2026-08-08-csrf/"/>
+    <published>2026-08-08T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: PHP 5.2.17 + MySQL 5.7.26<br>Lab: Pikachu</p>
+</blockquote>
+<hr>
+<h2 id="1-0-CSRF-跨站请求伪造"><a]]>
+    </summary>
+    <title>CSRF</title>
+    <updated>2026-09-02T14:11:01.197Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
     <category term="ssrf" scheme="https://byroins.github.io/categories/web-security/ssrf/"/>
     <category term="ssrf" scheme="https://byroins.github.io/tags/ssrf/"/>
     <category term="curl" scheme="https://byroins.github.io/tags/curl/"/>
-    <category term="file" scheme="https://byroins.github.io/tags/file/"/>
-    <category term="dict" scheme="https://byroins.github.io/tags/dict/"/>
+    <category term="file://" scheme="https://byroins.github.io/tags/file/"/>
+    <category term="dict://" scheme="https://byroins.github.io/tags/dict/"/>
+    <category term="反弹shell" scheme="https://byroins.github.io/tags/%E5%8F%8D%E5%BC%B9shell/"/>
     <category term="pikachu" scheme="https://byroins.github.io/tags/pikachu/"/>
-    <category term="gopher" scheme="https://byroins.github.io/tags/gopher/"/>
+    <category term="gopher://" scheme="https://byroins.github.io/tags/gopher/"/>
+    <category term="定时任务" scheme="https://byroins.github.io/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/"/>
+    <category term="ssh" scheme="https://byroins.github.io/tags/ssh/"/>
     <id>https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/</id>
     <link href="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/"/>
     <published>2026-08-07T14:00:00.000Z</published>
@@ -86,10 +191,10 @@
       <![CDATA[<blockquote>
 <p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: Pikachu</p>
 </blockquote>
-<h1 id="1-0-SSRF"><a href="#1-0-SSRF"]]>
+<h2 id="1-0-SSRF-服务端请求伪造"><a]]>
     </summary>
     <title>SSRF</title>
-    <updated>2026-08-09T12:02:39.199Z</updated>
+    <updated>2026-09-02T07:48:30.353Z</updated>
   </entry>
   <entry>
     <author>
