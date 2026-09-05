@@ -13,7 +13,33 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-09-02T14:12:51.352Z</updated>
+  <updated>2026-09-04T13:02:58.398Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="middleware" scheme="https://byroins.github.io/categories/middleware/"/>
+    <category term="middleware" scheme="https://byroins.github.io/tags/middleware/"/>
+    <category term="中间件" scheme="https://byroins.github.io/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+    <category term="tomcat" scheme="https://byroins.github.io/tags/tomcat/"/>
+    <category term="暴力破解" scheme="https://byroins.github.io/tags/%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3/"/>
+    <category term="war" scheme="https://byroins.github.io/tags/war/"/>
+    <category term="weblogic" scheme="https://byroins.github.io/tags/weblogic/"/>
+    <category term="WeblogicScan" scheme="https://byroins.github.io/tags/WeblogicScan/"/>
+    <category term="jar" scheme="https://byroins.github.io/tags/jar/"/>
+    <id>https://byroins.github.io/2026/09/03/middleware/2026-09-03-middleware/</id>
+    <link href="https://byroins.github.io/2026/09/03/middleware/2026-09-03-middleware/"/>
+    <published>2026-09-03T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment: Tomcat-11.0.22 &amp; JDK-17.0.12 &amp; Docker &amp; Vulhub</p>
+</blockquote>
+<blockquote>
+<p>Tools: BurpSuite]]>
+    </summary>
+    <title>Middleware</title>
+    <updated>2026-09-04T13:02:58.398Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>
@@ -43,7 +69,6 @@
     </author>
     <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
     <category term="jwt" scheme="https://byroins.github.io/categories/web-security/jwt/"/>
-    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
     <category term="JWT" scheme="https://byroins.github.io/tags/JWT/"/>
     <category term="jwt_tool" scheme="https://byroins.github.io/tags/jwt-tool/"/>
     <category term="Token" scheme="https://byroins.github.io/tags/Token/"/>
@@ -51,6 +76,7 @@
     <category term="Cookie" scheme="https://byroins.github.io/tags/Cookie/"/>
     <category term="RS256" scheme="https://byroins.github.io/tags/RS256/"/>
     <category term="HS256" scheme="https://byroins.github.io/tags/HS256/"/>
+    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
     <id>https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/</id>
     <link href="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/"/>
     <published>2026-08-25T14:00:00.000Z</published>
@@ -104,9 +130,9 @@
     <category term="venv" scheme="https://byroins.github.io/tags/venv/"/>
     <category term="OneForAll" scheme="https://byroins.github.io/tags/OneForAll/"/>
     <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
-    <id>https://byroins.github.io/2026/08/20/tools/2026-08-22-basic-tools/</id>
-    <link href="https://byroins.github.io/2026/08/20/tools/2026-08-22-basic-tools/"/>
-    <published>2026-08-20T14:00:00.000Z</published>
+    <id>https://byroins.github.io/2026/08/22/tools/2026-08-22-basic-tools/</id>
+    <link href="https://byroins.github.io/2026/08/22/tools/2026-08-22-basic-tools/"/>
+    <published>2026-08-22T14:00:00.000Z</published>
     <summary>
       <![CDATA[<blockquote>
 <p>Environment: Kali Ubuntu Windows</p>
@@ -116,7 +142,7 @@
 <p>摘要: 本文详细分析当下工具集最优管理链路, 从原理到实战部署,]]>
     </summary>
     <title>Basic-Tools</title>
-    <updated>2026-08-22T13:15:53.645Z</updated>
+    <updated>2026-09-04T12:43:37.975Z</updated>
   </entry>
   <entry>
     <author>
@@ -124,11 +150,11 @@
     </author>
     <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
     <category term="rce" scheme="https://byroins.github.io/categories/web-security/rce/"/>
+    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
     <category term="rce" scheme="https://byroins.github.io/tags/rce/"/>
     <category term="eval()" scheme="https://byroins.github.io/tags/eval/"/>
     <category term="system()" scheme="https://byroins.github.io/tags/system/"/>
     <category term="exec()" scheme="https://byroins.github.io/tags/exec/"/>
-    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
     <category term="过滤" scheme="https://byroins.github.io/tags/%E8%BF%87%E6%BB%A4/"/>
     <category term="绕过" scheme="https://byroins.github.io/tags/%E7%BB%95%E8%BF%87/"/>
     <category term="${IFS}" scheme="https://byroins.github.io/tags/IFS/"/>
@@ -293,8 +319,8 @@
     <category term="xss-labs" scheme="https://byroins.github.io/tags/xss-labs/"/>
     <category term="反射型xss" scheme="https://byroins.github.io/tags/%E5%8F%8D%E5%B0%84%E5%9E%8Bxss/"/>
     <category term="决策树" scheme="https://byroins.github.io/tags/%E5%86%B3%E7%AD%96%E6%A0%91/"/>
-    <id>https://byroins.github.io/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/</id>
-    <link href="https://byroins.github.io/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree.md/"/>
+    <id>https://byroins.github.io/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree/</id>
+    <link href="https://byroins.github.io/2026/07/20/web-security/xss/2026-07-20-xss-bypass-decision-tree/"/>
     <published>2026-07-20T14:00:00.000Z</published>
     <summary>
       <![CDATA[<blockquote>
@@ -307,7 +333,7 @@
 <h2]]>
     </summary>
     <title>XSS-Bypass-Decision-Tree</title>
-    <updated>2026-08-12T08:53:37.227Z</updated>
+    <updated>2026-09-03T06:04:38.383Z</updated>
   </entry>
   <entry>
     <author>
