@@ -13,7 +13,41 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-09-04T13:02:58.398Z</updated>
+  <updated>2026-09-07T01:56:18.552Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="Component-Framework" scheme="https://byroins.github.io/categories/Component-Framework/"/>
+    <category term="组件漏洞" scheme="https://byroins.github.io/tags/%E7%BB%84%E4%BB%B6%E6%BC%8F%E6%B4%9E/"/>
+    <category term="框架漏洞" scheme="https://byroins.github.io/tags/%E6%A1%86%E6%9E%B6%E6%BC%8F%E6%B4%9E/"/>
+    <category term="shiro" scheme="https://byroins.github.io/tags/shiro/"/>
+    <category term="SpringBoot" scheme="https://byroins.github.io/tags/SpringBoot/"/>
+    <category term="Actuator" scheme="https://byroins.github.io/tags/Actuator/"/>
+    <category term="Apache Shiro-550" scheme="https://byroins.github.io/tags/Apache-Shiro-550/"/>
+    <category term="反序列化" scheme="https://byroins.github.io/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
+    <category term="序列化" scheme="https://byroins.github.io/tags/%E5%BA%8F%E5%88%97%E5%8C%96/"/>
+    <category term="CVE-2016-4437" scheme="https://byroins.github.io/tags/CVE-2016-4437/"/>
+    <category term="ShiroAttack2" scheme="https://byroins.github.io/tags/ShiroAttack2/"/>
+    <category term="ShiroScan" scheme="https://byroins.github.io/tags/ShiroScan/"/>
+    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
+    <category term="SB-Actuator" scheme="https://byroins.github.io/tags/SB-Actuator/"/>
+    <category term="JDumpSpider" scheme="https://byroins.github.io/tags/JDumpSpider/"/>
+    <category term="heapdump_tool" scheme="https://byroins.github.io/tags/heapdump-tool/"/>
+    <category term="ThinkPHP" scheme="https://byroins.github.io/tags/ThinkPHP/"/>
+    <id>https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/</id>
+    <link href="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/"/>
+    <published>2026-09-05T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>Environment:  JDK8 &amp; Docker &amp; Vulhub</p>
+</blockquote>
+<blockquote>
+<p>Tools: BurpSuite ShiroAttack2 ShiroScan]]>
+    </summary>
+    <title>Component-Framework</title>
+    <updated>2026-09-07T01:56:18.552Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>
@@ -46,10 +80,10 @@
     </author>
     <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
     <category term="unserialize" scheme="https://byroins.github.io/categories/web-security/unserialize/"/>
+    <category term="反序列化" scheme="https://byroins.github.io/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
+    <category term="序列化" scheme="https://byroins.github.io/tags/%E5%BA%8F%E5%88%97%E5%8C%96/"/>
     <category term="unserialize" scheme="https://byroins.github.io/tags/unserialize/"/>
     <category term="serialize" scheme="https://byroins.github.io/tags/serialize/"/>
-    <category term="序列化" scheme="https://byroins.github.io/tags/%E5%BA%8F%E5%88%97%E5%8C%96/"/>
-    <category term="反序列化" scheme="https://byroins.github.io/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
     <category term="__construct()" scheme="https://byroins.github.io/tags/construct/"/>
     <category term="__destruct()" scheme="https://byroins.github.io/tags/destruct/"/>
     <category term="魔术方法" scheme="https://byroins.github.io/tags/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/"/>
@@ -124,12 +158,12 @@
     </author>
     <category term="tools" scheme="https://byroins.github.io/categories/tools/"/>
     <category term="basic-tools" scheme="https://byroins.github.io/categories/tools/basic-tools/"/>
+    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <category term="uv" scheme="https://byroins.github.io/tags/uv/"/>
     <category term="docker" scheme="https://byroins.github.io/tags/docker/"/>
     <category term="python" scheme="https://byroins.github.io/tags/python/"/>
     <category term="venv" scheme="https://byroins.github.io/tags/venv/"/>
     <category term="OneForAll" scheme="https://byroins.github.io/tags/OneForAll/"/>
-    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <id>https://byroins.github.io/2026/08/22/tools/2026-08-22-basic-tools/</id>
     <link href="https://byroins.github.io/2026/08/22/tools/2026-08-22-basic-tools/"/>
     <published>2026-08-22T14:00:00.000Z</published>

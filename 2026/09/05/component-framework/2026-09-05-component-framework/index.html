@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"byroins.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"atom-one-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":2,"unescape":true,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Environment:  JDK8 &amp; Docker &amp; Vulhub   Tools: BurpSuite ShiroAttack2 ShiroScan SB-Actuator JDumpSpider heapdump_tool   1.0 组件和框架漏洞组件: 通常是指在软件开发中可重复利用部件或模块, 具有特定的功能或特性, 可以独立使用或集成到更大的系统中. 组件可以包">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Component-Framework">
+<meta property="og:url" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/index.html">
+<meta property="og:site_name" content="Byron">
+<meta property="og:description" content="Environment:  JDK8 &amp; Docker &amp; Vulhub   Tools: BurpSuite ShiroAttack2 ShiroScan SB-Actuator JDumpSpider heapdump_tool   1.0 组件和框架漏洞组件: 通常是指在软件开发中可重复利用部件或模块, 具有特定的功能或特性, 可以独立使用或集成到更大的系统中. 组件可以包">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/1.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/2.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/3.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/4.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/5.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/6.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/7.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/8.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/9.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/10.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/11.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/12.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/13.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/14.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/15.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/16.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/17.png">
+<meta property="article:published_time" content="2026-09-05T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-07T01:56:18.552Z">
+<meta property="article:author" content="Byron">
+<meta property="article:tag" content="Actuator">
+<meta property="article:tag" content="Apache Shiro-550">
+<meta property="article:tag" content="CVE-2016-4437">
+<meta property="article:tag" content="JDumpSpider">
+<meta property="article:tag" content="SB-Actuator">
+<meta property="article:tag" content="ShiroAttack2">
+<meta property="article:tag" content="ShiroScan">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="ThinkPHP">
+<meta property="article:tag" content="dirsearch">
+<meta property="article:tag" content="heapdump_tool">
+<meta property="article:tag" content="shiro">
+<meta property="article:tag" content="反序列化">
+<meta property="article:tag" content="序列化">
+<meta property="article:tag" content="框架漏洞">
+<meta property="article:tag" content="组件漏洞">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/1.png">
+
+
+<link rel="canonical" href="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/","path":"2026/09/05/component-framework/2026-09-05-component-framework/","title":"Component-Framework"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Component-Framework | Byron</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Byron" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Byron</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Web Application Security Research & Exploit Development</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-%E7%BB%84%E4%BB%B6%E5%92%8C%E6%A1%86%E6%9E%B6%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.</span> <span class="nav-text">1.0 组件和框架漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Apache-Shiro-550-%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 Apache Shiro-550 漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E6%BC%8F%E6%B4%9E%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="nav-number">1.1.1.</span> <span class="nav-text">01 漏洞基本信息:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0"><span class="nav-number">1.1.2.</span> <span class="nav-text">02 漏洞成因:</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B61-AES-%E5%AF%86%E9%92%A5%E7%A1%AC%E7%BC%96%E7%A0%81"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">条件1: AES 密钥硬编码 (&lt;&#x3D;1.2.4)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6-2-Java-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E5%8F%AF%E5%88%A9%E7%94%A8-Gadget"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">条件 2: Java 反序列化 + 可利用 Gadget</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-CVE-2016-4437-%E6%BC%8F%E6%B4%9E%E5%AE%9E%E6%88%98"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 CVE-2016-4437 (漏洞实战)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E9%93%BE"><span class="nav-number">1.2.1.</span> <span class="nav-text">攻击链:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E7%A1%AE%E8%AE%A4%E7%9B%AE%E6%A0%87"><span class="nav-number">1.2.2.</span> <span class="nav-text">01 确认目标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="nav-number">1.2.3.</span> <span class="nav-text">02 漏洞利用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#03-%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D%E4%B8%8E%E9%98%B2%E5%BE%A1"><span class="nav-number">1.2.4.</span> <span class="nav-text">03 漏洞修复与防御</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-SpringBoot-Actuator%E6%9C%AA%E6%8E%88%E6%9D%83%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 SpringBoot Actuator未授权漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%9F%BA%E7%A1%80"><span class="nav-number">1.3.1.</span> <span class="nav-text">01 基础:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E7%AB%AF%E7%82%B9%E4%BF%A1%E6%81%AF"><span class="nav-number">1.3.2.</span> <span class="nav-text">02 端点信息:</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SpringBoot-Actuator%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD%E5%8C%85%E6%8B%AC"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">SpringBoot Actuator主要功能包括:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#03-%E7%BB%84%E4%BB%B6%E6%8E%A2%E6%B5%8B"><span class="nav-number">1.3.3.</span> <span class="nav-text">03 组件探测:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#04-%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="nav-number">1.3.4.</span> <span class="nav-text">04 漏洞利用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#env%E4%BF%A1%E6%81%AF%E8%84%B1%E6%95%8F%E5%88%A9%E7%94%A8-heapdump%E5%86%85%E5%AD%98%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">env信息脱敏利用(heapdump内存信息提取)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-ThinkPHP%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 ThinkPHP漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E6%A1%86%E6%9E%B6%E6%8E%A2%E6%B5%8B"><span class="nav-number">1.4.1.</span> <span class="nav-text">01 框架探测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E6%BC%8F%E6%B4%9E%E5%8F%91%E7%8E%B0"><span class="nav-number">1.4.2.</span> <span class="nav-text">02 漏洞发现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#03-%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="nav-number">1.4.3.</span> <span class="nav-text">03 漏洞利用</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Byron"
+      src="/images/private/icon1.png">
+  <p class="site-author-name" itemprop="name">Byron</p>
+  <div class="site-description" itemprop="description">Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">95</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/byroins/penetration-testing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;byroins&#x2F;penetration-testing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/09/05/component-framework/2026-09-05-component-framework/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Component-Framework | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Component-Framework
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-09-05 22:00:00" itemprop="dateCreated datePublished" datetime="2026-09-05T22:00:00+08:00">2026-09-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-09-07 09:56:18" itemprop="dateModified" datetime="2026-09-07T09:56:18+08:00">2026-09-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Component-Framework/" itemprop="url" rel="index"><span itemprop="name">Component-Framework</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>Environment:  JDK8 &amp; Docker &amp; Vulhub</p>
+</blockquote>
+<blockquote>
+<p>Tools: BurpSuite ShiroAttack2 ShiroScan SB-Actuator JDumpSpider heapdump_tool</p>
+</blockquote>
+<hr>
+<h2 id="1-0-组件和框架漏洞"><a href="#1-0-组件和框架漏洞" class="headerlink" title="1.0 组件和框架漏洞"></a>1.0 组件和框架漏洞</h2><p><strong>组件</strong>: 通常是指在软件开发中可重复利用部件或模块, 具有特定的功能或特性, 可以独立使用或集成到更大的系统中. 组件可以包括各种类型, 例: 前端UI组件, 后端服务组件, 安全组件, 数据处理组件等, 它们可以通过接口或API进行交互和集成, 构建出复杂的软件系统.</p>
+<p><strong>框架</strong>: 是一种软件开发工具或平台, 它提供了一套结构和规范, 用于帮助开发人员构建和组织软件应用程序. 框架通常包含了一些通用的功能模块, 设计模式, 工具和规范, 开发人员可以基于框架快速开发应用程序而不必从头开始编写所有代码</p>
+<p><strong>三大组件漏洞一览表:</strong></p>
+<blockquote>
+<p>以下本文复现三大组件经典漏洞概述表.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>语言</th>
+<th>典型漏洞</th>
+<th>指纹特征</th>
+<th>利用难度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Shiro</td>
+<td>Java</td>
+<td>反序列化</td>
+<td>rememberMe</td>
+<td>中</td>
+</tr>
+<tr>
+<td>SpringBoot</td>
+<td>Java</td>
+<td>Actuator未授权</td>
+<td>&#x2F;actuator</td>
+<td>低</td>
+</tr>
+<tr>
+<td>ThinkPHP</td>
+<td>PHP</td>
+<td>RCE</td>
+<td>ThinkPHP标识</td>
+<td>低</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="1-1-Apache-Shiro-550-漏洞"><a href="#1-1-Apache-Shiro-550-漏洞" class="headerlink" title="1.1 Apache Shiro-550 漏洞"></a>1.1 Apache Shiro-550 漏洞</h3><h4 id="01-漏洞基本信息"><a href="#01-漏洞基本信息" class="headerlink" title="01 漏洞基本信息:"></a>01 漏洞基本信息:</h4><p><code>Apache Shiro</code>是一个安全组件, 用于在Java程序中提供身份验证, 授权, 加密等安全功能.</p>
+<p><code>Shiro-550</code>属于<code>Apache Shiro</code>项目的历史漏洞, 存在于<code>RememberMe</code>功能中.</p>
+<ul>
+<li><p>RememberME: </p>
+<ul>
+<li>功能: 提供账户记忆功能, 勾选后下次访问无需重新登录</li>
+<li>特点: 若用户勾选此选项, 请求数据包<code>Cookie</code>字段会多出一组数据(包含经过加密的身份信息,)</li>
+</ul>
+</li>
+<li><p>RememberME机制:</p>
+<p>加密过程</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用户身份信息 → <span class="keyword">Java序列化 </span>→ AES 加密(用密钥 key) → <span class="keyword">Base64编码 </span>→ 存入rememberMe Cookie</span><br></pre></td></tr></table></figure>
+
+<p>解密过程</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">取出rememberMe Cookie → <span class="keyword">Base64 </span>解码 → AES 解密(用密钥 key) → <span class="keyword">Java反序列化 </span>→ 恢复用户身份</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>服务器对Cookie进行反序列化, 攻击者若能控制解密后的字节流, 就能让服务器反序列化一个恶意对象</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="02-漏洞成因"><a href="#02-漏洞成因" class="headerlink" title="02 漏洞成因:"></a>02 漏洞成因:</h4><h5 id="条件1-AES-密钥硬编码"><a href="#条件1-AES-密钥硬编码" class="headerlink" title="条件1: AES 密钥硬编码 (&lt;&#x3D;1.2.4)"></a>条件1: AES 密钥硬编码 (&lt;&#x3D;1.2.4)</h5><p>在 Shiro 1.2.4 及更早版本中, <code>AbstractRememberMeManager</code> 类里有这样一段代码:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">byte</span>[] DEFAULT_CIPHER_KEY_BYTES = Base64.decode(<span class="string">&quot;kPH+bIxk5D2deZiIxcaaaA==&quot;</span>);</span><br><span class="line"><span class="comment">// 密钥写死在源码, 所有Shiro应用默认使用同一密钥</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Shiro 1.2.5 之后改为每次启动随机生成密钥, 但如果开发者手动配置了弱密钥或密钥泄露, 仍然存在风险.</p>
+</blockquote>
+<h5 id="条件-2-Java-反序列化-可利用-Gadget"><a href="#条件-2-Java-反序列化-可利用-Gadget" class="headerlink" title="条件 2: Java 反序列化 + 可利用 Gadget"></a>条件 2: Java 反序列化 + 可利用 Gadget</h5><p>攻击者需要目标应用的 classpath 中存在**可利用的 gadget chain **(一组能在反序列化时触发任意代码执行的类组合), 常见的有:</p>
+<ul>
+<li><p>Commons-Collections</p>
+</li>
+<li><p>Commons-Beanutils (Shiro 自身依赖, 几乎必中)</p>
+</li>
+<li><p>Spring AOP</p>
+</li>
+<li><p>JDK 原生链</p>
+</li>
+</ul>
+<p>两个条件同时满足 → 攻击者可以构造一个包含恶意 gadget 的序列化对象, 用已知密钥加密后放入 Cookie, 服务器反序列化时触发 RCE. </p>
+<hr>
+<h3 id="1-2-CVE-2016-4437-漏洞实战"><a href="#1-2-CVE-2016-4437-漏洞实战" class="headerlink" title="1.2 CVE-2016-4437 (漏洞实战)"></a>1.2 CVE-2016-4437 (漏洞实战)</h3><blockquote>
+<p>注: 靶场基于Docker-Vulhub (&#x2F;vulhub&#x2F;shiro&#x2F;CVE-2016-4437)</p>
+</blockquote>
+<h4 id="攻击链"><a href="#攻击链" class="headerlink" title="攻击链:"></a>攻击链:</h4><blockquote>
+<p>以下完整攻击链图解</p>
+</blockquote>
+<hr>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/1.png"></p>
+<hr>
+<h4 id="01-确认目标"><a href="#01-确认目标" class="headerlink" title="01 确认目标"></a>01 确认目标</h4><blockquote>
+<p>想要快速对目标进行针对性测试, 首先需要知道目标是否使用该组件. 一般来讲, 如果一个网站里存在了记住密码的功能, 大概率使用了该组件.</p>
+</blockquote>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/2.png"></p>
+<hr>
+<ul>
+<li><p>方式1:</p>
+<p>查看响应头是否存在: <code>Set-Cookie: rememberMe=deleteMe</code></p>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/3.png"></p>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/4.png"></p>
+<blockquote>
+<p>存在<code>Set-Cookie: rememberMe=deleteMe</code>, 确定网站使用Shiro组件.</p>
+<p>也可手工在请求包<code>Cookie</code>添加<code>rememberMe=1</code></p>
+</blockquote>
+</li>
+<li><p>方式2: 使用<code>BurpSuite</code>插件<code>ShiroScan</code></p>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/5.png"></p>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/6.png"></p>
+<blockquote>
+<p>工具识别特征: 正确rememberMe字段值返回为空; 错误字段值返回<code>rememberMe=deleteMe</code></p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h4 id="02-漏洞利用"><a href="#02-漏洞利用" class="headerlink" title="02 漏洞利用"></a>02 漏洞利用</h4><blockquote>
+<p>通过对目标验证, 确认存在漏洞, 下一步动作: 漏洞利用</p>
+</blockquote>
+<p>Shiro漏洞利用工具: <code>ShiroAttack2</code></p>
+<p>项目地址:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/SummerSec/ShiroAttack2</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/7.png"></p>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/8.png"></p>
+<blockquote>
+<p>成功爆破密钥并通过<code>Commons-Beanutils</code>攻击链实现<code>RCE</code></p>
+</blockquote>
+<hr>
+<h4 id="03-漏洞修复与防御"><a href="#03-漏洞修复与防御" class="headerlink" title="03 漏洞修复与防御"></a>03 漏洞修复与防御</h4><ul>
+<li><strong>升级 Shiro 版本</strong>到 1.2.5 及以上(密钥随机生成);</li>
+<li><strong>自定义强密钥</strong>: 在 <code>shiro.ini</code> 或 Spring 配置中设置 <code>cipherKey</code> 为随机生成的 128&#x2F;256 位密钥;</li>
+<li><strong>升级依赖库</strong>: 移除或升级存在已知 gadget 的库(Commons-Collections 等);</li>
+<li><strong>WAF 规则</strong>: 检测异常长的 rememberMe Cookie 值;</li>
+<li><strong>最小权限</strong>: 应用服务以低权限运行, 降低 RCE 后的危害.</li>
+</ul>
+<hr>
+<h3 id="1-3-SpringBoot-Actuator未授权漏洞"><a href="#1-3-SpringBoot-Actuator未授权漏洞" class="headerlink" title="1.3 SpringBoot Actuator未授权漏洞"></a>1.3 SpringBoot Actuator未授权漏洞</h3><h4 id="01-基础"><a href="#01-基础" class="headerlink" title="01 基础:"></a>01 基础:</h4><p><code>Spring</code>是<code>java web</code>开发常见的框架, <code>SpringBoot</code>是 Pivotal 团队(Spring 官方团队), 开发的快速开发框架, 基于 Spring Framework, 简而言之, SpringBoot就是一个轻量级, 简化配置和开发流程的web整合框架.</p>
+<p><code>Actuator</code>是<code>SpringBoot</code>框架中的功能模块, 它提供了一系列用于监控和管理SpringBoot应用程序的端点(endpoints). 这些端点可以通过HTTP, JMX(Java Management Extensions)或其他一些远程方式访问, 用于查看应用程序的各种运行时信息和健康状态.</p>
+<p><code>SpringBoot Actuator</code>未授权访问漏洞: 攻击者未进行身份验证的情况下访问敏感的管理端点, 从而获取关键应用程序信息或执行某些管理操作. 这种漏洞的存在可能导致严重的安全问题, 如: 信息泄露, 应用程序篡改或拒绝服务攻击.</p>
+<h4 id="02-端点信息"><a href="#02-端点信息" class="headerlink" title="02 端点信息:"></a>02 端点信息:</h4><p><code>SpringBoot 1.x</code>版本默认内置路由根路径以<code>/</code>开始, <code>2.x</code> 统一以 <code>/actuator</code> 开始, springboot 1.x 的Actuator Web所有端点默认开启,可直接使用. <code>Springboot 2.x</code>Actuator Web端点只有<code>/health</code>和<code>/info</code>默认开启, 访问其它端点, 需要在配置文件<code>application.properties</code>中配置开启. </p>
+<h5 id="SpringBoot-Actuator主要功能包括"><a href="#SpringBoot-Actuator主要功能包括" class="headerlink" title="SpringBoot Actuator主要功能包括:"></a>SpringBoot Actuator主要功能包括:</h5><ol>
+<li><p><strong>健康检查(Health Check):</strong> 提供一个用于检查应用程序健康状况的端点. 通过访问<code>/actuator/health</code>端点, 可以查看应用程序是否正常运行. 它对于实时监控应用程序的健康状态和故障排查非常有用.</p>
+</li>
+<li><p><strong>应用程序信息(Application Information):</strong> 提供了关于应用程序的一些基本信息, 如应用程序名称, 版本号, 描述等, 通过访问<code>/actuator/info</code>端点, 可以获取这些信息. </p>
+</li>
+<li><p><strong>环境配置信息(Environment Information):</strong> 提供了应用程序的配置属性信息. 通过访问<code>/actuator/env</code>端点, 可以查看应用程序配置属性及其值. </p>
+</li>
+<li><p><strong>线程转储(Thread Dump):</strong> 提供了获取应用程序线程转储的端点, 通过访问<code>/actuator/threaddump</code>端点, 可以查看应用程序线程当前状态, 用于分析线程问题和死锁情况. </p>
+</li>
+<li><p><strong>度量指标(Metrics):</strong> 提供了关于应用程序性能和资源利用的度量信息. 通过访问<code>/actuator/metrics</code>端点, 可以查看请求统计, 内存使用, 垃圾回收等指标.</p>
+</li>
+<li><p><strong>管理端点(Management Endpoints):</strong> 除了上述常用端点外, Actuator还提供了其他管理端点, 如刷新配置, 关闭应用程序等…</p>
+<blockquote>
+<p>重点关注: <code>info &amp; health</code>端点一般不会被认定为漏洞, 不包含有害信息; <code>env</code>端点若能获取到信息必定有漏洞, <code>metrics</code>端点可能存在接口泄露或包含<code>Cookie &amp; Token &amp; JWT</code>信息.</p>
+</blockquote>
+</li>
+</ol>
+<ul>
+<li><p><strong>影响范围统计:</strong></p>
+<table>
+<thead>
+<tr>
+<th>SpringBoot版本</th>
+<th>默认开放端点</th>
+<th>风险等级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&lt; 1.x</td>
+<td>所有端点</td>
+<td>高危</td>
+</tr>
+<tr>
+<td>2.0.x - 2.3.x</td>
+<td>仅 &#x2F;health 和 &#x2F;info</td>
+<td>中危 (info)</td>
+</tr>
+<tr>
+<td>≥ 2.4.0</td>
+<td>仅 &#x2F;health</td>
+<td>低危</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>SpringBoot Actuator 端点默认开放, 攻击者通过访问这些敏感管理端点, 获取关键应用程序信息或执行某些管理操作.</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h4 id="03-组件探测"><a href="#03-组件探测" class="headerlink" title="03 组件探测:"></a>03 组件探测:</h4><ul>
+<li><p><strong>方式1: 通过网站图标</strong></p>
+<blockquote>
+<p>SpringBoot 框架网站加载默认会有如下图”树叶”图标</p>
+</blockquote>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/9.png"></p>
+</li>
+<li><p><strong>方式2: 通过报错页面</strong></p>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/10.png"></p>
+</li>
+<li><p><strong>方式3: 通过脚本工具</strong></p>
+<p>工具:</p>
+<ul>
+<li><p>dirsearch</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv run dirsearch.py -u <span class="string">&quot;10.0.0.10&quot;</span> -e *</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>SB-Actuator (SpringBoot Actuator 未授权访问漏洞专用命令行检测工具)</p>
+<p>项目地址:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/rabbitmask/SB-Actuator</span><br></pre></td></tr></table></figure>
+<p>使用方式:</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv run SB-Actuator.py -u http://10.0.0.10:8080</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="04-漏洞利用"><a href="#04-漏洞利用" class="headerlink" title="04 漏洞利用"></a>04 漏洞利用</h4><h5 id="env信息脱敏利用-heapdump内存信息提取"><a href="#env信息脱敏利用-heapdump内存信息提取" class="headerlink" title="env信息脱敏利用(heapdump内存信息提取)"></a>env信息脱敏利用(heapdump内存信息提取)</h5><p><code>SpringBoot actuator</code> 会将一些带有敏感关键词字, 例: password, secret, command的属性名对应的属性值用<code>*</code> 号替换达到脱敏的效果. </p>
+<ol>
+<li><p>访问漏洞网站的<code>/actuator/env</code>或<code>env</code>目录确认有信息泄露</p>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/11.png"></p>
+<blockquote>
+<p><code>/actuator/env/</code>信息泄露, 但关键信息为密文.</p>
+</blockquote>
+</li>
+<li><p>通过访问<code>/actuator/heapdump</code>下载内存数据 <code>heapdump</code></p>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/12.png"></p>
+</li>
+<li><p>工具提取<code>heapdump</code>内存数据文件</p>
+<ul>
+<li>JDumpSpider (一次性提取所有数据)</li>
+<li>heapdump_tool (动态读取, 自定义需要提取的值)</li>
+</ul>
+</li>
+<li><p>JDumpSpider 提取数据</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar JDumpSpider.jar heapdump &gt; a.txt</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>通过<code>JDumpSpider</code>将<code>heapdump</code>数据提取并重定向到文本文件<code>a.txt</code></p>
+</blockquote>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/13.png"></p>
+<blockquote>
+<p>加密属性<code>sun.java.command</code>经过工具提取, 属性值成明文.</p>
+</blockquote>
+</li>
+</ol>
+<p><strong>env信息脱敏利用逻辑分析:</strong></p>
+<ul>
+<li><p><strong>SpringBoot脱敏只发生在”输出阶段” (写HTTP响应时)</strong></p>
+<p>访问<code>/actuator/env/</code>时, SpringBoot会调用<code>Sanitizer</code>(净化器)类来序列化数据, 遍历所有 <code>PropertySource</code>, 检查属性名的<strong>关键字</strong>如:  <code>password</code>, <code>secret</code>, <code>command</code>, <code>key</code> 等. 若匹配关键字, 它会用 <code>******</code> 替换该属性的 <code>value</code> 字符串, 然后再将这个被替换后的 JSON 输出给浏览器. <strong>(只读副本替换, 未修改JVM 堆内存中原有的 <code>String</code> 对象)</strong></p>
+</li>
+<li><p><strong>HeapDump 抓取的是“存储阶段”(内存中的原始对象)</strong></p>
+<p><code>/actuator/heapdump</code> 端点利用 JVM 的 <code>hprof</code> 二进制格式, 将整个 JVM 堆内存(Heap)<strong>原封不动</strong>地序列化并导出为文件. 直接读取 JVM 运行时数据区的所有字节, 导出的 <code>heapdump</code> 文件中, 包含未被脱敏的原始字符串</p>
+</li>
+<li><p><strong>工具: 绕过输出阶段, 直接读取存储阶段的数据.</strong></p>
+<p>JDumpSpider 在本地运行, 完全脱离 SpringBoot 控制</p>
+<p><strong>工具逻辑链:</strong></p>
+<ul>
+<li><strong>解析结构:</strong> 解析 <code>.hprof</code> 文件的二进制格式, 重建出 JVM 中的对象图(Object Graph)</li>
+<li><strong>定位目标:</strong> 它内置针对SpringBoot的 “爬虫规则” Spider, 专门去查找 <code>OriginTrackedMapPropertySource</code>, <code>MutablePropertySources</code> 或 <code>System.getProperties()</code> 对应的 <code>Hashtable</code> 实例.</li>
+<li><strong>深度遍历:</strong> 遍历这些 <code>Map</code> 或 <code>Properties</code> 对象的 <code>Entry</code>(键值对). 当找到键为 <code>sun.java.command</code> 的 Entry 时, 它会顺着该 Entry 的 <code>value</code> 引用, 直接读取内存中那个 <code>String</code> 对象的 <code>char[]</code> 数组.</li>
+<li><strong>还原明文:</strong> 将 <code>char[]</code> 重新编码为 Java 字符串并打印.</li>
+</ul>
+</li>
+</ul>
+<p><strong>为什么脱敏无法保护内存 ?</strong></p>
+<ul>
+<li><strong>传输&#x2F;展示安全</strong>: <code>******</code> 只保护了”网络传输” 和 “页面展示”这一瞬间.</li>
+<li><strong>运行时安全</strong>: 只要程序要使用这个路径去启动 JAR 包, 那么 JVM 的类加载器(ClassLoader) 就必须<strong>持有这个字符串的明文引用.</strong></li>
+</ul>
+<hr>
+<h3 id="1-4-ThinkPHP漏洞"><a href="#1-4-ThinkPHP漏洞" class="headerlink" title="1.4 ThinkPHP漏洞"></a>1.4 ThinkPHP漏洞</h3><p><code>ThinkPHP</code>是为了简化企业级应用开发和敏捷WEB应用开发而诞生的开源轻量级PHP框架. 很多cms(内容管理系统)都是基于ThinkPHP二次开发, 所以ThinkPHP出问题, 会影响很多基于ThinkPHP开发的网站.</p>
+<blockquote>
+<p>以下案例基于Vulhub&#x2F;thinkphp&#x2F;2-rce</p>
+</blockquote>
+<h4 id="01-框架探测"><a href="#01-框架探测" class="headerlink" title="01 框架探测"></a>01 框架探测</h4><ul>
+<li><p><strong>通过网站图标及其默认页面</strong> </p>
+<blockquote>
+<p>FOFA等工具输入关键字<code>ThinkPHP</code>探测</p>
+</blockquote>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/14.png"></p>
+</li>
+</ul>
+<h4 id="02-漏洞发现"><a href="#02-漏洞发现" class="headerlink" title="02 漏洞发现"></a>02 漏洞发现</h4><ul>
+<li><p><strong>通过脚本工具</strong></p>
+<ul>
+<li>TPscan</li>
+</ul>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/15.png"></p>
+</li>
+</ul>
+<h4 id="03-漏洞利用"><a href="#03-漏洞利用" class="headerlink" title="03 漏洞利用"></a>03 漏洞利用</h4><p>自动化利用工具获取权限(LiqunKit)</p>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/16.png"></p>
+<blockquote>
+<p>工具成功发现漏洞<code>ThinkPHP_2-RCE</code></p>
+</blockquote>
+<p><img data-src="/2026/09/05/component-framework/2026-09-05-component-framework/17.png"></p>
+<blockquote>
+<p>通过命令执行验证</p>
+</blockquote>
+<hr>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E7%BB%84%E4%BB%B6%E6%BC%8F%E6%B4%9E/" rel="tag"># 组件漏洞</a>
+              <a href="/tags/%E6%A1%86%E6%9E%B6%E6%BC%8F%E6%B4%9E/" rel="tag"># 框架漏洞</a>
+              <a href="/tags/shiro/" rel="tag"># shiro</a>
+              <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+              <a href="/tags/Actuator/" rel="tag"># Actuator</a>
+              <a href="/tags/Apache-Shiro-550/" rel="tag"># Apache Shiro-550</a>
+              <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag"># 反序列化</a>
+              <a href="/tags/%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag"># 序列化</a>
+              <a href="/tags/CVE-2016-4437/" rel="tag"># CVE-2016-4437</a>
+              <a href="/tags/ShiroAttack2/" rel="tag"># ShiroAttack2</a>
+              <a href="/tags/ShiroScan/" rel="tag"># ShiroScan</a>
+              <a href="/tags/dirsearch/" rel="tag"># dirsearch</a>
+              <a href="/tags/SB-Actuator/" rel="tag"># SB-Actuator</a>
+              <a href="/tags/JDumpSpider/" rel="tag"># JDumpSpider</a>
+              <a href="/tags/heapdump-tool/" rel="tag"># heapdump_tool</a>
+              <a href="/tags/ThinkPHP/" rel="tag"># ThinkPHP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/03/middleware/2026-09-03-middleware/" rel="prev" title="Middleware">
+                  <i class="fa fa-angle-left"></i> Middleware
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Byron</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"byroins/penetration-testing","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>
