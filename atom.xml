@@ -13,12 +13,13 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-09-07T01:56:18.552Z</updated>
+  <updated>2026-09-07T02:40:11.510Z</updated>
   <entry>
     <author>
       <name>Byron</name>
     </author>
     <category term="Component-Framework" scheme="https://byroins.github.io/categories/Component-Framework/"/>
+    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <category term="组件漏洞" scheme="https://byroins.github.io/tags/%E7%BB%84%E4%BB%B6%E6%BC%8F%E6%B4%9E/"/>
     <category term="框架漏洞" scheme="https://byroins.github.io/tags/%E6%A1%86%E6%9E%B6%E6%BC%8F%E6%B4%9E/"/>
     <category term="shiro" scheme="https://byroins.github.io/tags/shiro/"/>
@@ -30,7 +31,6 @@
     <category term="CVE-2016-4437" scheme="https://byroins.github.io/tags/CVE-2016-4437/"/>
     <category term="ShiroAttack2" scheme="https://byroins.github.io/tags/ShiroAttack2/"/>
     <category term="ShiroScan" scheme="https://byroins.github.io/tags/ShiroScan/"/>
-    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <category term="SB-Actuator" scheme="https://byroins.github.io/tags/SB-Actuator/"/>
     <category term="JDumpSpider" scheme="https://byroins.github.io/tags/JDumpSpider/"/>
     <category term="heapdump_tool" scheme="https://byroins.github.io/tags/heapdump-tool/"/>
@@ -46,7 +46,7 @@
 <p>Tools: BurpSuite ShiroAttack2 ShiroScan]]>
     </summary>
     <title>Component-Framework</title>
-    <updated>2026-09-07T01:56:18.552Z</updated>
+    <updated>2026-09-07T02:40:11.510Z</updated>
   </entry>
   <entry>
     <author>
@@ -103,11 +103,11 @@
     </author>
     <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
     <category term="jwt" scheme="https://byroins.github.io/categories/web-security/jwt/"/>
+    <category term="Token" scheme="https://byroins.github.io/tags/Token/"/>
+    <category term="Cookie" scheme="https://byroins.github.io/tags/Cookie/"/>
     <category term="JWT" scheme="https://byroins.github.io/tags/JWT/"/>
     <category term="jwt_tool" scheme="https://byroins.github.io/tags/jwt-tool/"/>
-    <category term="Token" scheme="https://byroins.github.io/tags/Token/"/>
     <category term="Session" scheme="https://byroins.github.io/tags/Session/"/>
-    <category term="Cookie" scheme="https://byroins.github.io/tags/Cookie/"/>
     <category term="RS256" scheme="https://byroins.github.io/tags/RS256/"/>
     <category term="HS256" scheme="https://byroins.github.io/tags/HS256/"/>
     <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
@@ -158,12 +158,12 @@
     </author>
     <category term="tools" scheme="https://byroins.github.io/categories/tools/"/>
     <category term="basic-tools" scheme="https://byroins.github.io/categories/tools/basic-tools/"/>
-    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <category term="uv" scheme="https://byroins.github.io/tags/uv/"/>
     <category term="docker" scheme="https://byroins.github.io/tags/docker/"/>
     <category term="python" scheme="https://byroins.github.io/tags/python/"/>
     <category term="venv" scheme="https://byroins.github.io/tags/venv/"/>
     <category term="OneForAll" scheme="https://byroins.github.io/tags/OneForAll/"/>
+    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <id>https://byroins.github.io/2026/08/22/tools/2026-08-22-basic-tools/</id>
     <link href="https://byroins.github.io/2026/08/22/tools/2026-08-22-basic-tools/"/>
     <published>2026-08-22T14:00:00.000Z</published>
@@ -211,11 +211,11 @@
     </author>
     <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
     <category term="csrf" scheme="https://byroins.github.io/categories/web-security/csrf/"/>
-    <category term="Token" scheme="https://byroins.github.io/tags/Token/"/>
-    <category term="Cookie" scheme="https://byroins.github.io/tags/Cookie/"/>
     <category term="csrf" scheme="https://byroins.github.io/tags/csrf/"/>
     <category term="同源策略" scheme="https://byroins.github.io/tags/%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5/"/>
     <category term="Referer" scheme="https://byroins.github.io/tags/Referer/"/>
+    <category term="Token" scheme="https://byroins.github.io/tags/Token/"/>
+    <category term="Cookie" scheme="https://byroins.github.io/tags/Cookie/"/>
     <id>https://byroins.github.io/2026/08/08/web-security/csrf/2026-08-08-csrf/</id>
     <link href="https://byroins.github.io/2026/08/08/web-security/csrf/2026-08-08-csrf/"/>
     <published>2026-08-08T14:00:00.000Z</published>
