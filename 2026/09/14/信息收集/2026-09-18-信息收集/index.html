@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"byroins.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"atom-one-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":2,"unescape":true,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1.0 信息收集 本文详细梳理信息收集全流程   给我一个公司名, xx有限公司, 应该怎样去做信息收集? 1.1 企业主体与主域名确认 企查查, 天眼查;  工信部服务平台 …   信息整理:    主体 备案号 主域名    xx有限公司 ICP备xx.. target.com    1.2 子域名信息收集 FOFA 搜索引擎语法 site:target.com   子域名挖掘工具: OneF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="信息收集">
+<meta property="og:url" content="https://byroins.github.io/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/index.html">
+<meta property="og:site_name" content="Byron">
+<meta property="og:description" content="1.0 信息收集 本文详细梳理信息收集全流程   给我一个公司名, xx有限公司, 应该怎样去做信息收集? 1.1 企业主体与主域名确认 企查查, 天眼查;  工信部服务平台 …   信息整理:    主体 备案号 主域名    xx有限公司 ICP备xx.. target.com    1.2 子域名信息收集 FOFA 搜索引擎语法 site:target.com   子域名挖掘工具: OneF">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://byroins.github.io/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/1.png">
+<meta property="article:published_time" content="2026-09-14T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-21T07:30:17.732Z">
+<meta property="article:author" content="Byron">
+<meta property="article:tag" content="CDN">
+<meta property="article:tag" content="FOFA">
+<meta property="article:tag" content="OneForAll">
+<meta property="article:tag" content="dirsearch">
+<meta property="article:tag" content="httpx">
+<meta property="article:tag" content="naabu">
+<meta property="article:tag" content="nmap">
+<meta property="article:tag" content="subfinder">
+<meta property="article:tag" content="信息收集">
+<meta property="article:tag" content="小蓝本">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://byroins.github.io/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/1.png">
+
+
+<link rel="canonical" href="https://byroins.github.io/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://byroins.github.io/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/","path":"2026/09/14/信息收集/2026-09-18-信息收集/","title":"信息收集"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>信息收集 | Byron</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Byron" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Byron</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Web Application Security Research & Exploit Development</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">1.</span> <span class="nav-text">1.0 信息收集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BC%81%E4%B8%9A%E4%B8%BB%E4%BD%93%E4%B8%8E%E4%B8%BB%E5%9F%9F%E5%90%8D%E7%A1%AE%E8%AE%A4"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 企业主体与主域名确认</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%AD%90%E5%9F%9F%E5%90%8D%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 子域名信息收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E5%B0%8F%E7%A8%8B%E5%BA%8F-APP%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 小程序&amp;APP信息收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E5%AD%98%E6%B4%BB%E6%8E%A2%E6%B5%8B"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 存活探测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 指纹识别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-%E7%9C%9F%E5%AE%9EIP%E6%94%B6%E9%9B%86"><span class="nav-number">1.6.</span> <span class="nav-text">1.6 真实IP收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7-%E7%AB%AF%E5%8F%A3%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">1.7.</span> <span class="nav-text">1.7 端口信息收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-8-Web%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">1.8.</span> <span class="nav-text">1.8 Web信息收集</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Byron"
+      src="/images/private/icon1.png">
+  <p class="site-author-name" itemprop="name">Byron</p>
+  <div class="site-description" itemprop="description">Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/byroins/penetration-testing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;byroins&#x2F;penetration-testing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="信息收集 | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          信息收集
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-09-14 22:00:00" itemprop="dateCreated datePublished" datetime="2026-09-14T22:00:00+08:00">2026-09-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-09-21 15:30:17" itemprop="dateModified" datetime="2026-09-21T15:30:17+08:00">2026-09-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" itemprop="url" rel="index"><span itemprop="name">信息收集</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="1-0-信息收集"><a href="#1-0-信息收集" class="headerlink" title="1.0 信息收集"></a>1.0 信息收集</h2><blockquote>
+<p>本文详细梳理信息收集全流程</p>
+</blockquote>
+<hr>
+<p>给我一个公司名, xx有限公司, 应该怎样去做信息收集?</p>
+<h3 id="1-1-企业主体与主域名确认"><a href="#1-1-企业主体与主域名确认" class="headerlink" title="1.1 企业主体与主域名确认"></a>1.1 企业主体与主域名确认</h3><ol>
+<li><p>企查查, 天眼查;</p>
+</li>
+<li><p>工信部服务平台</p>
+<p>…</p>
+</li>
+</ol>
+<p>信息整理:</p>
+<table>
+<thead>
+<tr>
+<th>主体</th>
+<th>备案号</th>
+<th>主域名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>xx有限公司</td>
+<td>ICP备xx..</td>
+<td>target.com</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="1-2-子域名信息收集"><a href="#1-2-子域名信息收集" class="headerlink" title="1.2 子域名信息收集"></a>1.2 子域名信息收集</h3><ol>
+<li>FOFA</li>
+<li>搜索引擎语法<ul>
+<li>site:target.com</li>
+</ul>
+</li>
+<li>子域名挖掘工具:<ul>
+<li>OneForAll<ul>
+<li>主动+被动</li>
+<li>结果更全, 但是慢</li>
+<li>自带解析</li>
+</ul>
+</li>
+<li>subfinder<ul>
+<li>被动收集, 只查不扫, 不会触发WAF</li>
+<li>速度快, 适合批量扫描</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>FOFA 子域名收集: (以百度为例)</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">domain</span><span class="operator">=</span><span class="string">&quot;baidu.com&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/1.png"></p>
+</li>
+<li><p>OneForAll</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">uv run oneforall.py --target target.com run</span><br><span class="line">uv run oneforall.py --targets domain.txt run <span class="comment"># 读文件</span></span><br><span class="line"><span class="comment"># 结果在 results下</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>subfinder</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subfinder -d target.com</span><br><span class="line">subfinder -d target.com -o subs.txt        <span class="comment"># 输出结果到文件</span></span><br><span class="line">subfinder -dL domains.txt -o all_subs.txt  <span class="comment"># 从文件读</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h3 id="1-3-小程序-APP信息收集"><a href="#1-3-小程序-APP信息收集" class="headerlink" title="1.3 小程序&amp;APP信息收集"></a>1.3 小程序&amp;APP信息收集</h3><ol>
+<li>通过小蓝本进行收集</li>
+<li>工信部服务平台</li>
+</ol>
+<hr>
+<h3 id="1-4-存活探测"><a href="#1-4-存活探测" class="headerlink" title="1.4 存活探测"></a>1.4 存活探测</h3><blockquote>
+<p>子域名拉取后, 存在大量死链, 下一步进行资产过滤</p>
+</blockquote>
+<ul>
+<li><p>httpx</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基础用法: 只看哪些域名活了</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent</span><br><span class="line"><span class="comment"># 带状态码, 标题, 技术栈(常用)</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent -sc -title -tech-detect</span><br><span class="line"><span class="comment"># 输出到文件</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent -sc -title -o live.txt</span><br><span class="line">httpx -l subs.txt -silent -sc -title -tech-detect -o live.txt (更常用)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h3 id="1-5-指纹识别"><a href="#1-5-指纹识别" class="headerlink" title="1.5 指纹识别"></a>1.5 指纹识别</h3><ol>
+<li>浏览器插件 Wappalyzer</li>
+<li>httpx 批量识别 (-tech-detect)</li>
+</ol>
+<hr>
+<h3 id="1-6-真实IP收集"><a href="#1-6-真实IP收集" class="headerlink" title="1.6 真实IP收集"></a>1.6 真实IP收集</h3><p><strong>如何判断网站使用了CDN?</strong></p>
+<ol>
+<li><p>多地Ping: 若IP结果不唯一, 则使用了CDN</p>
+</li>
+<li><p>DNS解析: 返回多个IP</p>
+</li>
+<li><p>HTTP响应头分析: 使用 <code>curl -I</code> 查看响应头, 出现 <code>Server: cloudflare</code>, <code>X-Cache</code> 等字段</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 站长工具</span><br><span class="line">https://ping.chinaz.com/</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>如何绕过CDN?</strong></p>
+<ol>
+<li><p>很多网站只对主站或者高流量子站做CDN, 若使用真实IP的子站和主站处于同一个服务器或者C段, 则可通过子站IP辅助查找主站真实IP</p>
+</li>
+<li><p>历史DNS记录</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 微步</span><br><span class="line">https://x.threatbook.com/</span><br><span class="line"># ip138</span><br><span class="line">https://www.ip138.com/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>国外访问</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ping.pe/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>邮箱服务: 查看邮件头 <code>Received</code> 字段</p>
+</li>
+</ol>
+<hr>
+<h3 id="1-7-端口信息收集"><a href="#1-7-端口信息收集" class="headerlink" title="1.7 端口信息收集"></a>1.7 端口信息收集</h3><blockquote>
+<p>目标: 在存活资产基础上发现开放端口, 为服务识别和 Web 入口扩展做准备<br>原则: 先快后慢, 先全后精, 控制速率</p>
+</blockquote>
+<p><strong>扫描策略:</strong></p>
+<ul>
+<li>先对存活 IP 做常见端口快速扫描</li>
+<li>再对重点 IP 做全端口扫描</li>
+<li>最后用 nmap 对开放端口做精细识别</li>
+<li>CDN&#x2F;WAF 资产先尝试找真实 IP, 再扫端口</li>
+<li>非标端口发现后, 重新用 httpx 探测 Web 服务</li>
+</ul>
+<p><strong>常用工具:</strong></p>
+<p>naabu: 快速对全端口进行扫描</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 常见端口快速扫描</span></span><br><span class="line">naabu -l live_ips.txt -top-ports 1000 -rate 1000 -o common_ports.txt</span><br><span class="line"><span class="comment"># 2. 重点 IP 全端口扫描</span></span><br><span class="line">naabu -l key_ips.txt -p - -rate 1000 -o all_ports.txt</span><br></pre></td></tr></table></figure>
+
+<p>nmap 精细识别</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 常见 Web 端口</span></span><br><span class="line">nmap -sV -sC -Pn -iL live_ips.txt -p 80,443,8080,8443,8000,9000,9443 -oA nmap_web</span><br><span class="line"><span class="comment"># 全端口精细扫描，速度较慢</span></span><br><span class="line">nmap -sV -sC -Pn -p- --min-rate 1000 -iL live_ips.txt -oA nmap_full</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-8-Web信息收集"><a href="#1-8-Web信息收集" class="headerlink" title="1.8 Web信息收集"></a>1.8 Web信息收集</h3><p>目录信息收集:</p>
+<p>dirsearch工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirsearch -u https://target.com -e *</span><br></pre></td></tr></table></figure>
+
+<p>浏览器插件FindSomething</p>
+<hr>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/dirsearch/" rel="tag"># dirsearch</a>
+              <a href="/tags/OneForAll/" rel="tag"># OneForAll</a>
+              <a href="/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="tag"># 信息收集</a>
+              <a href="/tags/FOFA/" rel="tag"># FOFA</a>
+              <a href="/tags/subfinder/" rel="tag"># subfinder</a>
+              <a href="/tags/%E5%B0%8F%E8%93%9D%E6%9C%AC/" rel="tag"># 小蓝本</a>
+              <a href="/tags/httpx/" rel="tag"># httpx</a>
+              <a href="/tags/CDN/" rel="tag"># CDN</a>
+              <a href="/tags/nmap/" rel="tag"># nmap</a>
+              <a href="/tags/naabu/" rel="tag"># naabu</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/11/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-11-%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E8%AE%BE%E5%A4%87/" rel="prev" title="安全产品设备">
+                  <i class="fa fa-angle-left"></i> 安全产品设备
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/" rel="next" title="WAF">
+                  WAF <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Byron</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"byroins/penetration-testing","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

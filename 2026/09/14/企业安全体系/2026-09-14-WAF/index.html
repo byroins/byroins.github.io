@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"byroins.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"atom-one-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":2,"unescape":true,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1.0 WAF1.1 简介WAF (Web应用防火墙, Web Application Firewall) 专门用于保护Web应用免受常见网络攻击的安全工具, 通过监控和过滤HTTP&#x2F;HTTPS流量, 阻止各种基于Web应用的攻击, 如: SQL注入, XSS, include_file等… 1.2 WAF工作原理WAF位于用户与Web服务器之间, 作为过滤层检查进入和离开服务器的流量.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WAF">
+<meta property="og:url" content="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/index.html">
+<meta property="og:site_name" content="Byron">
+<meta property="og:description" content="1.0 WAF1.1 简介WAF (Web应用防火墙, Web Application Firewall) 专门用于保护Web应用免受常见网络攻击的安全工具, 通过监控和过滤HTTP&#x2F;HTTPS流量, 阻止各种基于Web应用的攻击, 如: SQL注入, XSS, include_file等… 1.2 WAF工作原理WAF位于用户与Web服务器之间, 作为过滤层检查进入和离开服务器的流量.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/1.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/2.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/3.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/4.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/5.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/6.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/7.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/8.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/9.png">
+<meta property="og:image" content="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/10.png">
+<meta property="article:published_time" content="2026-09-14T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-15T07:50:40.506Z">
+<meta property="article:author" content="Byron">
+<meta property="article:tag" content="WAF">
+<meta property="article:tag" content="WAF绕过">
+<meta property="article:tag" content="内联注释">
+<meta property="article:tag" content="安全狗">
+<meta property="article:tag" content="雷池WAF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/1.png">
+
+
+<link rel="canonical" href="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/","path":"2026/09/14/企业安全体系/2026-09-14-WAF/","title":"WAF"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>WAF | Byron</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Byron" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Byron</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Web Application Security Research & Exploit Development</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-WAF"><span class="nav-number">1.</span> <span class="nav-text">1.0 WAF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-WAF%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 WAF工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-WAF%E7%9A%84%E9%98%B2%E6%8A%A4%E5%8E%9F%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 WAF的防护原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-WAF%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 WAF的类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-%E5%B8%B8%E8%A7%81WAF%E7%89%B9%E5%BE%81"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 常见WAF特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-WAF-%E9%83%A8%E7%BD%B2"><span class="nav-number">1.6.</span> <span class="nav-text">1.6 WAF 部署</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E5%AE%89%E5%85%A8%E7%8B%97"><span class="nav-number">1.6.1.</span> <span class="nav-text">01 安全狗</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E9%9B%B7%E6%B1%A0WAF-%E9%95%BF%E4%BA%AD%E7%A7%91%E6%8A%80"><span class="nav-number">1.6.2.</span> <span class="nav-text">02 雷池WAF(长亭科技)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-0-WAF%E7%BB%95%E8%BF%87"><span class="nav-number">2.</span> <span class="nav-text">2.0 WAF绕过</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E6%95%B0%E6%8D%AE%E7%BB%95%E8%BF%87"><span class="nav-number">2.1.</span> <span class="nav-text">01 数据绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E6%95%B0%E6%8D%AE%E6%8F%90%E4%BA%A4%E7%BB%95%E8%BF%87"><span class="nav-number">2.2.</span> <span class="nav-text">02 数据提交绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#03-%E5%85%B6%E4%BB%96%E6%96%B9%E5%BC%8F"><span class="nav-number">2.3.</span> <span class="nav-text">03 其他方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%BB%95%E8%BF%87%E5%AE%9E%E6%88%98"><span class="nav-number">2.4.</span> <span class="nav-text">2.1 绕过实战</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Byron"
+      src="/images/private/icon1.png">
+  <p class="site-author-name" itemprop="name">Byron</p>
+  <div class="site-description" itemprop="description">Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/byroins/penetration-testing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;byroins&#x2F;penetration-testing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="WAF | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          WAF
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-09-14 22:00:00" itemprop="dateCreated datePublished" datetime="2026-09-14T22:00:00+08:00">2026-09-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-09-15 15:50:40" itemprop="dateModified" datetime="2026-09-15T15:50:40+08:00">2026-09-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/" itemprop="url" rel="index"><span itemprop="name">企业安全体系</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/WAF/" itemprop="url" rel="index"><span itemprop="name">WAF</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="1-0-WAF"><a href="#1-0-WAF" class="headerlink" title="1.0 WAF"></a>1.0 WAF</h2><h3 id="1-1-简介"><a href="#1-1-简介" class="headerlink" title="1.1 简介"></a>1.1 简介</h3><p>WAF (Web应用防火墙, Web Application Firewall) 专门用于保护Web应用免受常见网络攻击的安全工具, 通过监控和过滤HTTP&#x2F;HTTPS流量, 阻止各种基于Web应用的攻击, 如: SQL注入, XSS, include_file等…</p>
+<h3 id="1-2-WAF工作原理"><a href="#1-2-WAF工作原理" class="headerlink" title="1.2 WAF工作原理"></a>1.2 WAF工作原理</h3><p>WAF位于用户与Web服务器之间, 作为过滤层检查进入和离开服务器的流量. 当用户请求到达Web应用时, WAF会根据预定义的规则对这些请求进行分析, 并阻止符合攻击特征的请. 例如:</p>
+<ul>
+<li>阻止恶意SQL查询, 防止SQL注入攻</li>
+<li>拦截恶意的JavaScript代码, 防止XSS</li>
+<li>检测文件上传请求中的恶意文件</li>
+</ul>
+<h3 id="1-3-WAF的防护原理"><a href="#1-3-WAF的防护原理" class="headerlink" title="1.3 WAF的防护原理"></a>1.3 WAF的防护原理</h3><p>WAF之所以能够起到对网络应用的防护作用, 主要是基于以下手段:</p>
+<ol>
+<li>异常检测机制: 拒绝不符合HTTP标准的请求;</li>
+<li>黑名单 &#x2F; 白名单;</li>
+<li>基于规则和异常的保护: 定义安全规则或异常状态, 对服务器进行安全防护;</li>
+<li>扫描器识别: 对于扫描器特征会进行识别以及拦截</li>
+</ol>
+<h3 id="1-4-WAF的类型"><a href="#1-4-WAF的类型" class="headerlink" title="1.4 WAF的类型"></a>1.4 WAF的类型</h3><ol>
+<li><p><strong>软件型WAF:</strong> 本身是一个软件, 部署在服务器上, 检测是否存在Web攻击;</p>
+</li>
+<li><p><strong>硬件型WAF:</strong> 本身是一款硬件, 可以有多种部署方式, 如果是串联到链路中, 则可以拦截恶意流量, 如果是以旁路的形式部署, 则只能记录攻击但是不能拦截. 硬件型WAF一般而言比软件型WAF更加昂贵, 但是检测速度快, 不易成为网站瓶颈.</p>
+</li>
+<li><p><strong>云WAF:</strong> 云WAF简单理解为带有WAF功能的CDN, 因为其实现机理与CDN基本相同, 都是通过更改目标站点的DNS记录, 使其指向云WAF, 然后对站点的访问进行过滤. 云WAF通常以反向代理的方式进行工作, 其最大的优点是方便快捷, 但是如果攻击者能够找到站点的真实IP地址, 那么云WAF就存在被直接绕过的风险.</p>
+</li>
+<li><p><strong>站点内置WAF:</strong> 站点内置WAF, 即网站的开发者考虑到站点的安全性, 将一些过滤功能写成代码, 嵌入到站点内, 或者直接嵌入到页面代码中, 或者以一个单独的文件列出, 然后被相关页面所引用. 这种WAF的灵活性非常高, 因为是直接开发在页面上, 因此可以针对一项非常具体的业务, 乃至一个微小的功能来实现检测和规律, 但是相应的其通用型就比较低了.</p>
+</li>
+</ol>
+<h3 id="1-5-常见WAF特征"><a href="#1-5-常见WAF特征" class="headerlink" title="1.5 常见WAF特征"></a>1.5 常见WAF特征</h3><ol>
+<li><p>360 Firewa</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">拦截状态码 493</span><br><span class="line"><span class="section">响应头包含: X-Powered-By-360WZB</span></span><br><span class="line"><span class="section">引用指向: http://wangshen.360.cn</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>阿里云盾</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">拦截状态码 <span class="number">405</span></span><br><span class="line">引用指向http<span class="punctuation">:</span><span class="comment">//errors.aliyun.com</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>AWS</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">拦截状态码为<span class="number">403</span></span><br><span class="line">响应内容头部<span class="keyword">server</span>包含<span class="string">&quot;AWS&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>百度云加速</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server字段可能会为”Yunjiasu<span class="punctuation">-</span>nginx<span class="string">&quot;或&quot;</span>Yunjiasu<span class="string">&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Cloudflare</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">![<span class="number">1</span>]<span class="punctuation">(</span><span class="number">1</span>.png<span class="punctuation">)</span>响应头部<span class="punctuation">:</span> 可能有cf<span class="punctuation">-</span>ray字段<span class="punctuation">;</span> server字段包含”cloudflare<span class="string">&quot;;Set-Cookie包含&quot;</span>__cfuid<span class="punctuation">=</span><span class="string">&quot;.</span></span><br><span class="line">响应内容<span class="punctuation">:</span> 可能包含<span class="string">&quot;Attention Required!&quot;</span>或<span class="string">&quot;Cloudflare Ray ID:&quot;</span><span class="punctuation">;</span> 请求无效URL会有<span class="string">&quot;CLOUDFLARE</span></span><br><span class="line">_ERROR_500S_BOX<span class="string">&quot;返回</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<h3 id="1-6-WAF-部署"><a href="#1-6-WAF-部署" class="headerlink" title="1.6 WAF 部署"></a>1.6 WAF 部署</h3><h4 id="01-安全狗"><a href="#01-安全狗" class="headerlink" title="01 安全狗"></a>01 安全狗</h4><blockquote>
+<p>网站安全狗是一款服务器安全防护软件, 是为IDC运营商, 虚拟主机服务商, 企业主机, 服务器管理者等用户提供服务器安全防范的实用系统, 是集网站内容安全防护, 网站资源保护及网站流量保护功能为一体的服务器工具.</p>
+</blockquote>
+<p>官网:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.safedog.cn/website_safedog.html</span><br></pre></td></tr></table></figure>
+
+<p>安全狗是基于Apache服务才能扫描Apache文件使得安装成功, 在安装安全狗之前需先将Apache安装为服务</p>
+<ol>
+<li><p>管理员命令提示符安装服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">httpd.exe -k install -n apache2.4</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/1.png"></p>
+</li>
+<li><p>服务启动</p>
+<p><img data-src="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/2.png"></p>
+</li>
+<li><p>程序安装&amp;目录配置</p>
+<p><img data-src="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/3.png"></p>
+</li>
+<li><p>验证</p>
+<p><img data-src="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/4.png"></p>
+</li>
+</ol>
+<hr>
+<h4 id="02-雷池WAF-长亭科技"><a href="#02-雷池WAF-长亭科技" class="headerlink" title="02 雷池WAF(长亭科技)"></a>02 雷池WAF(长亭科技)</h4><p>参考官方安装部署文档</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://help.waf-ce.chaitin.cn/node/</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-0-WAF绕过"><a href="#2-0-WAF绕过" class="headerlink" title="2.0 WAF绕过"></a>2.0 WAF绕过</h2><blockquote>
+<p>靶场: Windows10 PHPStudy sqli-labs</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>WAF绕过本质: WAF检测规则识别不到输入的敏感字符, 即利用WAF规则漏洞进行绕过.</p>
+</blockquote>
+<hr>
+<h4 id="01-数据绕过"><a href="#01-数据绕过" class="headerlink" title="01 数据绕过"></a>01 数据绕过</h4><ol>
+<li><p>大小写绕过: 如: <code>union select</code> 改为 <code>UniON SeLeCt</code></p>
+</li>
+<li><p>参数加解密绕过: <code>database()</code>使用base64加密为 <code>ZGF0YWJhc2UoKQ==</code></p>
+</li>
+<li><p>参数编码解码绕过: 针对WAF过滤的字符编码, 如使用URL编码, Unicode编码, 十六进制编码, Hex编码等…</p>
+</li>
+<li><p>使用特殊符号绕过</p>
+</li>
+<li><p>使用等价函数, 同义符号绕过 如: <code>and</code> 等价于<code>&amp;&amp;</code></p>
+</li>
+<li><p>注释符混用绕</p>
+</li>
+<li><p>内联注释绕过: 如: 安全狗对database()函数进行拦截, 因此, 可以改写为<code>database/**/()</code> 或 <code>union selecte</code>&#x3D;<code>/*!union*/ select</code>, 注释符中感叹号后面的内容会被mysql执行</p>
+</li>
+<li><p>双关键字绕过: 如: <code>script</code> 写为 <code>ScscriptRipt</code></p>
+</li>
+<li><p>HTTP参污染: 对目标发送多个参数, 如果目标没有多参数进行多次过滤, 那么WAF对多个参数只会识别其中的一个. 如: <code>?id=1&amp;id=2&amp;id=3</code> 或<code>?id=1/**&amp;id=-1%20union%20select%201,2,3%23*/</code></p>
+</li>
+</ol>
+<hr>
+<h4 id="02-数据提交绕过"><a href="#02-数据提交绕过" class="headerlink" title="02 数据提交绕过"></a>02 数据提交绕过</h4><p>更改数据提交方式: GET方式改为POST提交</p>
+<hr>
+<h4 id="03-其他方式"><a href="#03-其他方式" class="headerlink" title="03 其他方式"></a>03 其他方式</h4><ol>
+<li>FUZZ工具绕过</li>
+<li>数据库特性绕过</li>
+</ol>
+<hr>
+<h3 id="2-1-绕过实战"><a href="#2-1-绕过实战" class="headerlink" title="2.1 绕过实战"></a>2.1 绕过实战</h3><blockquote>
+<p>基于sqli-labs Less-1 + 安全狗; 内联注释方式绕过</p>
+</blockquote>
+<hr>
+<p>01 靶场访问传入<code>?id=1&#39;--+</code></p>
+<p><img data-src="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/5.png"></p>
+<blockquote>
+<p>页面正常返回参数</p>
+</blockquote>
+<hr>
+<p>02 <code>传入?id=1&#39; and 1=1--+</code></p>
+<p><img data-src="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/6.png"></p>
+<blockquote>
+<p>页面触发WAF被拦截 </p>
+</blockquote>
+<hr>
+<p>03 分析: 手工测试WAF拦截点</p>
+<ul>
+<li>?id&#x3D;1’ and–+ (页面正常报语法错误)</li>
+<li>?id&#x3D;1’ and 1–+ (触发WAF拦截)</li>
+</ul>
+<p>可以确定WAF触发点→and与1</p>
+<hr>
+<p>04 利用BurpSuite爆破</p>
+<blockquote>
+<p>基于内联注释爆破</p>
+</blockquote>
+<p><img data-src="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/7.png"></p>
+<p><img data-src="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/8.png"></p>
+<blockquote>
+<p>成功爆破绕过, 且长度为935的均为可绕过字符</p>
+</blockquote>
+<hr>
+<p>05 探测列数</p>
+<ul>
+<li>?id&#x3D;1’ order by –+ 触发拦截</li>
+<li>手工验证, 确定触发点为order by函数, 且可内联注释的点为空格位置</li>
+<li>使用上一步爆破的可绕过注释符</li>
+</ul>
+<p><img data-src="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/9.png"></p>
+<blockquote>
+<p>成功绕过并探测出列数&#x3D;3</p>
+</blockquote>
+<hr>
+<p>06 爆库</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&#x27; union/*/-*!!*/select 1,database/*/-*!!*/(),3--+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/10.png"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/WAF/" rel="tag"># WAF</a>
+              <a href="/tags/%E5%AE%89%E5%85%A8%E7%8B%97/" rel="tag"># 安全狗</a>
+              <a href="/tags/%E9%9B%B7%E6%B1%A0WAF/" rel="tag"># 雷池WAF</a>
+              <a href="/tags/WAF%E7%BB%95%E8%BF%87/" rel="tag"># WAF绕过</a>
+              <a href="/tags/%E5%86%85%E8%81%94%E6%B3%A8%E9%87%8A/" rel="tag"># 内联注释</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="prev" title="信息收集">
+                  <i class="fa fa-angle-left"></i> 信息收集
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Byron</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"byroins/penetration-testing","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>
