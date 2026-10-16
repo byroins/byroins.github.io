@@ -13,7 +13,27 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-10-16T08:40:36.223Z</updated>
+  <updated>2026-10-16T13:51:13.710Z</updated>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="vuln" scheme="https://byroins.github.io/categories/vuln/"/>
+    <category term="某后台管理系统Shiro反序列化认证绕过" scheme="https://byroins.github.io/categories/vuln/%E6%9F%90%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FShiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87/"/>
+    <category term="反序列化" scheme="https://byroins.github.io/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
+    <category term="Shiro-550" scheme="https://byroins.github.io/tags/Shiro-550/"/>
+    <category term="工具开发" scheme="https://byroins.github.io/tags/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/"/>
+    <category term="认证绕过" scheme="https://byroins.github.io/tags/%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87/"/>
+    <category term="ShiroForge" scheme="https://byroins.github.io/tags/ShiroForge/"/>
+    <id>https://byroins.github.io/2026/10/15/vuln/2026-10-12-%E6%9F%90%E4%BF%A1%E6%81%AF%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FShiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87/</id>
+    <link href="https://byroins.github.io/2026/10/15/vuln/2026-10-12-%E6%9F%90%E4%BF%A1%E6%81%AF%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FShiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87/"/>
+    <published>2026-10-15T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<h2 id="某信息科技有限公司后台管理系统-Shiro-反序列化认证绕过"><a href="#某信息科技有限公司后台管理系统-Shiro-反序列化认证绕过" class="headerlink" title="某信息科技有限公司后台管理系统 Shiro]]>
+    </summary>
+    <title>某后台管理系统Shiro反序列化认证绕过</title>
+    <updated>2026-10-16T13:51:13.710Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Byron</name>
@@ -63,8 +83,8 @@
       <name>Byron</name>
     </author>
     <category term="信息收集" scheme="https://byroins.github.io/categories/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/"/>
-    <category term="OneForAll" scheme="https://byroins.github.io/tags/OneForAll/"/>
     <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
+    <category term="OneForAll" scheme="https://byroins.github.io/tags/OneForAll/"/>
     <category term="信息收集" scheme="https://byroins.github.io/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/"/>
     <category term="FOFA" scheme="https://byroins.github.io/tags/FOFA/"/>
     <category term="subfinder" scheme="https://byroins.github.io/tags/subfinder/"/>
@@ -131,7 +151,6 @@
       <name>Byron</name>
     </author>
     <category term="Component-Framework" scheme="https://byroins.github.io/categories/Component-Framework/"/>
-    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <category term="组件漏洞" scheme="https://byroins.github.io/tags/%E7%BB%84%E4%BB%B6%E6%BC%8F%E6%B4%9E/"/>
     <category term="框架漏洞" scheme="https://byroins.github.io/tags/%E6%A1%86%E6%9E%B6%E6%BC%8F%E6%B4%9E/"/>
     <category term="shiro" scheme="https://byroins.github.io/tags/shiro/"/>
@@ -143,6 +162,7 @@
     <category term="CVE-2016-4437" scheme="https://byroins.github.io/tags/CVE-2016-4437/"/>
     <category term="ShiroAttack2" scheme="https://byroins.github.io/tags/ShiroAttack2/"/>
     <category term="ShiroScan" scheme="https://byroins.github.io/tags/ShiroScan/"/>
+    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <category term="SB-Actuator" scheme="https://byroins.github.io/tags/SB-Actuator/"/>
     <category term="JDumpSpider" scheme="https://byroins.github.io/tags/JDumpSpider/"/>
     <category term="heapdump_tool" scheme="https://byroins.github.io/tags/heapdump-tool/"/>
@@ -215,14 +235,14 @@
     </author>
     <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
     <category term="jwt" scheme="https://byroins.github.io/categories/web-security/jwt/"/>
-    <category term="Token" scheme="https://byroins.github.io/tags/Token/"/>
-    <category term="Cookie" scheme="https://byroins.github.io/tags/Cookie/"/>
-    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
     <category term="JWT" scheme="https://byroins.github.io/tags/JWT/"/>
     <category term="jwt_tool" scheme="https://byroins.github.io/tags/jwt-tool/"/>
+    <category term="Token" scheme="https://byroins.github.io/tags/Token/"/>
     <category term="Session" scheme="https://byroins.github.io/tags/Session/"/>
+    <category term="Cookie" scheme="https://byroins.github.io/tags/Cookie/"/>
     <category term="RS256" scheme="https://byroins.github.io/tags/RS256/"/>
     <category term="HS256" scheme="https://byroins.github.io/tags/HS256/"/>
+    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
     <id>https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/</id>
     <link href="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/"/>
     <published>2026-08-25T14:00:00.000Z</published>
@@ -270,12 +290,12 @@
     </author>
     <category term="tools" scheme="https://byroins.github.io/categories/tools/"/>
     <category term="basic-tools" scheme="https://byroins.github.io/categories/tools/basic-tools/"/>
+    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <category term="uv" scheme="https://byroins.github.io/tags/uv/"/>
     <category term="docker" scheme="https://byroins.github.io/tags/docker/"/>
     <category term="python" scheme="https://byroins.github.io/tags/python/"/>
     <category term="venv" scheme="https://byroins.github.io/tags/venv/"/>
     <category term="OneForAll" scheme="https://byroins.github.io/tags/OneForAll/"/>
-    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <id>https://byroins.github.io/2026/08/22/tools/2026-08-22-basic-tools/</id>
     <link href="https://byroins.github.io/2026/08/22/tools/2026-08-22-basic-tools/"/>
     <published>2026-08-22T14:00:00.000Z</published>
@@ -296,11 +316,11 @@
     </author>
     <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
     <category term="rce" scheme="https://byroins.github.io/categories/web-security/rce/"/>
+    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
     <category term="rce" scheme="https://byroins.github.io/tags/rce/"/>
     <category term="eval()" scheme="https://byroins.github.io/tags/eval/"/>
     <category term="system()" scheme="https://byroins.github.io/tags/system/"/>
     <category term="exec()" scheme="https://byroins.github.io/tags/exec/"/>
-    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
     <category term="过滤" scheme="https://byroins.github.io/tags/%E8%BF%87%E6%BB%A4/"/>
     <category term="绕过" scheme="https://byroins.github.io/tags/%E7%BB%95%E8%BF%87/"/>
     <category term="${IFS}" scheme="https://byroins.github.io/tags/IFS/"/>
@@ -323,11 +343,11 @@
     </author>
     <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
     <category term="csrf" scheme="https://byroins.github.io/categories/web-security/csrf/"/>
+    <category term="Token" scheme="https://byroins.github.io/tags/Token/"/>
+    <category term="Cookie" scheme="https://byroins.github.io/tags/Cookie/"/>
     <category term="csrf" scheme="https://byroins.github.io/tags/csrf/"/>
     <category term="同源策略" scheme="https://byroins.github.io/tags/%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5/"/>
     <category term="Referer" scheme="https://byroins.github.io/tags/Referer/"/>
-    <category term="Token" scheme="https://byroins.github.io/tags/Token/"/>
-    <category term="Cookie" scheme="https://byroins.github.io/tags/Cookie/"/>
     <id>https://byroins.github.io/2026/08/08/web-security/csrf/2026-08-08-csrf/</id>
     <link href="https://byroins.github.io/2026/08/08/web-security/csrf/2026-08-08-csrf/"/>
     <published>2026-08-08T14:00:00.000Z</published>
@@ -505,33 +525,5 @@
     </summary>
     <title>SQLMap</title>
     <updated>2026-07-16T08:02:51.305Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Byron</name>
-    </author>
-    <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
-    <category term="sql-injection" scheme="https://byroins.github.io/categories/web-security/sql-injection/"/>
-    <category term="sqli-labs" scheme="https://byroins.github.io/tags/sqli-labs/"/>
-    <category term="sql-injection" scheme="https://byroins.github.io/tags/sql-injection/"/>
-    <category term="boolean" scheme="https://byroins.github.io/tags/boolean/"/>
-    <category term="Time" scheme="https://byroins.github.io/tags/Time/"/>
-    <id>
-      <![CDATA[https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&time-blind-injection/]]>
-    </id>
-    <link href="https://byroins.github.io/2026/07/09/web-security/sql-injection/2026-07-09-boolean&amp;time-blind-injection/"/>
-    <published>2026-07-09T14:00:00.000Z</published>
-    <summary>
-      <![CDATA[<blockquote>
-<p>Environment: PHP 7.3.4 + MySQL 5.7.26</p>
-</blockquote>
-<blockquote>
-<p>Lab: sqli-labs Less-8</p>
-</blockquote>
-<hr>
-<h2]]>
-    </summary>
-    <title>Boolean and Time-blind-Injection</title>
-    <updated>2026-07-13T08:41:06.818Z</updated>
   </entry>
 </feed>

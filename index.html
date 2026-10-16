@@ -176,18 +176,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-count">30</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">169</span>
+        <span class="site-state-item-count">173</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -212,6 +212,331 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/10/15/vuln/2026-10-12-%E6%9F%90%E4%BF%A1%E6%81%AF%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FShiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/10/15/vuln/2026-10-12-%E6%9F%90%E4%BF%A1%E6%81%AF%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FShiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87/" class="post-title-link" itemprop="url">某后台管理系统Shiro反序列化认证绕过</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-10-15 22:00:00" itemprop="dateCreated datePublished" datetime="2026-10-15T22:00:00+08:00">2026-10-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-10-16 21:51:13" itemprop="dateModified" datetime="2026-10-16T21:51:13+08:00">2026-10-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/vuln/" itemprop="url" rel="index"><span itemprop="name">vuln</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/vuln/%E6%9F%90%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FShiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87/" itemprop="url" rel="index"><span itemprop="name">某后台管理系统Shiro反序列化认证绕过</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="某信息科技有限公司后台管理系统-Shiro-反序列化认证绕过"><a href="#某信息科技有限公司后台管理系统-Shiro-反序列化认证绕过" class="headerlink" title="某信息科技有限公司后台管理系统 Shiro 反序列化认证绕过"></a>某信息科技有限公司后台管理系统 Shiro 反序列化认证绕过</h2><blockquote>
+<p>声明：本次漏洞经历在授权状态下进行，企业信息已脱敏，不涉及任何破坏性操作 ！</p>
+</blockquote>
+<h3 id="00-危害"><a href="#00-危害" class="headerlink" title="00 危害"></a>00 危害</h3><table>
+<thead>
+<tr>
+<th>危害</th>
+<th>说明</th>
+<th>证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>认证绕过 &#x2F; 未授权访问后台</strong></td>
+<td>无需任何账号密码，直接取得后台身份（本次为 <code>id=1</code> 超管）</td>
+<td>5 个后台页 302 → <strong>200</strong></td>
+</tr>
+<tr>
+<td><strong>业务数据暴露</strong></td>
+<td>后台含订单、生产统计、报价等业务模块（属企业生产经营数据）</td>
+<td>登录后台可见菜单与模块</td>
+</tr>
+<tr>
+<td><strong>组件信息泄露</strong></td>
+<td>Druid 监控台、Swagger 文档、运行时信息（JDK 版本、部署包名）对外可达</td>
+<td><code>/druid/basic.json</code> 等 200</td>
+</tr>
+<tr>
+<td><strong>凭据级风险</strong></td>
+<td>一枚 cookie 等于一个管理员会话凭据；且<strong>无过期、可复用</strong></td>
+<td>重复请求均 200</td>
+</tr>
+</tbody></table>
+<ul>
+<li>该漏洞根因属 <strong>CVE-2016-4437</strong>（Shiro <code>&lt; 1.2.5</code> 硬编码默认密钥）同类问题：<br>NVD 评分 <strong>9.8 CRITICAL</strong>，且已被 <strong>CISA KEV</strong> 收录。</li>
+<li>本次实际利用到的是其中的<strong>认证绕过</strong>层面，按国内平台通常落在<strong>高危</strong>（”绕过认证访问后台 &#x2F; 敏感数据”）。</li>
+</ul>
+<hr>
+<h3 id="01-信息收集"><a href="#01-信息收集" class="headerlink" title="01 信息收集"></a>01 信息收集</h3><p>通过信息收集的方式发现目标公司部署了 Webstack-Guns 后台管理系统</p>
+<p>指纹识别：</p>
+<ol>
+<li><p>挂 BurpSuite 代理打开该站点 <a href="http://target:port/（站点信息脱敏）">http://target:port/（站点信息脱敏）</a></p>
+</li>
+<li><p>请求包写入：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>rememberMe=1</span><br></pre></td></tr></table></figure>
+<p>响应内容：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Set-Cookie</span><span class="punctuation">: </span>rememberMe=deleteMe</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/10/15/vuln/2026-10-12-%E6%9F%90%E4%BF%A1%E6%81%AF%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FShiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87/1.png"></p>
+</li>
+<li><p>同时 ShiroScan 插件获取目标网站 rememberMe 的 AES 密钥</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Key Z3VucwAAAAAAAAAAAAAAAA== (AES-128-CBC)</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/10/15/vuln/2026-10-12-%E6%9F%90%E4%BF%A1%E6%81%AF%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FShiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87/2.png"></p>
+<blockquote>
+<p>解码后是 <code>67 75 6e 73</code> + 12 个 <code>00 </code>也就是字符串 <strong><code>guns</code></strong> 补零到 16 字节</p>
+</blockquote>
+<hr>
+</li>
+<li><p>ShiroAttack2 工具尝试打RCE</p>
+<p><strong>操作</strong>：ShiroAttack2 遍历「利用链 × 回显方式」矩阵</p>
+<p><strong>结果</strong>：现有利用链全部测试，未发现可用组合；无命令回显</p>
+<hr>
+</li>
+</ol>
+<h3 id="02-换思路，构造”字符串身份”"><a href="#02-换思路，构造”字符串身份”" class="headerlink" title="02 换思路，构造”字符串身份”"></a>02 换思路，构造”字符串身份”</h3><ul>
+<li><p><strong>目的</strong>：验证”服务端是否真的会把我们塞的对象当成身份”。</p>
+</li>
+<li><p><strong>原理</strong>：载荷 &#x3D; <code>SimplePrincipalCollection</code>（Shiro 自带容器）+ <strong>一个字符串</strong>。<br>字符串是本地必然存在的类，因此<strong>一定能被反序列化</strong>，用来做”通行对照”。</p>
+</li>
+<li><p><strong>操作</strong>：用密钥加密该载荷，得到 cookie，访问 <code>/admin</code>：</p>
+</li>
+</ul>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/admin</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>******</span><br><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>rememberMe=&lt;SPC + 字符串 的密文&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>结果</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>请求</th>
+<th>状态码</th>
+<th><code>deleteMe</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无 cookie</td>
+<td>302 → <code>/login</code></td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>字符串身份</strong></td>
+<td><strong>500</strong></td>
+<td><strong>无</strong></td>
+</tr>
+<tr>
+<td>错误密钥</td>
+<td>302 → <code>/login</code></td>
+<td><strong>有</strong></td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>判断</strong></li>
+</ul>
+<ol>
+<li><code>deleteMe</code> <strong>消失</strong> ⇒ 密钥正确、<strong>服务端解开了并反序列化成功</strong>；</li>
+<li>状态码从 <code>302</code> 变成 <code>500</code> ⇒ <strong>请求已经被放行到业务代码</strong>（过滤器被绕过）；</li>
+<li><code>500</code> 的原因 &#x3D; 业务代码要把 principal <strong>强转成它自己的用户类</strong>，而我们是 <code>String</code>，转不过去。</li>
+</ol>
+<hr>
+<h3 id="03-接口发现"><a href="#03-接口发现" class="headerlink" title="03 接口发现"></a>03 接口发现</h3><ul>
+<li><p><strong>目的</strong>：找出哪些路径在”已认证”状态下可用（→ 也顺带确认凭据覆盖范围）。</p>
+</li>
+<li><p><strong>操作</strong>：带着上一步的”字符串身份” cookie 扫描常见路径。</p>
+</li>
+<li><p><strong>实测结果</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>状态码</th>
+<th>长度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/druid/index.html</code></td>
+<td><strong>200</strong></td>
+<td>3379 B</td>
+</tr>
+<tr>
+<td><code>/swagger-ui.html</code></td>
+<td><strong>200</strong></td>
+<td>3318 B</td>
+</tr>
+<tr>
+<td><code>/index</code>、<code>/main</code>、<code>/user/list</code>、<code>/welcome</code></td>
+<td>404</td>
+<td>—</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>判据</strong>：过滤器确实被绕过（否则全部 302）</p>
+</li>
+</ul>
+<hr>
+<h3 id="04-读运行信息—定位产品与部署包"><a href="#04-读运行信息—定位产品与部署包" class="headerlink" title="04 读运行信息—定位产品与部署包"></a>04 读运行信息—定位产品与部署包</h3><ul>
+<li><p><strong>目的</strong>：不用猜产品，直接从目标自己吐的信息里拿。</p>
+</li>
+<li><p><strong>操作</strong>：访问 Druid 的运行时信息接口 <code>/druid/basic.json</code>。</p>
+</li>
+<li><p><strong>实测结果</strong>（关键字段）：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;JavaVersion&quot;</span><span class="punctuation">:</span><span class="string">&quot;1.8.0_231&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;JavaClassPath&quot;</span><span class="punctuation">:</span><span class="string">&quot;Webstack-Guns-1.0.jar&quot;</span><span class="punctuation">,</span> ...<span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>另可见 Druid <code>1.1.10</code>、数据库驱动 <code>com.mysql.cj.jdbc.Driver</code>。</p>
+</li>
+<li><p><strong>判据</strong>：</p>
+<ul>
+<li><code>JavaClassPath</code> &#x3D; <strong>部署包名</strong> ⇒ 目标就是开源产品 <strong>Webstack-Guns</strong>（对应其 GitHub 源码）；</li>
+<li><code>JavaVersion 1.8.0_231</code> ⇒ <strong>JDK 8</strong>（这解释了为什么经典 gadget 理论上应可用，RCE 失败更可能是<strong>链&#x2F;回显适配</strong>问题，而不是 JDK 限制）。</li>
+</ul>
+<p><img data-src="/2026/10/15/vuln/2026-10-12-%E6%9F%90%E4%BF%A1%E6%81%AF%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FShiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87/3.png"></p>
+</li>
+</ul>
+<hr>
+<h3 id="05-定位”身份类”的类名与字段"><a href="#05-定位”身份类”的类名与字段" class="headerlink" title="05 定位”身份类”的类名与字段"></a>05 定位”身份类”的类名与字段</h3><ul>
+<li><p><strong>目的</strong>：拿到目标期望的 <code>User</code> 类的<strong>全限定名</strong>与<strong>字段清单</strong>。</p>
+</li>
+<li><p><strong>操作</strong>：按包名去 GitHub 读该产品源码（<code>ShiroConfig</code> &#x2F; <code>ShiroUser</code> &#x2F; 过滤器配置）。</p>
+</li>
+<li><p><strong>实测结果</strong>：该产品有<strong>多个分支</strong>，每个分支的包名不同，字段基本一致：</p>
+<table>
+<thead>
+<tr>
+<th>分支</th>
+<th>用户类全限定名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>分支一</td>
+<td><code>com.jsnjfz.manage.core.shiro.ShiroUser</code></td>
+</tr>
+<tr>
+<td>分支二</td>
+<td><code>com.nikati.manage.core.shiro.ShiroUser</code></td>
+</tr>
+</tbody></table>
+<p>字段（两者相同）：<code>id</code> &#x2F; <code>account</code> &#x2F; <code>name</code> &#x2F; <code>deptId</code> &#x2F; <code>roleList</code> &#x2F; <code>deptName</code> &#x2F; <code>roleNames</code>，<br>且 <code>implements Serializable</code>、<strong>未显式声明 <code>serialVersionUID</code></strong>（即按字段结构计算出 UID，通常与 <code>1L</code> 一致）。</p>
+</li>
+<li><p><strong>判据</strong>：</p>
+<ul>
+<li><strong>类名必须与目标一字不差</strong> —— 类不在目标 classpath 上 ⇒ <code>ClassNotFoundException</code> ⇒ <code>deleteMe</code>；</li>
+<li>产品<strong>分多个分支</strong> ⇒ 无法从外观判断 ⇒ <strong>只能盲测</strong>（各造一张卡试一次）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="06-Shiro-认证绕过工具（ShiroForge-原创已开源）"><a href="#06-Shiro-认证绕过工具（ShiroForge-原创已开源）" class="headerlink" title="06 Shiro 认证绕过工具（ShiroForge 原创已开源）"></a>06 Shiro 认证绕过工具（ShiroForge 原创已开源）</h3><p><strong>实测结果</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>身份类</th>
+<th><code>/admin</code> 结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>com.jsnjfz.manage.core.shiro.ShiroUser</code></td>
+<td><strong>200</strong>（后台主页）✅</td>
+</tr>
+<tr>
+<td><code>com.nikati.manage.core.shiro.ShiroUser</code></td>
+<td>302 → <code>/login</code> + <code>deleteMe</code> ❌</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>Payload构造</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv run shiroforge.py make <span class="literal">--class</span> com.jsnjfz.manage.core.shiro.ShiroUser <span class="literal">--key</span> Z3VucwAAAAAAAAAAAAAAAA== <span class="literal">--id</span> <span class="number">1</span> <span class="literal">--account</span> admin <span class="literal">-o</span> Cookie.txt</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/10/15/vuln/2026-10-12-%E6%9F%90%E4%BF%A1%E6%81%AF%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FShiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87/4.png"></p>
+<hr>
+</li>
+<li><p>后台接管</p>
+<p><img data-src="/2026/10/15/vuln/2026-10-12-%E6%9F%90%E4%BF%A1%E6%81%AF%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FShiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87/5.png"></p>
+</li>
+</ul>
+<hr>
+<h3 id="07-修复建议"><a href="#07-修复建议" class="headerlink" title="07 修复建议"></a>07 修复建议</h3><ol>
+<li><strong>轮换 <code>cipherKey</code> 为随机值</strong>（取消使用任何公开字典里的默认键）；</li>
+<li><strong>不需要 rememberMe 功能可关</strong>（<code>setRememberMeManager(null)</code>），从根源关闭客户端可控反序列化；</li>
+<li><strong>升级 Apache Shiro</strong> 到已修复版本，并核对 1.2.5 之后的所有相关 CVE；</li>
+<li><strong>启用 JEP 290 反序列化过滤器（白名单）</strong> —— 即使密钥再次泄漏，也能阻断反序列化利用；</li>
+<li><strong>收敛敏感端点</strong>：Druid 监控台 &#x2F; Swagger 不应对外网开放，且需加认证。</li>
+</ol>
+<p><strong>检测 &#x2F; 排查</strong></p>
+<ol start="6">
+<li>排查历史日志中的 <strong>Shiro 反序列化异常</strong>与<strong>异常长度的 <code>rememberMe</code> cookie</strong>；</li>
+<li>WAF 可对”超长 <code>rememberMe</code> + 异常请求头”组合做拦截。</li>
+</ol>
+<hr>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2962,132 +3287,6 @@
 <h4 id="04-修改签名算法"><a href="#04-修改签名算法" class="headerlink" title="04 修改签名算法"></a>04 修改签名算法</h4><p>漏洞原理: </p>
 <p>服务端使用RS256: 私钥签名, 公钥验证, 但服务端并未写死验证算法, 读取alg字段, 可以将<code>RS256</code>, 修改为<code>HS256</code>, 通过公钥文件当<code>HMAC‑HS256</code>对称密钥校验签名.</p>
 <hr>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/08/24/web-security/vulhub/2026-08-24-vulhub-base/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/private/icon1.png">
-      <meta itemprop="name" content="Byron">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Byron">
-      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Byron">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/24/web-security/vulhub/2026-08-24-vulhub-base/" class="post-title-link" itemprop="url">Vulhub-Base</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-08-24 22:00:00" itemprop="dateCreated datePublished" datetime="2026-08-24T22:00:00+08:00">2026-08-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-09-02 22:13:22" itemprop="dateModified" datetime="2026-09-02T22:13:22+08:00">2026-09-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/web-security/" itemprop="url" rel="index"><span itemprop="name">web-security</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/web-security/vulhub/" itemprop="url" rel="index"><span itemprop="name">vulhub</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>Environment: Ubuntu 22.04 Docker</p>
-</blockquote>
-<blockquote>
-<p>Lab: Vulhub</p>
-</blockquote>
-<hr>
-<h2 id="1-0-靶场搭建"><a href="#1-0-靶场搭建" class="headerlink" title="1.0 靶场搭建"></a>1.0 靶场搭建</h2><p>01 官方网址</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://vulhub.org/zh</span><br></pre></td></tr></table></figure>
-
-<p>02 仓库克隆</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/vulhub/vulhub.git</span><br><span class="line"># 临时代理</span><br><span class="line">HTTP_PROXY=http://ip:port HTTPS_PROXY=http://ip:port git clone https://github.com/vulhub/vulhub.git</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-0-靶场下载"><a href="#2-0-靶场下载" class="headerlink" title="2.0 靶场下载"></a>2.0 靶场下载</h2><p>案例: CVE-2023-27524</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/vulhub/superset/CVE-2023-27524</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/08/24/web-security/vulhub/2026-08-24-vulhub-base/1.png"></p>
-<p>使用docker拉取靶场</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
-
-<h4 id="网络问题解决方案"><a href="#网络问题解决方案" class="headerlink" title="网络问题解决方案:"></a>网络问题解决方案:</h4><ul>
-<li><p>执行<code>docker compose up -d</code>时, 由于国内网络问题, 导致镜像pull失败, 返回<code>connection reset by peer </code></p>
-</li>
-<li><p><strong>HTTP</strong> 代理</p>
-</li>
-</ul>
-<blockquote>
-<p>写入以下内容</p>
-</blockquote>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/etc/systemd/system/docker.service.d/http-proxy.conf</span><br><span class="line">[Service]</span><br><span class="line">Environment=<span class="string">&quot;HTTP_PROXY=http://ip:7897&quot;</span></span><br><span class="line">Environment=<span class="string">&quot;HTTPS_PROXY=http://ip:7897&quot;</span></span><br><span class="line">Environment=<span class="string">&quot;NO_PROXY=localhost,127.0.0.1,10.0.0.0/8&quot;</span></span><br></pre></td></tr></table></figure>
-
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置重载</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
-
-<p>  <img data-src="/2026/08/24/web-security/vulhub/2026-08-24-vulhub-base/2.png"></p>
-<blockquote>
-<p>成功pull image </p>
-<p>备注: 配置代理需清空daemon.json第三方镜像源</p>
-</blockquote>
 
       
     </div>
