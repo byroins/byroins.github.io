@@ -221,7 +221,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/10/01/project/2026-10-01-Hermes-PentestAgent/">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/10/01/Hermes-PentestAgent/2026-10-01-Hermes-PentestAgent/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/private/icon1.png">
@@ -239,7 +239,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/10/01/project/2026-10-01-Hermes-PentestAgent/" class="post-title-link" itemprop="url">Hermes-PentestAgent</a>
+          <a href="/2026/10/01/Hermes-PentestAgent/2026-10-01-Hermes-PentestAgent/" class="post-title-link" itemprop="url">Hermes-PentestAgent</a>
         </h2>
 
         <div class="post-meta-container">
@@ -257,7 +257,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-10-15 10:36:28" itemprop="dateModified" datetime="2026-10-15T10:36:28+08:00">2026-10-15</time>
+      <time title="Modified: 2026-10-16 16:40:36" itemprop="dateModified" datetime="2026-10-16T16:40:36+08:00">2026-10-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -331,7 +331,7 @@
 <li><strong>决策可干预</strong>：阶段之间由人放行，模型不自主跨越阶段。</li>
 </ul>
 <h3 id="3-2-总体架构"><a href="#3-2-总体架构" class="headerlink" title="3.2 总体架构"></a>3.2 总体架构</h3><p>系统由三个组件层与三个自研层构成，如图 1 所示。</p>
-<p><img data-src="/2026/10/01/project/2026-10-01-Hermes-PentestAgent/architecture.png" alt="系统总体架构"></p>
+<p><img data-src="/2026/10/01/Hermes-PentestAgent/2026-10-01-Hermes-PentestAgent/architecture.png" alt="系统总体架构"></p>
 <p>图 1 系统总体架构</p>
 <p>三个组件均为既有能力：Hermes Agent 负责决策与编排，Skills 负责提供方法论，Kali Linux 负责执行。<strong>框架的自研部分位于组件之上的三层结构。</strong></p>
 <p><strong>关于术语来源。</strong> 三个组件层的命名沿用通用表述；而自研的三层是本框架为便于表述所作的命名，并非既有标准用语。其各自对应的既有概念如下，后文沿用本文命名：</p>
@@ -772,7 +772,7 @@
 <p><strong>其一，边界层发生过一次实际拦截。</strong> 执行至目录发现阶段时，声明的目标地址与执行机可达地址不一致。Agent 未自行推断，而是停止并请求人工裁定。这表明 3.4 节的”单一事实来源”约束不仅在文本上成立，且在执行路径上被实际触发过。</p>
 <p><strong>其二，约束触发了人工拒绝。</strong> 数据下载类命令被人工拒绝后，Agent 未重试原命令，而是改以替代方案征询。对应 3.3 节”危险动作先问”与”不自行判断没关系”的约定。</p>
 <p><strong>其三，一次误判被自行发现并纠正。</strong> 首批漏洞验证中，带参 GET 请求因客户端默认方法被发为 POST，导致 GET 型注入点全部返回空；该误判在下一批中被发现并修正，报告结论以修正批次为准。<strong>这一项最能说明证据层的作用</strong>：正因为原始输出全部落盘（3.5 节），两批输出才可能被交叉比对，误判才可能被暴露。</p>
-<h4 id="5-6-4-跨工作负载对照"><a href="#5-6-4-跨工作负载对照" class="headerlink" title="5.6.4 跨工作负载对照"></a>5.6.4 跨工作负载对照</h4><p>单一负载不足以反映各指标在不同任务形态下的表现。为此另取同一框架在两类不同性质任务上的运行记录，与负载 A 构成对照，见表 8。</p>
+<h4 id="5-6-4-跨工作负载对照"><a href="#5-6-4-跨工作负载对照" class="headerlink" title="5.6.4 跨工作负载对照"></a>5.6.4 跨工作负载对照</h4><p>单一负载不足以反映各指标在不同任务形态下的表现。为此另取同一框架在两类不同性质任务上的运行记录，与负载 A 构成对照，结果见表 8 与图 2。</p>
 <p>三类负载按人工介入密度区分：A 为<strong>探索式测试</strong>（逐步探测、依响应调整），B 为<strong>定向侦察</strong>（目标明确、以信息收集为主），C 为<strong>批量作业</strong>（高重复度、同一流程反复套用）。三者均为独立项目；其目标标识、产物内容与原始文件均不在本文范围内，本节只使用汇总后的指标。</p>
 <p>表 8 跨工作负载指标对照</p>
 <table>
@@ -869,6 +869,10 @@
 <td>11.0</td>
 </tr>
 </tbody></table>
+<p>表 8 给出的是绝对值。为便于跨指标比较，图 2 将其统一换算为相对负载 A 的倍数，并按对数刻度绘制。</p>
+<p><img data-src="/2026/10/01/Hermes-PentestAgent/2026-10-01-Hermes-PentestAgent/fig2-workload.png" alt="跨工作负载指标对照"></p>
+<p>图 2 跨工作负载指标对照（以负载 A 为基准的倍数，对数刻度）</p>
+<p>换算后可见，规模类指标与密度类指标在对数轴上<strong>完全分离</strong>：前者为负载 A 的 2.3–13.0 倍，后者仅为 0.4–1.5 倍。<strong>规模随负载放大，而密度不随之增长</strong>——这构成了以下三项观察的共同背景。</p>
 <p>三项观察：</p>
 <p><strong>其一，落盘约占工具调用的三分之一。</strong> 负载 B 与 C 中写文件类调用分别占 33% 与 34%；负载 A 因改用终端重定向落盘，其比例较低但落盘总量相当。<strong>“原始输出先落盘”在长会话中是主导性开销，而非附属性动作</strong>——这是 3.5 节设计在成本侧的直接代价。</p>
 <p><strong>其二，错误密度与任务重复度负相关。</strong> 负载 C 的重复度最高，错误密度反而最低（0.06 条&#x2F;工具结果，A 为 0.15）。但其错误类型集中在脚本层——Python 异常 17 次、路径不存在 14 次——说明长会话中的主要故障源是<strong>拼接脚本</strong>，而非被调用的工具本身。</p>
@@ -1078,6 +1082,218 @@
 <p><img data-src="/2026/09/20/tools/2026-09-20-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%BC%8F%E6%B4%9E%E6%89%AB%E6%8F%8F/3.png"></p>
 <p>05 新建扫描</p>
 <p><img data-src="/2026/09/20/tools/2026-09-20-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%BC%8F%E6%B4%9E%E6%89%AB%E6%8F%8F/4.png"></p>
+<hr>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/private/icon1.png">
+      <meta itemprop="name" content="Byron">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Byron">
+      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Byron">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" class="post-title-link" itemprop="url">信息收集</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-09-14 22:00:00" itemprop="dateCreated datePublished" datetime="2026-09-14T22:00:00+08:00">2026-09-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-09-21 15:30:17" itemprop="dateModified" datetime="2026-09-21T15:30:17+08:00">2026-09-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" itemprop="url" rel="index"><span itemprop="name">信息收集</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="1-0-信息收集"><a href="#1-0-信息收集" class="headerlink" title="1.0 信息收集"></a>1.0 信息收集</h2><blockquote>
+<p>本文详细梳理信息收集全流程</p>
+</blockquote>
+<hr>
+<p>给我一个公司名, xx有限公司, 应该怎样去做信息收集?</p>
+<h3 id="1-1-企业主体与主域名确认"><a href="#1-1-企业主体与主域名确认" class="headerlink" title="1.1 企业主体与主域名确认"></a>1.1 企业主体与主域名确认</h3><ol>
+<li><p>企查查, 天眼查;</p>
+</li>
+<li><p>工信部服务平台</p>
+<p>…</p>
+</li>
+</ol>
+<p>信息整理:</p>
+<table>
+<thead>
+<tr>
+<th>主体</th>
+<th>备案号</th>
+<th>主域名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>xx有限公司</td>
+<td>ICP备xx..</td>
+<td>target.com</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="1-2-子域名信息收集"><a href="#1-2-子域名信息收集" class="headerlink" title="1.2 子域名信息收集"></a>1.2 子域名信息收集</h3><ol>
+<li>FOFA</li>
+<li>搜索引擎语法<ul>
+<li>site:target.com</li>
+</ul>
+</li>
+<li>子域名挖掘工具:<ul>
+<li>OneForAll<ul>
+<li>主动+被动</li>
+<li>结果更全, 但是慢</li>
+<li>自带解析</li>
+</ul>
+</li>
+<li>subfinder<ul>
+<li>被动收集, 只查不扫, 不会触发WAF</li>
+<li>速度快, 适合批量扫描</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>FOFA 子域名收集: (以百度为例)</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">domain</span><span class="operator">=</span><span class="string">&quot;baidu.com&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/1.png"></p>
+</li>
+<li><p>OneForAll</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">uv run oneforall.py --target target.com run</span><br><span class="line">uv run oneforall.py --targets domain.txt run <span class="comment"># 读文件</span></span><br><span class="line"><span class="comment"># 结果在 results下</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>subfinder</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subfinder -d target.com</span><br><span class="line">subfinder -d target.com -o subs.txt        <span class="comment"># 输出结果到文件</span></span><br><span class="line">subfinder -dL domains.txt -o all_subs.txt  <span class="comment"># 从文件读</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h3 id="1-3-小程序-APP信息收集"><a href="#1-3-小程序-APP信息收集" class="headerlink" title="1.3 小程序&amp;APP信息收集"></a>1.3 小程序&amp;APP信息收集</h3><ol>
+<li>通过小蓝本进行收集</li>
+<li>工信部服务平台</li>
+</ol>
+<hr>
+<h3 id="1-4-存活探测"><a href="#1-4-存活探测" class="headerlink" title="1.4 存活探测"></a>1.4 存活探测</h3><blockquote>
+<p>子域名拉取后, 存在大量死链, 下一步进行资产过滤</p>
+</blockquote>
+<ul>
+<li><p>httpx</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基础用法: 只看哪些域名活了</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent</span><br><span class="line"><span class="comment"># 带状态码, 标题, 技术栈(常用)</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent -sc -title -tech-detect</span><br><span class="line"><span class="comment"># 输出到文件</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent -sc -title -o live.txt</span><br><span class="line">httpx -l subs.txt -silent -sc -title -tech-detect -o live.txt (更常用)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h3 id="1-5-指纹识别"><a href="#1-5-指纹识别" class="headerlink" title="1.5 指纹识别"></a>1.5 指纹识别</h3><ol>
+<li>浏览器插件 Wappalyzer</li>
+<li>httpx 批量识别 (-tech-detect)</li>
+</ol>
+<hr>
+<h3 id="1-6-真实IP收集"><a href="#1-6-真实IP收集" class="headerlink" title="1.6 真实IP收集"></a>1.6 真实IP收集</h3><p><strong>如何判断网站使用了CDN?</strong></p>
+<ol>
+<li><p>多地Ping: 若IP结果不唯一, 则使用了CDN</p>
+</li>
+<li><p>DNS解析: 返回多个IP</p>
+</li>
+<li><p>HTTP响应头分析: 使用 <code>curl -I</code> 查看响应头, 出现 <code>Server: cloudflare</code>, <code>X-Cache</code> 等字段</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 站长工具</span><br><span class="line">https://ping.chinaz.com/</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>如何绕过CDN?</strong></p>
+<ol>
+<li><p>很多网站只对主站或者高流量子站做CDN, 若使用真实IP的子站和主站处于同一个服务器或者C段, 则可通过子站IP辅助查找主站真实IP</p>
+</li>
+<li><p>历史DNS记录</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 微步</span><br><span class="line">https://x.threatbook.com/</span><br><span class="line"># ip138</span><br><span class="line">https://www.ip138.com/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>国外访问</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ping.pe/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>邮箱服务: 查看邮件头 <code>Received</code> 字段</p>
+</li>
+</ol>
+<hr>
+<h3 id="1-7-端口信息收集"><a href="#1-7-端口信息收集" class="headerlink" title="1.7 端口信息收集"></a>1.7 端口信息收集</h3><blockquote>
+<p>目标: 在存活资产基础上发现开放端口, 为服务识别和 Web 入口扩展做准备<br>原则: 先快后慢, 先全后精, 控制速率</p>
+</blockquote>
+<p><strong>扫描策略:</strong></p>
+<ul>
+<li>先对存活 IP 做常见端口快速扫描</li>
+<li>再对重点 IP 做全端口扫描</li>
+<li>最后用 nmap 对开放端口做精细识别</li>
+<li>CDN&#x2F;WAF 资产先尝试找真实 IP, 再扫端口</li>
+<li>非标端口发现后, 重新用 httpx 探测 Web 服务</li>
+</ul>
+<p><strong>常用工具:</strong></p>
+<p>naabu: 快速对全端口进行扫描</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 常见端口快速扫描</span></span><br><span class="line">naabu -l live_ips.txt -top-ports 1000 -rate 1000 -o common_ports.txt</span><br><span class="line"><span class="comment"># 2. 重点 IP 全端口扫描</span></span><br><span class="line">naabu -l key_ips.txt -p - -rate 1000 -o all_ports.txt</span><br></pre></td></tr></table></figure>
+
+<p>nmap 精细识别</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 常见 Web 端口</span></span><br><span class="line">nmap -sV -sC -Pn -iL live_ips.txt -p 80,443,8080,8443,8000,9000,9443 -oA nmap_web</span><br><span class="line"><span class="comment"># 全端口精细扫描，速度较慢</span></span><br><span class="line">nmap -sV -sC -Pn -p- --min-rate 1000 -iL live_ips.txt -oA nmap_full</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-8-Web信息收集"><a href="#1-8-Web信息收集" class="headerlink" title="1.8 Web信息收集"></a>1.8 Web信息收集</h3><p>目录信息收集:</p>
+<p>dirsearch工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirsearch -u https://target.com -e *</span><br></pre></td></tr></table></figure>
+
+<p>浏览器插件FindSomething</p>
 <hr>
 
       
@@ -1320,218 +1536,6 @@
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&#x27; union/*/-*!!*/select 1,database/*/-*!!*/(),3--+</span><br></pre></td></tr></table></figure>
 
 <p><img data-src="/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/10.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://byroins.github.io/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/private/icon1.png">
-      <meta itemprop="name" content="Byron">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Byron">
-      <meta itemprop="description" content="Documenting vulnerability reproduction, SRC bug bounty write-ups, and custom penetration testing tools.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Byron">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" class="post-title-link" itemprop="url">信息收集</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2026-09-14 22:00:00" itemprop="dateCreated datePublished" datetime="2026-09-14T22:00:00+08:00">2026-09-14</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-09-21 15:30:17" itemprop="dateModified" datetime="2026-09-21T15:30:17+08:00">2026-09-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" itemprop="url" rel="index"><span itemprop="name">信息收集</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="1-0-信息收集"><a href="#1-0-信息收集" class="headerlink" title="1.0 信息收集"></a>1.0 信息收集</h2><blockquote>
-<p>本文详细梳理信息收集全流程</p>
-</blockquote>
-<hr>
-<p>给我一个公司名, xx有限公司, 应该怎样去做信息收集?</p>
-<h3 id="1-1-企业主体与主域名确认"><a href="#1-1-企业主体与主域名确认" class="headerlink" title="1.1 企业主体与主域名确认"></a>1.1 企业主体与主域名确认</h3><ol>
-<li><p>企查查, 天眼查;</p>
-</li>
-<li><p>工信部服务平台</p>
-<p>…</p>
-</li>
-</ol>
-<p>信息整理:</p>
-<table>
-<thead>
-<tr>
-<th>主体</th>
-<th>备案号</th>
-<th>主域名</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>xx有限公司</td>
-<td>ICP备xx..</td>
-<td>target.com</td>
-</tr>
-</tbody></table>
-<hr>
-<h3 id="1-2-子域名信息收集"><a href="#1-2-子域名信息收集" class="headerlink" title="1.2 子域名信息收集"></a>1.2 子域名信息收集</h3><ol>
-<li>FOFA</li>
-<li>搜索引擎语法<ul>
-<li>site:target.com</li>
-</ul>
-</li>
-<li>子域名挖掘工具:<ul>
-<li>OneForAll<ul>
-<li>主动+被动</li>
-<li>结果更全, 但是慢</li>
-<li>自带解析</li>
-</ul>
-</li>
-<li>subfinder<ul>
-<li>被动收集, 只查不扫, 不会触发WAF</li>
-<li>速度快, 适合批量扫描</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<ul>
-<li><p>FOFA 子域名收集: (以百度为例)</p>
-<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">domain</span><span class="operator">=</span><span class="string">&quot;baidu.com&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="/2026/09/14/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/2026-09-18-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/1.png"></p>
-</li>
-<li><p>OneForAll</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">uv run oneforall.py --target target.com run</span><br><span class="line">uv run oneforall.py --targets domain.txt run <span class="comment"># 读文件</span></span><br><span class="line"><span class="comment"># 结果在 results下</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>subfinder</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subfinder -d target.com</span><br><span class="line">subfinder -d target.com -o subs.txt        <span class="comment"># 输出结果到文件</span></span><br><span class="line">subfinder -dL domains.txt -o all_subs.txt  <span class="comment"># 从文件读</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<hr>
-<h3 id="1-3-小程序-APP信息收集"><a href="#1-3-小程序-APP信息收集" class="headerlink" title="1.3 小程序&amp;APP信息收集"></a>1.3 小程序&amp;APP信息收集</h3><ol>
-<li>通过小蓝本进行收集</li>
-<li>工信部服务平台</li>
-</ol>
-<hr>
-<h3 id="1-4-存活探测"><a href="#1-4-存活探测" class="headerlink" title="1.4 存活探测"></a>1.4 存活探测</h3><blockquote>
-<p>子域名拉取后, 存在大量死链, 下一步进行资产过滤</p>
-</blockquote>
-<ul>
-<li><p>httpx</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基础用法: 只看哪些域名活了</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent</span><br><span class="line"><span class="comment"># 带状态码, 标题, 技术栈(常用)</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent -sc -title -tech-detect</span><br><span class="line"><span class="comment"># 输出到文件</span></span><br><span class="line"><span class="built_in">cat</span> subs.txt | httpx -silent -sc -title -o live.txt</span><br><span class="line">httpx -l subs.txt -silent -sc -title -tech-detect -o live.txt (更常用)</span><br></pre></td></tr></table></figure></li>
-</ul>
-<hr>
-<h3 id="1-5-指纹识别"><a href="#1-5-指纹识别" class="headerlink" title="1.5 指纹识别"></a>1.5 指纹识别</h3><ol>
-<li>浏览器插件 Wappalyzer</li>
-<li>httpx 批量识别 (-tech-detect)</li>
-</ol>
-<hr>
-<h3 id="1-6-真实IP收集"><a href="#1-6-真实IP收集" class="headerlink" title="1.6 真实IP收集"></a>1.6 真实IP收集</h3><p><strong>如何判断网站使用了CDN?</strong></p>
-<ol>
-<li><p>多地Ping: 若IP结果不唯一, 则使用了CDN</p>
-</li>
-<li><p>DNS解析: 返回多个IP</p>
-</li>
-<li><p>HTTP响应头分析: 使用 <code>curl -I</code> 查看响应头, 出现 <code>Server: cloudflare</code>, <code>X-Cache</code> 等字段</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 站长工具</span><br><span class="line">https://ping.chinaz.com/</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p><strong>如何绕过CDN?</strong></p>
-<ol>
-<li><p>很多网站只对主站或者高流量子站做CDN, 若使用真实IP的子站和主站处于同一个服务器或者C段, 则可通过子站IP辅助查找主站真实IP</p>
-</li>
-<li><p>历史DNS记录</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 微步</span><br><span class="line">https://x.threatbook.com/</span><br><span class="line"># ip138</span><br><span class="line">https://www.ip138.com/</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>国外访问</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ping.pe/</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>邮箱服务: 查看邮件头 <code>Received</code> 字段</p>
-</li>
-</ol>
-<hr>
-<h3 id="1-7-端口信息收集"><a href="#1-7-端口信息收集" class="headerlink" title="1.7 端口信息收集"></a>1.7 端口信息收集</h3><blockquote>
-<p>目标: 在存活资产基础上发现开放端口, 为服务识别和 Web 入口扩展做准备<br>原则: 先快后慢, 先全后精, 控制速率</p>
-</blockquote>
-<p><strong>扫描策略:</strong></p>
-<ul>
-<li>先对存活 IP 做常见端口快速扫描</li>
-<li>再对重点 IP 做全端口扫描</li>
-<li>最后用 nmap 对开放端口做精细识别</li>
-<li>CDN&#x2F;WAF 资产先尝试找真实 IP, 再扫端口</li>
-<li>非标端口发现后, 重新用 httpx 探测 Web 服务</li>
-</ul>
-<p><strong>常用工具:</strong></p>
-<p>naabu: 快速对全端口进行扫描</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 常见端口快速扫描</span></span><br><span class="line">naabu -l live_ips.txt -top-ports 1000 -rate 1000 -o common_ports.txt</span><br><span class="line"><span class="comment"># 2. 重点 IP 全端口扫描</span></span><br><span class="line">naabu -l key_ips.txt -p - -rate 1000 -o all_ports.txt</span><br></pre></td></tr></table></figure>
-
-<p>nmap 精细识别</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 常见 Web 端口</span></span><br><span class="line">nmap -sV -sC -Pn -iL live_ips.txt -p 80,443,8080,8443,8000,9000,9443 -oA nmap_web</span><br><span class="line"><span class="comment"># 全端口精细扫描，速度较慢</span></span><br><span class="line">nmap -sV -sC -Pn -p- --min-rate 1000 -iL live_ips.txt -oA nmap_full</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="1-8-Web信息收集"><a href="#1-8-Web信息收集" class="headerlink" title="1.8 Web信息收集"></a>1.8 Web信息收集</h3><p>目录信息收集:</p>
-<p>dirsearch工具</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirsearch -u https://target.com -e *</span><br></pre></td></tr></table></figure>
-
-<p>浏览器插件FindSomething</p>
-<hr>
 
       
     </div>

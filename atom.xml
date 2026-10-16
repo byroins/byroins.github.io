@@ -13,7 +13,7 @@
     <![CDATA[Web Application Security Research & Exploit Development]]>
   </subtitle>
   <title>Byron</title>
-  <updated>2026-10-15T02:36:28.706Z</updated>
+  <updated>2026-10-16T08:40:36.223Z</updated>
   <entry>
     <author>
       <name>Byron</name>
@@ -29,14 +29,14 @@
     <category term="架构设计" scheme="https://byroins.github.io/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/"/>
     <category term="证据链" scheme="https://byroins.github.io/tags/%E8%AF%81%E6%8D%AE%E9%93%BE/"/>
     <category term="资产落盘" scheme="https://byroins.github.io/tags/%E8%B5%84%E4%BA%A7%E8%90%BD%E7%9B%98/"/>
-    <id>https://byroins.github.io/2026/10/01/project/2026-10-01-Hermes-PentestAgent/</id>
-    <link href="https://byroins.github.io/2026/10/01/project/2026-10-01-Hermes-PentestAgent/"/>
+    <id>https://byroins.github.io/2026/10/01/Hermes-PentestAgent/2026-10-01-Hermes-PentestAgent/</id>
+    <link href="https://byroins.github.io/2026/10/01/Hermes-PentestAgent/2026-10-01-Hermes-PentestAgent/"/>
     <published>2026-10-01T14:00:00.000Z</published>
     <summary>
       <![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink"]]>
     </summary>
     <title>Hermes-PentestAgent</title>
-    <updated>2026-10-15T02:36:28.706Z</updated>
+    <updated>2026-10-16T08:40:36.223Z</updated>
   </entry>
   <entry>
     <author>
@@ -62,29 +62,9 @@
     <author>
       <name>Byron</name>
     </author>
-    <category term="企业安全体系" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/"/>
-    <category term="WAF" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/WAF/"/>
-    <category term="WAF" scheme="https://byroins.github.io/tags/WAF/"/>
-    <category term="安全狗" scheme="https://byroins.github.io/tags/%E5%AE%89%E5%85%A8%E7%8B%97/"/>
-    <category term="雷池WAF" scheme="https://byroins.github.io/tags/%E9%9B%B7%E6%B1%A0WAF/"/>
-    <category term="WAF绕过" scheme="https://byroins.github.io/tags/WAF%E7%BB%95%E8%BF%87/"/>
-    <category term="内联注释" scheme="https://byroins.github.io/tags/%E5%86%85%E8%81%94%E6%B3%A8%E9%87%8A/"/>
-    <id>https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/</id>
-    <link href="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/"/>
-    <published>2026-09-14T14:00:00.000Z</published>
-    <summary>
-      <![CDATA[<h2 id="1-0-WAF"><a href="#1-0-WAF" class="headerlink" title="1.0 WAF"></a>1.0 WAF</h2><h3 id="1-1-简介"><a href="#1-1-简介" class="headerlink"]]>
-    </summary>
-    <title>WAF</title>
-    <updated>2026-09-15T07:50:40.506Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Byron</name>
-    </author>
     <category term="信息收集" scheme="https://byroins.github.io/categories/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/"/>
-    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <category term="OneForAll" scheme="https://byroins.github.io/tags/OneForAll/"/>
+    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <category term="信息收集" scheme="https://byroins.github.io/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/"/>
     <category term="FOFA" scheme="https://byroins.github.io/tags/FOFA/"/>
     <category term="subfinder" scheme="https://byroins.github.io/tags/subfinder/"/>
@@ -107,11 +87,31 @@
       <name>Byron</name>
     </author>
     <category term="企业安全体系" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/"/>
-    <category term="安全产品设备" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E8%AE%BE%E5%A4%87/"/>
+    <category term="WAF" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/WAF/"/>
     <category term="WAF" scheme="https://byroins.github.io/tags/WAF/"/>
+    <category term="安全狗" scheme="https://byroins.github.io/tags/%E5%AE%89%E5%85%A8%E7%8B%97/"/>
+    <category term="雷池WAF" scheme="https://byroins.github.io/tags/%E9%9B%B7%E6%B1%A0WAF/"/>
+    <category term="WAF绕过" scheme="https://byroins.github.io/tags/WAF%E7%BB%95%E8%BF%87/"/>
+    <category term="内联注释" scheme="https://byroins.github.io/tags/%E5%86%85%E8%81%94%E6%B3%A8%E9%87%8A/"/>
+    <id>https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/</id>
+    <link href="https://byroins.github.io/2026/09/14/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/2026-09-14-WAF/"/>
+    <published>2026-09-14T14:00:00.000Z</published>
+    <summary>
+      <![CDATA[<h2 id="1-0-WAF"><a href="#1-0-WAF" class="headerlink" title="1.0 WAF"></a>1.0 WAF</h2><h3 id="1-1-简介"><a href="#1-1-简介" class="headerlink"]]>
+    </summary>
+    <title>WAF</title>
+    <updated>2026-09-15T07:50:40.506Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>Byron</name>
+    </author>
+    <category term="企业安全体系" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/"/>
+    <category term="安全产品设备" scheme="https://byroins.github.io/categories/%E4%BC%81%E4%B8%9A%E5%AE%89%E5%85%A8%E4%BD%93%E7%B3%BB/%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E8%AE%BE%E5%A4%87/"/>
     <category term="杀毒软件" scheme="https://byroins.github.io/tags/%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/"/>
     <category term="EDR" scheme="https://byroins.github.io/tags/EDR/"/>
     <category term="防火墙" scheme="https://byroins.github.io/tags/%E9%98%B2%E7%81%AB%E5%A2%99/"/>
+    <category term="WAF" scheme="https://byroins.github.io/tags/WAF/"/>
     <category term="IDS/IPS" scheme="https://byroins.github.io/tags/IDS-IPS/"/>
     <category term="态势感知" scheme="https://byroins.github.io/tags/%E6%80%81%E5%8A%BF%E6%84%9F%E7%9F%A5/"/>
     <category term="堡垒机" scheme="https://byroins.github.io/tags/%E5%A0%A1%E5%9E%92%E6%9C%BA/"/>
@@ -131,6 +131,7 @@
       <name>Byron</name>
     </author>
     <category term="Component-Framework" scheme="https://byroins.github.io/categories/Component-Framework/"/>
+    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <category term="组件漏洞" scheme="https://byroins.github.io/tags/%E7%BB%84%E4%BB%B6%E6%BC%8F%E6%B4%9E/"/>
     <category term="框架漏洞" scheme="https://byroins.github.io/tags/%E6%A1%86%E6%9E%B6%E6%BC%8F%E6%B4%9E/"/>
     <category term="shiro" scheme="https://byroins.github.io/tags/shiro/"/>
@@ -142,7 +143,6 @@
     <category term="CVE-2016-4437" scheme="https://byroins.github.io/tags/CVE-2016-4437/"/>
     <category term="ShiroAttack2" scheme="https://byroins.github.io/tags/ShiroAttack2/"/>
     <category term="ShiroScan" scheme="https://byroins.github.io/tags/ShiroScan/"/>
-    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <category term="SB-Actuator" scheme="https://byroins.github.io/tags/SB-Actuator/"/>
     <category term="JDumpSpider" scheme="https://byroins.github.io/tags/JDumpSpider/"/>
     <category term="heapdump_tool" scheme="https://byroins.github.io/tags/heapdump-tool/"/>
@@ -217,12 +217,12 @@
     <category term="jwt" scheme="https://byroins.github.io/categories/web-security/jwt/"/>
     <category term="Token" scheme="https://byroins.github.io/tags/Token/"/>
     <category term="Cookie" scheme="https://byroins.github.io/tags/Cookie/"/>
+    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
     <category term="JWT" scheme="https://byroins.github.io/tags/JWT/"/>
     <category term="jwt_tool" scheme="https://byroins.github.io/tags/jwt-tool/"/>
     <category term="Session" scheme="https://byroins.github.io/tags/Session/"/>
     <category term="RS256" scheme="https://byroins.github.io/tags/RS256/"/>
     <category term="HS256" scheme="https://byroins.github.io/tags/HS256/"/>
-    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
     <id>https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/</id>
     <link href="https://byroins.github.io/2026/08/25/web-security/jwt/2026-08-25-jwt/"/>
     <published>2026-08-25T14:00:00.000Z</published>
@@ -270,12 +270,12 @@
     </author>
     <category term="tools" scheme="https://byroins.github.io/categories/tools/"/>
     <category term="basic-tools" scheme="https://byroins.github.io/categories/tools/basic-tools/"/>
-    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <category term="uv" scheme="https://byroins.github.io/tags/uv/"/>
     <category term="docker" scheme="https://byroins.github.io/tags/docker/"/>
     <category term="python" scheme="https://byroins.github.io/tags/python/"/>
     <category term="venv" scheme="https://byroins.github.io/tags/venv/"/>
     <category term="OneForAll" scheme="https://byroins.github.io/tags/OneForAll/"/>
+    <category term="dirsearch" scheme="https://byroins.github.io/tags/dirsearch/"/>
     <id>https://byroins.github.io/2026/08/22/tools/2026-08-22-basic-tools/</id>
     <link href="https://byroins.github.io/2026/08/22/tools/2026-08-22-basic-tools/"/>
     <published>2026-08-22T14:00:00.000Z</published>
@@ -296,11 +296,11 @@
     </author>
     <category term="web-security" scheme="https://byroins.github.io/categories/web-security/"/>
     <category term="rce" scheme="https://byroins.github.io/categories/web-security/rce/"/>
-    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
     <category term="rce" scheme="https://byroins.github.io/tags/rce/"/>
     <category term="eval()" scheme="https://byroins.github.io/tags/eval/"/>
     <category term="system()" scheme="https://byroins.github.io/tags/system/"/>
     <category term="exec()" scheme="https://byroins.github.io/tags/exec/"/>
+    <category term="CTFHub" scheme="https://byroins.github.io/tags/CTFHub/"/>
     <category term="过滤" scheme="https://byroins.github.io/tags/%E8%BF%87%E6%BB%A4/"/>
     <category term="绕过" scheme="https://byroins.github.io/tags/%E7%BB%95%E8%BF%87/"/>
     <category term="${IFS}" scheme="https://byroins.github.io/tags/IFS/"/>
